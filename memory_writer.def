@@ -1,0 +1,7 @@
+SECTIONS
+{
+	. = 0xE6302000;
+	.text : { *(.text) }
+	.data : { *(.data) }
+	.bss : { *(.bss) }
+}
