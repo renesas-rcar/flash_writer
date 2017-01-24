@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,18 +35,14 @@
 ***********************/
 
 const char *const StartMessMonitor[START_MESS_MON_LINE] = {
-				"eMMC Writer for R-Car H3/M3 Series V1.00 Jan.10,2017",
-	MESSAGE_END,
+				"eMMC Writer for R-Car H3/M3 Series V1.01 Mar.15,2017",
+				MESSAGE_END,
 };
 
 
 const char *const StartMessWorkMem[START_MESS_MEM_LINE] = {
-#ifdef Writer
-				" Work Memory SystemRAM (H'E6302000-H'E632FFFF) ",	
-#else
 				" Work Memory SystemRAM (H'E6328000-H'E632FFFF) ",
-#endif
-			    MESSAGE_END,
+				MESSAGE_END,
 };
 
 const char *const AllHelpMess[ALL_HELP_MESS_LINE] = {

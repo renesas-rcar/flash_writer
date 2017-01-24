@@ -1,6 +1,6 @@
 #
 # Copyright (c) 2013-2015, ARM Limited and Contributors. All rights reserved.
-# Copyright (c) 2015-2016, Renesas Electronics Corporation. All rights reserved.
+# Copyright (c) 2015-2017, Renesas Electronics Corporation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -99,13 +99,13 @@ endif
 ifeq ("$(BOOT)", "WRITER")
 	BOOT_DEF    = Writer
 	MEMORY_DEF = memory_writer.def
-	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_eMMC_Writer_SCIF_E6302000
+	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_eMMC_writer_SCIF_E6304000
 endif
 
 ifeq ("$(BOOT)", "WRITER_WITH_CERT")
 	BOOT_DEF    = Writer
 	MEMORY_DEF  = memory_writer_with_cert.def
-	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_eMMC_Writer_SCIF_DUMMY_CERT_E6300000
+	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_eMMC_writer_SCIF_DUMMY_CERT_E6300400
 endif
 
 ifeq ("$(SCIF_CLK)", "EXTERNAL")

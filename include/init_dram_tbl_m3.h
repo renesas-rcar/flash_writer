@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -244,8 +244,8 @@ static const uint32_t DDR_PHY_ADR_G_REGSET_M3[DDR_PHY_ADR_G_REGSET_NUM_M3] = {
 /*0b95*/	0x0002c000,
 /*0b96*/	0x02c002c0,
 /*0b97*/	0x000002c0,
-/*0b98*/	0x0b421b42,
-/*0b99*/	0x00000b42,
+/*0b98*/	0x01421142,
+/*0b99*/	0x00000142,
 /*0b9a*/	0x00000000,
 /*0b9b*/	0x00000000,
 /*0b9c*/	0x05020000,
@@ -394,9 +394,9 @@ static const uint32_t DDR_PI_REGSET_M3[DDR_PI_REGSET_NUM_M3] = {
 /*0268*/	0x1111018e,
 /*0269*/	0x10010204,
 /*026a*/	0x09090650,
-/*026b*/	0x20110202,
-/*026c*/	0x00201000,
-/*026d*/	0x00201000,
+/*026b*/	0xff110202,
+/*026c*/	0x00ff1000,
+/*026d*/	0x00ff1000,
 /*026e*/	0x04041000,
 /*026f*/	0x18020100,
 /*0270*/	0x00010018,

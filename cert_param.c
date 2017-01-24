@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,11 @@
 
 /* 0xE6300400 */
 const unsigned int __attribute__ ((section (".boot_param"))) boot_param = 0x00000000;
-/* 0xE6301154 */
-const unsigned int __attribute__ ((section (".cert_addr"))) cert_addr = 0xE6302000;
-/* 0xE6301264 */
+/* 0xE63005D4 */
+const unsigned int __attribute__ ((section (".cert_addr"))) cert_addr = 0xE6304000;
+/* 0xE63006E4 */
 const unsigned int __attribute__ ((section (".cert_size"))) cert_size = 0x00001000;
+/* 0xE6301154 */
+const unsigned int __attribute__ ((section (".cert_addr2"))) cert_addr2 = 0xE6304000;
+/* 0xE6301264 */
+const unsigned int __attribute__ ((section (".cert_size2"))) cert_size2 = 0x00001000;

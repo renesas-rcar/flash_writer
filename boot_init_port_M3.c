@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,6 +45,8 @@
 #define PRR_PRODUCT_H3		(0x00004F00U)           /* R-Car H3 */
 #define PRR_PRODUCT_M3		(0x00005200U)           /* R-Car M3 */
 #define PRR_PRODUCT_10		(0x00U)
+#define PRR_PRODUCT_11		(0x01U)
+#define PRR_PRODUCT_20		(0x10U)
 
 
 
@@ -94,14 +96,21 @@ static void StartRtDma0_Descriptor(void);
 void InitPORT(void)
 {
 	uint32_t product;
+	uint32_t cut;
 
 	product = *((volatile uint32_t*)PRR) & PRR_PRODUCT_MASK;
+	cut = *((volatile uint32_t*)PRR) & PRR_CUT_MASK;
 
 	switch (product) {
 	case PRR_PRODUCT_H3:
 		InitMODSEL();
-		InitIPSR_H3();
-		InitGPSR_H3();
+	if (cut < PRR_PRODUCT_20) {
+			InitIPSR_H3();
+			InitGPSR_H3();
+	} else {
+			InitIPSR_M3();
+			InitGPSR_M3();
+	}
 		InitPOCCTRL();
 		InitDRVCTRL();
 		InitPUD();

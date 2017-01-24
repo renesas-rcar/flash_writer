@@ -1,16 +1,20 @@
 SECTIONS
 {
-	. = 0xE6300000;
+	. = 0xE6300400;
 	. : {
-		. = 0x00000400;
+		. = 0x00000000;
 		KEEP(*(.boot_param))
-		. = 0x00001154;
+		. = 0x000001D4;
 		KEEP(*(.cert_addr))
-		. = 0x00001264;
+		. = 0x000002E4;
 		KEEP(*(.cert_size))
+		. = 0x00000D54;
+		KEEP(*(.cert_addr2))
+		. = 0x00000E64;
+		KEEP(*(.cert_size2))
 	}
 
-	. = 0xE6302000;
+	. = 0xE6304000;
 	.text : { *(.text) }
 	.rodata : { *(.rodata) }
 	.data : { *(.data) }
