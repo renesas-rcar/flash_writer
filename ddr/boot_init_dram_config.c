@@ -377,15 +377,9 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 {
 	0x0f,		/* phyvalid */
 	0x00,		/* dbi_en */
-//	0x300,		/* cacs_dly */
-//	0x280,		/* cacs_dly */
-	0x220,		/* cacs_dly */
-//	0x1c0,		/* cacs_dly */
-//	-320,		/* cacs_dly_adj */
-//	-200,		/* cacs_dly_adj */
-//	-100,		/* cacs_dly_adj */
-	-50,		/* cacs_dly_adj */
-//	0,		/* cacs_dly_adj */
+	0x2c0,		/* cacs_dly */
+	-320,		/* cacs_dly_adj */
+
 	0x300,		/* dqdm_dly_w */
 	0x0a0,		/* dqdm_dly_r */
 	{
@@ -410,7 +404,7 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 			  0, 0, 0, 0, 0, 0, 0, 0 }
 			},
 /*ch[1]*/	{
-/*ddr_density[]*/	{ 0x02, 0xff },
+/*ddr_density[]*/	{ 0x02, 0xff }, 
 /*ca_swap*/		0x00025143,
 /*dqs_swap*/		0x3210,
 /*dq_swap[]*/		{ 0x70613542, 0x16245307, 0x30712645, 0x21706354 },
@@ -450,7 +444,7 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 			  0, 0, 0, 0, 0, 0, 0, 0 }
 			},
 /*ch[3]*/	{
-/*ddr_density[]*/	{ 0x02, 0xff },
+/*ddr_density[]*/	{ 0x02, 0xff }, 
 /*ca_swap*/		0x00153402,
 /*dqs_swap*/		0x2031,
 /*dq_swap[]*/		{ 0x30671254, 0x26541037, 0x17054623, 0x12307645 },
@@ -622,8 +616,8 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
  */
 {
 	0x0f,		/* phyvalid */
-	0x00,		/* dbi_en */
-	0x2C0,		/* cacs_dly */
+	0x01,		/* dbi_en */
+	0x300,		/* cacs_dly */
 	0,		/* cacs_dly_adj */
 	0x300,		/* dqdm_dly_w */
 	0x0a0,		/* dqdm_dly_r */
@@ -652,7 +646,6 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 /*ddr_density[]*/	{ 0x02, 0xff },
 /*ca_swap*/		0x00105432,
 /*dqs_swap*/		0x3210,
-/*dqs_swap*///		0x1032,
 /*dq_swap[]*/		{ 0x43256107 , 0x07162354 , 0x10234567 , 0x01235467 },
 /*dm_swap[]*/		{ 0x08, 0x08, 0x08, 0x08 },
 /*wdqlvl_patt[]*/	WDQLVL_PAT,
@@ -673,7 +666,6 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 /*ddr_density[]*/	{ 0x02, 0xff }, 
 /*ca_swap*/		0x00543210,
 /*dqs_swap*/		0x2301,
-/*dqs_swap*///		0x0123,
 /*dq_swap[]*/		{ 0x01327654 , 0x02316457 , 0x10234567 , 0x01325467 },
 /*dm_swap[]*/		{ 0x08, 0x08, 0x08, 0x08 },
 /*wdqlvl_patt[]*/	WDQLVL_PAT,
@@ -746,8 +738,7 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 /*ch[1]*/	{
 /*ddr_density[]*/	{ 0x02, 0x02 }, 
 /*ca_swap*/		0x00105432,
-/*dqs_swap*///		0x3210,
-/*dqs_swap*/		0x1032,
+/*dqs_swap*/		0x3210,
 /*dq_swap[]*/		{ 0x43256107 , 0x07162354 , 0x10234567 , 0x01235467 },
 /*dm_swap[]*/		{ 0x08, 0x08, 0x08, 0x08 },
 /*wdqlvl_patt[]*/	WDQLVL_PAT,
@@ -767,8 +758,7 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 /*ch[2]*/	{
 /*ddr_density[]*/	{ 0x02, 0x02 }, 
 /*ca_swap*/		0x00543210,
-/*dqs_swap*///		0x2301,
-/*dqs_swap*/		0x0123,
+/*dqs_swap*/		0x2301,
 /*dq_swap[]*/		{ 0x01327654 , 0x02316457 , 0x10234567 , 0x01325467 },
 /*dm_swap[]*/		{ 0x08, 0x08, 0x08, 0x08 },
 /*wdqlvl_patt[]*/	WDQLVL_PAT,
@@ -813,16 +803,16 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 {
 	0x0f,		/* phyvalid */
 	0x01,		/* dbi_en */
-	0x220,		/* cacs_dly */
-	-50,		/* cacs_dly_adj */
+	0x300,		/* cacs_dly */
+	0,		/* cacs_dly_adj */
 	0x300,		/* dqdm_dly_w */
 	0x0a0,		/* dqdm_dly_r */
 	{
 /*ch[0]*/	{
 /*ddr_density[]*/	{ 0x02, 0xff }, 
 /*ca_swap*/		0x00543210,
-/*dqs_swap*/		0x3120,
-/*dq_swap[]*/		{ 0x23674510, 0x53467210, 0x75346210, 0x27645310 },
+/*dqs_swap*/		0x3210,
+/*dq_swap[]*/		{ 0x27645310, 0x75346210, 0x53467210, 0x23674510 },
 /*dm_swap[]*/		{ 0x08, 0x08, 0x08, 0x08 },
 /*wdqlvl_patt[]*/	WDQLVL_PAT,
 /*cacs_adj*/		{ 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -841,8 +831,8 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 /*ch[1]*/	{
 /*ddr_density[]*/	{ 0x02, 0xff },
 /*ca_swap*/		0x00543210,
-/*dqs_swap*/		0x3210,
-/*dq_swap[]*/		{ 0x37652401, 0x43752610, 0x43257610, 0x23764510 },
+/*dqs_swap*/		0x2301,
+/*dq_swap[]*/		{ 0x23764510, 0x43257610, 0x43752610, 0x37652401 },
 /*dm_swap[]*/		{ 0x08, 0x08, 0x08, 0x08 },
 /*wdqlvl_patt[]*/	WDQLVL_PAT,
 /*cacs_adj*/		{ 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -861,8 +851,8 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 /*ch[2]*/	{
 /*ddr_density[]*/	{ 0x02, 0xff }, 
 /*ca_swap*/		0x00452103,
-/*dqs_swap*/		0x2301,
-/*dq_swap[]*/		{ 0x26573401, 0x43752610, 0x43257610, 0x32764510 },
+/*dqs_swap*/		0x3210,
+/*dq_swap[]*/		{ 0x32764510, 0x43257610, 0x43752610, 0x26573401 },
 /*dm_swap[]*/		{ 0x08, 0x08, 0x08, 0x08 },
 /*wdqlvl_patt[]*/	WDQLVL_PAT,
 /*cacs_adj*/		{ 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -881,8 +871,8 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 /*ch[3]*/	{
 /*ddr_density[]*/	{ 0x02, 0xff },
 /*ca_swap*/		0x00520413,
-/*dqs_swap*/		0x2031,
-/*dq_swap[]*/		{ 0x32674501, 0x53467210, 0x75346210, 0x47652301 },
+/*dqs_swap*/		0x2301,
+/*dq_swap[]*/		{ 0x47652301, 0x75346210, 0x53467210, 0x32674501 },
 /*dm_swap[]*/		{ 0x08, 0x08, 0x08, 0x08 },
 /*wdqlvl_patt[]*/	WDQLVL_PAT,
 /*cacs_adj*/		{ 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -912,7 +902,7 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
  * 16.66MHz CLK,DIV=50,3  (md14,md13==0,0)
  * 20.00MHz CLK,DIV=60,3  (md14,md13==0,1)
  * 25.00MHz CLK,DIV=75,3  (md14,md13==1,0)
- * 16.66MHz CLK,DIV=50,3  (md14,md13==1,1)
+ * 16.66MHz CLK,DIV=50,3  (md14,md13==1,1) // for H3ver1.0
 */
 void boardcnf_get_brd_clk(uint32_t brd, uint32_t *clk, uint32_t *div) {
 	uint32_t md;
@@ -921,7 +911,7 @@ void boardcnf_get_brd_clk(uint32_t brd, uint32_t *clk, uint32_t *div) {
 		case 0x0 : *clk = 50; *div = 3; break;
 		case 0x1 : *clk = 60; *div = 3; break;
 		case 0x2 : *clk = 75; *div = 3; break;
-		case 0x3 : *clk = 50; *div = 3; break;
+		case 0x3 : *clk = 50; *div = 3; break; /* for H3ver1.0 */
 	}
 	(void)brd;
 }
@@ -968,16 +958,16 @@ void boardcnf_get_ddr_mbps(uint32_t brd, uint32_t *mbps, uint32_t *div) {
 #define M3_SAMPLE_SS_E28        0xB866CC10,0x3C231421
 #define M3_SAMPLE_SS_E32        0xB866CC10,0x3C241421
 static const uint32_t TermcodeBySample[20][3]= {
-	{M3_SAMPLE_TT_A84,      0x000158D5},
-	{M3_SAMPLE_TT_A85,      0x00015955},
-	{M3_SAMPLE_TT_A86,      0x00015955},
-	{M3_SAMPLE_FF_B45,      0x00015690},
-	{M3_SAMPLE_FF_B49,      0x00015753},
-	{M3_SAMPLE_FF_B56,      0x00015793},
-	{M3_SAMPLE_SS_E24,      0x00015996},
-	{M3_SAMPLE_SS_E28,      0x000159D7},
-	{M3_SAMPLE_SS_E32,      0x00015997},
-	{0xFFFFFFFF,0xFFFFFFFF, 0x0001554F}
+	{	M3_SAMPLE_TT_A84,		0x000158D5	},
+	{	M3_SAMPLE_TT_A85,		0x00015955	},
+	{	M3_SAMPLE_TT_A86,		0x00015955	},
+	{	M3_SAMPLE_FF_B45,		0x00015690	},
+	{	M3_SAMPLE_FF_B49,		0x00015753	},
+	{	M3_SAMPLE_FF_B56,		0x00015793	},
+	{	M3_SAMPLE_SS_E24,		0x00015996	},
+	{	M3_SAMPLE_SS_E28,		0x000159D7	},
+	{	M3_SAMPLE_SS_E32,		0x00015997	},
+	{	0xFFFFFFFF,	0xFFFFFFFF, 0x0001554F	}
 };
 #ifdef BOARD_JUDGE_AUTO
 /*******************************************************************************
@@ -1004,10 +994,16 @@ static const uint32_t TermcodeBySample[20][3]= {
 #define BIT0  (1)
 #define    GPIO_GPSR6 0xE6060118U
 
+#ifndef RCAR_GEN3_ULCB
+#define RCAR_GEN3_ULCB		0
+#endif
+
+#if (RCAR_GEN3_ULCB==0) // non Starter Kit
 /* 
  * Connect = return 0
  * Open    = return 1
  */
+
 static void pfc_write_and_poll(uint32_t a, uint32_t v)
 {
 	mmio_write_32(PFC_PMMR,~v);
@@ -1016,6 +1012,7 @@ static void pfc_write_and_poll(uint32_t a, uint32_t v)
 	while( v != mmio_read_32(a));
 	dsb_sev();
 }
+
 static uint32_t opencheck_SSI_WS6(void)
 {
 	uint32_t dataL, down, up;
@@ -1068,63 +1065,49 @@ static uint32_t opencheck_SSI_WS6(void)
 		return 1;
 	}
 }
-static uint32_t evaborad_softsw_check(void)
-{
-	uint32_t dataL;
+#endif //(RCAR_GEN3_ULCB==0)
 
-	// GP5[17] : SoftSW[0]
-	// GP5[20] : SoftSW[1]
-	// GP5[22] : SoftSW[2]
-	// GP5[23] : SoftSW[3]
-	dataL = mmio_read_32(GPIO_INDT5) & 0x00D20000;
-	dataL = (((dataL >> 20) + 0x00000001) & 0x0000000E) | ((dataL >> 17) & 0x00000001);
-	return (dataL);
-}
 static uint32_t _board_judge(void) {
 	uint32_t brd;
+#if (RCAR_GEN3_ULCB==1)
+	/* Starter Kit */
+	if(PRR_PRODUCT_H3 == Prr_Product) {
+	  if (PRR_PRODUCT_11>=Prr_Cut) {
+		/* RENESAS Starter Kit(H3-SIP) board */
+		brd = 2;
+	  } else {
+		/* RENESAS Starter Kit(H3SIP_VER2.0) board */
+		brd = 7;
+	  }
+	} else {
+		/* RENESAS Starter Kit(M3-SIP 1RANK) board */
+		brd = 3;
+	}
+#else// not (RCAR_GEN3_ULCB==1)
 	uint32_t usb2_ovc_open;
 
 	usb2_ovc_open = opencheck_SSI_WS6();
-//	SoftSW No4 ON/OFF (ON = Starter Kit)
-	if((evaborad_softsw_check() & 0x08)==0x00) {
+
+	/* RENESAS Eva-borad */
+	if(usb2_ovc_open) {
+		/* RENESAS Kriek board */
+		brd = 1;
+	} else {
 		if(PRR_PRODUCT_H3 == Prr_Product) {
 		  if (PRR_PRODUCT_11>=Prr_Cut) {
-			/* RENESAS SALVATOR-X (H3-SIP 2rank)*/
-			brd= 6;
+			/* RENESAS SALVATOR-X (H3-SIP) */
+			brd = 2;
 		  } else {
-			/* RENESAS SALVATOR-X (H3SIP_VER2.0-2rank)*/
-			brd= 8;
+			/* RENESAS SALVATOR-X (H3SIP_VER2.0) */
+			brd = 7;
 		  }
 		} else {
-			if(usb2_ovc_open) {
-				/* RENESAS Kriek-1rank board */
-				brd = 5;
-			} else {
-				/* RENESAS Starter Kit(M3-SIP) board */
-				brd = 3;
-			}
-		}
-	} else {
-		if(usb2_ovc_open) {
-			/* RENESAS Kriek board */
-			brd = 1;
-		} else {
-			if(PRR_PRODUCT_H3 == Prr_Product) {
-			  if (PRR_PRODUCT_11>=Prr_Cut) {
-				/* RENESAS Starter Kit(H3-SIP) board */
-				brd= 2;
-			  } else {
-				/* RENESAS SALVATOR-X (H3SIP_VER2.0-1rank)*/
-				brd= 7;
-			  }
-			} else {
-				/* RENESAS SALVATOR-X (M3-SIP)*/
-				brd= 0;
-			}
+			/* RENESAS SALVATOR-X (M3-SIP) */
+			brd = 0;
 		}
 	}
+#endif//(RCAR_GEN3_ULCB==1)
 
 	return brd;
 }
 #endif
-

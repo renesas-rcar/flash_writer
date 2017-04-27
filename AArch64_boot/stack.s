@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -16,7 +16,7 @@
  *     used to endorse or promote products derived from this software without
  *     specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
@@ -29,12 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-int32_t PutCharSCIF2(char outChar);
-int32_t GetCharSCIF2(char *inChar);
-void PowerOnScif2(void);
-void WaitPutScif2SendEnd(void);
-void InitScif2_SCIFCLK(void);
-void SetScif2_DL(uint16_t setData);
-void SetScif2_BRR(uint8_t setData);
-void InitScif2PinFunction(void);
-uint32_t SCIF_TerminalInputCheck(char* str);
+
+	.section writer_stack, "aw", %nobits
+	.align 5
+stacks:
+	.space (8*1024), 0
+
+	.end

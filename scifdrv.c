@@ -33,6 +33,7 @@
 #include "scifdrv.h"
 #include "bit.h"
 #include "reg_rcarh3.h"
+#include "devdrv.h"
 
 
  /* Product Register */
@@ -161,6 +162,28 @@ void InitScif2_SCIFCLK(void)
 	SoftDelay(100);
 }
 
+void InitScif2PinFunction(void)
+{
+	uint32_t dataL;
+
+//SCIF2
+	dataL = *((volatile uint32_t*)PFC_MOD_SEL1);
+	dataL &= ~BIT12;
+	*((volatile uint32_t*)PFC_PMMR) = ~dataL;
+	*((volatile uint32_t*)PFC_MOD_SEL1) = dataL;
+	
+	dataL = *((volatile uint32_t*)PFC_IPSR12);
+	dataL &= ~0x000000FF;	//IP12[7:4]=4'b0000, IP12[3:0]=4'b0000
+	*((volatile uint32_t*)PFC_PMMR) = ~dataL;
+	*((volatile uint32_t*)PFC_IPSR12) = dataL;
+	
+	dataL = *((volatile uint32_t*)PFC_GPSR5);
+//	dataL &= 0xFFFFF3FF;	//GP5[11],GP5[10]
+	dataL |= 0x00000C00;	//GP5[11],GP5[10]
+	*((volatile uint32_t*)PFC_PMMR) = ~dataL;
+	*((volatile uint32_t*)PFC_GPSR5) = dataL;
+}
+
 void SetScif2_DL(uint16_t setData)
 {
 	*((volatile uint16_t*)SCIF2_DL)    = setData;
@@ -169,4 +192,25 @@ void SetScif2_DL(uint16_t setData)
 void SetScif2_BRR(uint8_t setData)
 {
 	*((volatile uint8_t*)SCIF2_SCBRR)  = setData;
+}
+
+
+uint32_t SCIF_TerminalInputCheck(char* str)
+{
+	char result = 0;
+	
+	if(0x91 & *((volatile uint16_t *)SCIF2_SCFSR))
+		*((volatile uint16_t *)SCIF2_SCFSR) &= ~0x91;
+	if(0x01 & *((volatile uint16_t *)SCIF2_SCLSR))
+	{
+		PutStr("ORER",1);
+		*((volatile uint16_t *)SCIF2_SCLSR) &= ~0x01;
+	}
+	if(0x02 & *((volatile uint16_t *)SCIF2_SCFSR))
+	{
+		*str = *((volatile unsigned char*)SCIF2_SCFRDR);
+		*((volatile uint16_t*)SCIF2_SCFSR) &= ~0x02;
+		result = 1;
+	}
+	return result;
 }

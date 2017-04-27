@@ -1,7 +1,11 @@
+MEMORY {
+	CERT (rwxa): ORIGIN = 0xE6300400, LENGTH = 0x00003BFF
+	RAM (rwxa): ORIGIN = 0xE6304000, LENGTH = 0x0005BFFF
+}
+
 SECTIONS
 {
-	. = 0xE6300400;
-	. : {
+	.cert : {
 		. = 0x00000000;
 		KEEP(*(.boot_param))
 		. = 0x000001D4;
@@ -12,11 +16,36 @@ SECTIONS
 		KEEP(*(.cert_addr2))
 		. = 0x00000E64;
 		KEEP(*(.cert_size2))
-	}
+	} > CERT
 
-	. = 0xE6304000;
-	.text : { *(.text) }
-	.rodata : { *(.rodata) }
-	.data : { *(.data) }
-	.bss : { *(.bss) }
+	.text : {
+		*(.text*)
+		*(.rodata*)
+		. = NEXT(64);
+		__RO_END__ = .;
+	} > RAM
+
+	.data : {
+		__DATA_START__ = .;
+		 *(.data)
+		__DATA_END__ = .;
+	} > RAM
+
+	__DATA_SIZE__ = SIZEOF(.data);
+
+	.bss : {
+		__BSS_START__ = .;
+		 *(.bss)
+		 *(COMMON)
+		 . = NEXT(64);
+		__BSS_END__ = .;
+	} > RAM
+
+	stacks (NOLOAD) : ALIGN(64) {
+		__STACKS_START__ = .;
+		KEEP(*(writer_stack))
+		__STACKS_END__ = .;
+	} >RAM
+
+	__BSS_SIZE__ = SIZEOF(.bss);
 }

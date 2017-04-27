@@ -1,5 +1,5 @@
 ;/*
-; * Copyright (c) 2015-2016, Renesas Electronics Corporation
+; * Copyright (c) 2015-2017, Renesas Electronics Corporation
 ; * All rights reserved.
 ; *
 ; * Redistribution and use in source and binary forms, with or without
@@ -181,12 +181,12 @@ Stack_init_sys:
 ;####################################################################################################
 .ifdef Area0Boot
 Init_set_WDT:
-	LDR		R0,	=RWDT_RWTCSRA
+	LDR		R0, =RWDT_RWTCSRA
 	LDR		R1, =0xA5A5A500				;#Timer disabled
 	STR		R1, [R0]
 
 Init_set_SYSWDT:
-	LDR		R0,	=SYSWDT_WTCSRA
+	LDR		R0, =SYSWDT_WTCSRA
 	LDR		R1, =0xA5A5A500				;#Timer  disabled (Enable -> disabled)
 	STR		R1, [R0]
 .endif
@@ -207,6 +207,32 @@ CACHE_ENABLE:
 .ENDIF
 
 CACHE_ENABLE_END:
+
+	/* clear bss section */
+	mov	r0, #0x0
+	ldr	r1, =__BSS_START__
+	ldr	r2, =__BSS_SIZE__
+bss_loop:
+	subs	r2, r2, #4
+	bcc	bss_end
+	str	r0, [r1, +r2]
+	b	bss_loop
+bss_end:
+
+.ifdef Area0Boot
+	/* copy data section */
+	ldr	r0, =__DATA_COPY_START__
+	ldr	r1, =__DATA_START__
+	ldr	r2, =__DATA_SIZE__
+data_loop:
+	subs	r2, r2, #4
+	bcc	data_end
+	ldr	r3, [r0, +r2]
+	str	r3, [r1, +r2]
+	b	data_loop
+data_end:
+.endif
+
 
 .ifdef Area0Boot
 	BL InitPORT

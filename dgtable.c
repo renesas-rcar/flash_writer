@@ -46,7 +46,8 @@ const com_menu MonCom[COMMAND_UNIT] = {
 	 "EM_DCSD"			, &dg_emmc_disp_csd				,  0	,
 	 "EM_DECSD"			, &dg_emmc_disp_ext_csd			,  0	,
 	 "EM_SECSD"			, &dg_emmc_set_ext_csd			,  0	,
-	 "EM_W"				, &dg_emmc_write				,  0	,
+	 "EM_W"				, &dg_emmc_write_mot				,  0	,
+	 "EM_WB"			, &dg_emmc_write_bin				,  0	,
 	 "EM_E"				, &dg_emmc_erase				,  0	,
 	 "SUP"				, dgScifSpeedUp					,  0	,
 	TBL_END				, 0								,  0

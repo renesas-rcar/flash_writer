@@ -1,5 +1,5 @@
 ;/*
-; * Copyright (c) 2015-2016, Renesas Electronics Corporation
+; * Copyright (c) 2015-2017, Renesas Electronics Corporation
 ; * All rights reserved.
 ; *
 ; * Redistribution and use in source and binary forms, with or without
@@ -74,12 +74,12 @@ Register_init:
 	LDR		X30, =0
 
 Set_EnableRAM:
-	LDR		X0,	=0xE67F0018
+	LDR		X0, =0xE67F0018
 	LDR		W1, =0x00000001			;#Enable  DRAM/SECRAM/PUBRAM
 	STR		W1, [X0]
 
 ;# Loader
-    LDR x0, =0xE6330000
+    LDR x0, =__STACKS_END__
     MSR SP_EL0,x0
     MSR SP_EL1,x0
     MSR SP_EL2,x0
@@ -96,12 +96,12 @@ Set_EnableRAM:
 .ifdef Area0Boot
 
 Init_set_WDT:
-	LDR		W0,	=RWDT_RWTCSRA
+	LDR		W0, =RWDT_RWTCSRA
 	LDR		W1, =0xA5A5A500				;#Timer disabled
 	STR		W1, [X0]
 
 Init_set_SYSWDT:
-	LDR		W0,	=SYSWDT_WTCSRA
+	LDR		W0, =SYSWDT_WTCSRA
 	LDR		W1, =0xA5A5A500				;#Timer  disabled (Enable -> disabled)
 	STR		W1, [X0]
 
@@ -119,6 +119,31 @@ Init_set_SYSWDT:
 	isb
 
 
+	/* clear bss section */
+	mov	X0, #0x0
+	ldr	X1, =__BSS_START__
+	ldr	X2, =__BSS_SIZE__
+bss_loop:
+	subs	X2, X2, #4
+	bcc	bss_end
+	str	W0, [X1, X2]
+	b	bss_loop
+bss_end:
+
+.ifdef Area0Boot
+	/* copy data section */
+	ldr	X0, =__DATA_COPY_START__
+	ldr	X1, =__DATA_START__
+	ldr	X2, =__DATA_SIZE__
+data_loop:
+	subs	X2, X2, #4
+	bcc	data_end
+	ldr	W3, [X0, X2]
+	str	W3, [X1, X2]
+	b	data_loop
+.endif
+
+data_end:
 
 .ifdef Area0Boot
 

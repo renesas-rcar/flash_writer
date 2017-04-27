@@ -283,7 +283,7 @@ static const uint32_t DDR_PHY_ADR_G_REGSET_M3[DDR_PHY_ADR_G_REGSET_NUM_M3] = {
 /*0bbc*/	0x06e40000,
 /*0bbd*/	0x00000000,
 /*0bbe*/	0x00000000,
-/*0bbf*/	0x00020000
+/*0bbf*/	0x00010000
 };
 
 static const uint32_t DDR_PI_REGSET_M3[DDR_PI_REGSET_NUM_M3] = {
@@ -394,9 +394,9 @@ static const uint32_t DDR_PI_REGSET_M3[DDR_PI_REGSET_NUM_M3] = {
 /*0268*/	0x1111018e,
 /*0269*/	0x10010204,
 /*026a*/	0x09090650,
-/*026b*/	0xff110202,
-/*026c*/	0x00ff1000,
-/*026d*/	0x00ff1000,
+/*026b*/	0x20110202,
+/*026c*/	0x00201000,
+/*026d*/	0x00201000,
 /*026e*/	0x04041000,
 /*026f*/	0x18020100,
 /*0270*/	0x00010018,

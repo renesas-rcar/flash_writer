@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,13 +36,19 @@
 #include	"cpudrv.h"
 #include	"dgemmc.h"
 #include	"dginit.h"
+#include	"usb_lib.h"
+#include	"scifdrv.h"
+#include	"devdrv.h"
 
 extern const char *const StartMessMonitor[START_MESS_MON_LINE];
 extern const char *const StartMessWorkMem[START_MESS_MEM_LINE];
 extern const com_menu MonCom[COMMAND_UNIT];
+extern uint8_t	gCOMMAND_Area[COMMAND_BUFFER_SIZE];
+extern uint32_t	gTerminal;
 
 char gKeyBuf[64];
 int32_t gComNo;
+
 
 void Main(void)
 {
@@ -59,6 +65,7 @@ void InitMain(void)
 #endif
 	dg_init_emmc();
 	SetgPrrData();
+	USB_Init();
 }
 
 void StartMess( void )
@@ -72,11 +79,44 @@ void StartMess( void )
 
 void DecCom(void)
 {
-	char tmp[64],chCnt,chPtr;
+	char tmp[64], chCnt, chPtr;
+	uint32_t rtn = 0;
+	uint32_t res;
+	chCnt = 1;
 
-	while(1){
-		PutStr(">",0);
-		GetStr(gKeyBuf,&chCnt);
+	PutStr(">", 0);
+
+	while (rtn == 0) {
+		rtn = USB_TerminalInputCheck(gCOMMAND_Area);
+		if (rtn > 0) {
+			gTerminal = USB_TERMINAL;
+			gKeyBuf[0] = gCOMMAND_Area[0];
+
+			PutMess(StartMessMonitor);
+			PutMess(StartMessWorkMem);
+			PutStr(">", 0);
+			USB_IntCheck();
+		}
+
+		if (rtn == 0) {
+			rtn = SCIF_TerminalInputCheck(gKeyBuf);
+		}
+		if (0 < rtn) {
+			if (gKeyBuf[0] == CR_CODE) {
+				PutChar(LF_CODE);
+				PutChar(CR_CODE);
+				PutStr(">", 0);
+				chCnt = 0;
+
+			} else if (gKeyBuf[0] != LF_CODE) {
+				PutChar(gKeyBuf[0]);
+			}
+		}
+	}
+
+	while(1)
+	{
+		GetStr(gKeyBuf+chCnt,&chCnt);
 		chPtr=0;
 		GetStrBlk(gKeyBuf,tmp,&chPtr,0);
 		if(chPtr!=1){
@@ -86,6 +126,9 @@ void DecCom(void)
 			}
 			else PutStr("command not found",1);
 		}
+		PutStr(">",0);
+		chCnt=0;
+		USB_IntCheck();
 	}
 }
 

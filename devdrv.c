@@ -33,13 +33,22 @@
 #include	"devdrv.h"
 #include	"scifdrv.h"
 
+uint32_t	gTerminal = SCIF2_TERMINAL;
+
 /************************
 	PutChar				*
 *************************/
 
 int32_t PutChar(char outChar)
 {
-	PutCharSCIF2(outChar);
+	if (gTerminal == USB_TERMINAL)
+	{
+		PutCharUSB(outChar);
+	}
+	else
+	{
+		PutCharSCIF2(outChar);
+	}
 	return(0);
 }
 
@@ -49,7 +58,14 @@ int32_t PutChar(char outChar)
 
 int32_t GetChar(char *inChar)
 {
-	GetCharSCIF2(inChar);
+	if (gTerminal == USB_TERMINAL)
+	{
+		GetCharUSB(inChar);
+	}
+	else
+	{
+		GetCharSCIF2(inChar);
+	}
 	return(0);
 }
 

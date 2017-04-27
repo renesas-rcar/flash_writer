@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-int32_t PutCharSCIF2(char outChar);
-int32_t GetCharSCIF2(char *inChar);
-void PowerOnScif2(void);
-void WaitPutScif2SendEnd(void);
-void InitScif2_SCIFCLK(void);
-void SetScif2_DL(uint16_t setData);
-void SetScif2_BRR(uint8_t setData);
-void InitScif2PinFunction(void);
-uint32_t SCIF_TerminalInputCheck(char* str);
+#ifndef DRAM_SUB_FUNC_H_
+#define DRAM_SUB_FUNC_H_
+
+#define DRAM_BOOT_STATUS_COLD	(0U)
+#define DRAM_BOOT_STATUS_WARM	(1U)
+
+#define DRAM_UPDATE_STATUS_ERR	(-1)
+
+void dram_get_boot_status(uint32_t *status);
+int32_t dram_update_boot_status(uint32_t status);
+
+#endif /* DRAM_SUB_FUNC_H_ */

@@ -29,6 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef COMMON_H
+#define COMMON_H
+
 #include <stdint.h>
 
 
@@ -62,11 +65,16 @@
 #define		SIZE_32BIT		4			// Old name : LONG_SIZE
 #define		SIZE_64BIT		8			// New
 
+#define		SCIF2_TERMINAL		0
+#define		USB_TERMINAL		1
+#define		COMMAND_BUFFER_SIZE	1024
 /****************************
 	Module Proto Type		*
 ****************************/
 int32_t PutMess(const char *const mess[]);
 int32_t	PutStr(const char *str,char rtn);
+int32_t PutCharUSB(char outChar);
+int32_t GetCharUSB(char *inChar);
 int32_t	GetStr(char *str,char *chCnt);
 int32_t	GetStr_MemEd(char *str,char *chCnt);
 uint32_t Hex2Ascii(int32_t hexdata,char *str,int32_t *chcnt);
@@ -82,3 +90,5 @@ void SoftDelay(uint32_t roop);
 void WaitKeyIn_Y(void);
 char WaitKeyIn_YorN(void);
 int32_t	GetStr_MemEd(char *str,char *chCnt);
+
+#endif

@@ -818,7 +818,7 @@ static uint32_t InputExtCsdParam( uint32_t *index, uint32_t *value )
 	int32_t lchCnt;
 	int8_t buf[16];
 	int8_t key[16];
-	int8_t chCnt;
+	int8_t chCnt = 0;
 	int8_t chPtr;
 
 	loop = EMMC_EXT_CSD_INPUT_INDEX;

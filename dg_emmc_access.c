@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,6 +44,7 @@
 #include	"dgmodul1.h"
 #include	"devdrv.h"
 #include	"b_boarddrv.h"
+#include	"usb_lib.h"
 
 #define		SIZE2SECTOR(x)				( (x) >> 9 )	/* 512Byte		*/
 
@@ -62,12 +63,14 @@
 #define		EMMC_SECURERAM_SADD			0xE6300000U
 #define		EMMC_SECURERAM_EADD			0xE635FFFFU
 
+#define		DMA_TRANSFER_SIZE       (0x20)                /* DMA Transfer size =  32 Bytes*/
+#define		DMA_ROUNDUP_VALUE       (0xFFFFFFE0)
+
  /* Product Register */
 #define		PRR							(0xFFF00044U)
 #define		PRR_PRODUCT_MASK			(0x00007F00U)
 #define		PRR_PRODUCT_H3				(0x00004F00U)	/* R-Car H3 */
 #define		PRR_PRODUCT_M3				(0x00005200U)	/* R-Car M3 */
-
 
 typedef enum
 {
@@ -96,11 +99,20 @@ typedef struct
 	uint32_t	maxSectorCount[EMMC_PARTITION_MAX];
 }EMMC_SECTOR;
 
+typedef enum
+{
+	EMMC_WRITE_MOT = 0,
+	EMMC_WRITE_BINARY,
+}EMMC_WRITE_COMMAND;
 
+extern uint32_t	gTerminal;
+
+static void dg_emmc_write_bin_serial(uint32_t* workStartAdd, uint32_t fileSize);
 static EMMC_ERROR_CODE dg_emmc_init(void);
 static uint32_t InputEmmcSector( EMMC_PARTITION partitionArea, uint32_t maxSectorCnt, uint32_t *startSector, uint32_t *sizeSector, EMMC_INPUT_TYPE type );
 static uint32_t InputEmmcSectorArea( EMMC_PARTITION *partitionArea );
 static uint32_t InputEmmcPrgStartAdd( uint32_t *prgStartAdd );
+static uint32_t InputFileSize( uint32_t *fileSize );
 static int32_t ChkSectorSize( uint32_t maxSectorCnt, uint32_t startSector, uint32_t sizeSector );
 static void SetSectorData(EMMC_SECTOR *sectorData);
 static void DispAreaData(EMMC_SECTOR sectorData);
@@ -193,7 +205,7 @@ static EMMC_ERROR_CODE	dg_emmc_init(void)
 	COMMAND				: EMMC_W								*
 	INPUT PARAMETER		: EMMC_W								*
 *****************************************************************/
-void	dg_emmc_write(void)
+void	dg_emmc_write(EMMC_WRITE_COMMAND wc)
 {
 
 	EMMC_ERROR_CODE result;
@@ -219,10 +231,19 @@ void	dg_emmc_write(void)
 	uint32_t	SecEndAdd;
 	uint32_t	SecCnt;
 
+	uint32_t	totalDownloadSize;
+	uint32_t	fileSize;
+
 	int32_t chCnt;
 	int8_t buf[16];
 	int8_t motLoad = 1;
 	int8_t oldPartitionConfig;
+
+	const int8_t startMessage[][32] = {"EM_W Start --------------",
+					   "EM_WB Start --------------"};
+
+	const int8_t endMessage[][32] =	{"EM_W Complete!",
+					 "EM_WB Complete!"};
 
 	result = dg_emmc_check_init();
 	if( EMMC_SUCCESS != result )
@@ -231,7 +252,7 @@ void	dg_emmc_write(void)
 		return;
 	}
 
-	PutStr("EM_W Start --------------",1);
+	PutStr(startMessage[wc], 1);
 
 //sector data disp
 	SetSectorData( &sectorData );
@@ -275,10 +296,13 @@ void	dg_emmc_write(void)
 	mmcPrgStartAdd		= sectorStartAddress<<9;
 
 //Input address( program start address)
-	chkInput = InputEmmcPrgStartAdd( &prgStartAdd );
-	if( 1 != chkInput )
+	if (wc == EMMC_WRITE_MOT)
 	{
-		return;
+		chkInput = InputEmmcPrgStartAdd( &prgStartAdd );
+		if( 1 != chkInput )
+		{
+			return;
+		}
 	}
 
 // WorkMemory CLEAR (Write H'00000000)
@@ -297,7 +321,33 @@ void	dg_emmc_write(void)
 	}
 
 // MOT file load
-	motLoad = dg_emmc_mot_load(&workAdd_Max ,&workAdd_Min, prgStartAdd);
+	if (wc == EMMC_WRITE_MOT)
+	{
+		motLoad = dg_emmc_mot_load(&workAdd_Max ,&workAdd_Min, prgStartAdd);
+	}
+	else
+	{
+		chkInput = InputFileSize( &fileSize );
+		if( 1 != chkInput )
+		{
+			return;
+		}
+		PutStr("please send binary file!",1);
+
+		if (gTerminal == 1)
+		{
+			totalDownloadSize = ((fileSize + (DMA_TRANSFER_SIZE - 1)) & DMA_ROUNDUP_VALUE);
+
+			USB_ReadDataWithDMA((unsigned long)Load_workStartAdd, totalDownloadSize);
+		}
+		else
+		{
+			dg_emmc_write_bin_serial(Load_workStartAdd, fileSize);
+		}
+
+		workAdd_Min = (uintptr_t)Load_workStartAdd;
+		workAdd_Max = workAdd_Min + fileSize - 1;
+	}
 
 #ifdef EMMC_DEBUG
 	PutStr("workAdd_Min    = 0x",0);
@@ -308,10 +358,13 @@ void	dg_emmc_write(void)
 	PutStr(buf,1);
 #endif /* EMMC_DEBUG */
 
-	if( 1 == motLoad )
+	if (wc == EMMC_WRITE_MOT)
 	{
-		PutStr("EM_W mot file read ERR",1);
-		return;
+		if( 1 == motLoad )
+		{
+			PutStr("EM_W mot file read ERR",1);
+			return;
+		}
 	}
 
 //transfer data calc
@@ -362,9 +415,51 @@ void	dg_emmc_write(void)
     }
 
 // Change original EXT_CSD
-    PutStr("EM_W Complete!",1);
+	PutStr(endMessage[wc], 1);
 }
 
+/****************************************************************
+	MODULE				: dg_emmc_write_bin							*
+FUNCTION			: Write Memory to eMMC (Binary)					*
+	COMMAND				: EMMC_WB								*
+	INPUT PARAMETER		: EMMC_WB								*
+*****************************************************************/
+void	dg_emmc_write_bin(void)
+{
+	dg_emmc_write(EMMC_WRITE_BINARY);
+}
+
+/****************************************************************
+	MODULE				: dg_emmc_write_mot							*
+FUNCTION			: Write Memory to eMMC					*
+	COMMAND				: EMMC_W								*
+	INPUT PARAMETER		: EMMC_W								*
+*****************************************************************/
+void dg_emmc_write_mot(void)
+{
+	dg_emmc_write(EMMC_WRITE_MOT);
+}
+
+/****************************************************************
+	MODULE				: dg_emmc_write_bin_serial							*
+FUNCTION			: Write Memory to eMMC (Binary(Serial))					*
+	COMMAND				: EMMC_WB								*
+	INPUT PARAMETER		: EMMC_WB								*
+*****************************************************************/
+static void dg_emmc_write_bin_serial(uint32_t* workStartAdd, uint32_t fileSize)
+{
+	uint32_t i;
+	int8_t byteData = 0;
+	uintptr_t ptr;
+
+	ptr = (uintptr_t)workStartAdd;
+	for (i = 0; i < fileSize; i++)
+	{
+		GetChar(&byteData);
+		*((uint8_t *)ptr) = byteData;
+		ptr++;
+	}
+}
 
 /****************************************************************
 	MODULE				: dg_emmc_erase							*
@@ -623,7 +718,7 @@ static uint32_t InputEmmcSector( EMMC_PARTITION partitionArea, uint32_t maxSecto
 	int32_t chkInput;
 	int8_t str[64];
 	int8_t buf[16];
-	int8_t chCnt;
+	int8_t chCnt = 0;
 	int8_t chPtr;
 
 	//Input Start Address and Size (sector)
@@ -716,7 +811,7 @@ static uint32_t InputEmmcSectorArea( EMMC_PARTITION *partitionArea )
 	uint32_t wrData;
 	int8_t str[64];
 	int8_t buf[16];
-	int8_t chCnt;
+	int8_t chCnt = 0;
 	int8_t chPtr;
 
 	loop=1;
@@ -781,7 +876,7 @@ static uint32_t InputEmmcPrgStartAdd( uint32_t *prgStartAdd )
 	uint32_t wrData;
 	int8_t key[16];
 	int8_t buf[16];
-	int8_t chCnt;
+	int8_t chCnt = 0;
 	int8_t chPtr;
 
 	loop = 1;
@@ -824,6 +919,52 @@ static uint32_t InputEmmcPrgStartAdd( uint32_t *prgStartAdd )
 
 	return(1);
 }
+
+/****************************************************************
+	MODULE				: InputFileSize					*
+	FUNCTION			: Input Binary File Size				*
+	COMMAND				: 										*
+	INPUT PARAMETER		: 										*
+*****************************************************************/
+static uint32_t InputFileSize( uint32_t *fileSize )
+{
+	uint32_t loop;
+	uint32_t wrData;
+	int8_t str[16];
+	int8_t buf[16];
+	int8_t chCnt = 0;
+	int8_t chPtr;
+
+	loop = 1;
+	while(loop)
+	{
+		PutStr("Please Input File size(byte) : ",0);
+		GetStr(str,&chCnt);
+		chPtr=0;
+		if(!GetStrBlk(str,buf,&chPtr,0))
+		{
+			if(chPtr==1)
+			{									/* Case Return */
+				return(0);
+			}
+			else
+			{
+				if(HexAscii2Data((uint8_t*)buf,&wrData))
+				{
+					PutStr("Syntax Error",1);
+				}
+				else
+				{
+					*fileSize = wrData;
+					loop =0;
+				}
+			}
+		}
+	}
+
+	return(1);
+}
+
 
 /****************************************************************
 	MODULE				: ChkSectorSize							*

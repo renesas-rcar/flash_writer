@@ -1,8 +1,39 @@
+MEMORY {
+	ROM (rxa): ORIGIN = 0x00000000, LENGTH = 0x0003FFFF
+	RAM (rwxa): ORIGIN = 0xE6300000, LENGTH = 0x0003FFFF
+}
+
 SECTIONS
 {
-	. = 0x00000000;
-	.text : { *(.text) }
-	. = 0xE6328000;
-	.data : { *(.data) }
-	.bss : { *(.bss) }
+	.text : {
+		*(.text*)
+		*(.rodata*)
+		. = NEXT(64);
+		__RO_END__ = .;
+		__DATA_COPY_START__ = .;
+	} > ROM
+
+	.data : {
+		__DATA_START__ = .;
+		 *(.data)
+		__DATA_END__ = .;
+	} > RAM AT > ROM
+
+	__DATA_SIZE__ = SIZEOF(.data);
+
+	.bss : {
+		__BSS_START__ = .;
+		 *(.bss)
+		 *(COMMON)
+		 . = NEXT(64);
+		__BSS_END__ = .;
+	} > RAM AT > ROM
+
+	stacks (NOLOAD) : ALIGN(64) {
+		__STACKS_START__ = .;
+		KEEP(*(writer_stack))
+		__STACKS_END__ = .;
+	} >RAM
+
+	__BSS_SIZE__ = SIZEOF(.bss);
 }

@@ -39,7 +39,8 @@ extern void	dg_emmc_set_ext_csd(void);
 
 extern void dg_init_emmc(void);
 extern unsigned long dg_emmc_check_init(void);
-extern void	dg_emmc_write(void);
+extern void	dg_emmc_write_mot(void);
+extern void	dg_emmc_write_bin(void);
 extern void	dg_emmc_erase(void);
 extern void	InitMmcDrv(void);
 

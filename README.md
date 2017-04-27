@@ -2,7 +2,7 @@ About the eMMC writer
 =====================
 <Div Align="right">
 Renesas Electronics Corporation<BR>
-Mar-31-2017
+Apr-28-2017
 </Div><BR>
 
 The eMMC writer is sample software for R-Car H3 / M3 series.  

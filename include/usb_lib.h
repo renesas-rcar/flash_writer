@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-int32_t PutCharSCIF2(char outChar);
-int32_t GetCharSCIF2(char *inChar);
-void PowerOnScif2(void);
-void WaitPutScif2SendEnd(void);
-void InitScif2_SCIFCLK(void);
-void SetScif2_DL(uint16_t setData);
-void SetScif2_BRR(uint8_t setData);
-void InitScif2PinFunction(void);
-uint32_t SCIF_TerminalInputCheck(char* str);
+#ifndef USB_LIB_H_
+#define USB_LIB_H_
+
+int32_t USB_Init(void);
+int32_t USB_TerminalInputCheck(uint8_t *command_area);
+void USB_IntCheck(void);
+int USB_ReadCount(void);
+int USB_ReadData(uint8_t *pBuff, int iDataSize);
+int USB_WriteData(uint8_t *pBuff, int iDataSize);
+void USB_ReadDataWithDMA(unsigned long bufferAddress, uint32_t totalDownloadSize);
+
+#endif /* USB_LIB_H_ */

@@ -35,7 +35,7 @@
 ***********************/
 
 const char *const StartMessMonitor[START_MESS_MON_LINE] = {
-				"eMMC Writer for R-Car H3/M3 Series V1.01 Mar.15,2017",
+				"eMMC Writer for R-Car H3/M3 Series V1.02 Apr.28,2017",
 				MESSAGE_END,
 };
 
@@ -52,6 +52,7 @@ const char *const AllHelpMess[ALL_HELP_MESS_LINE] = {
 				" EM_DECSD       display register EXT_CSD",
 				" EM_SECSD       change register EXT_CSD byte",
 				" EM_W           write program to eMMC",
+				" EM_WB          write program to eMMC (Binary)",
 				" EM_E           erase program to eMMC",
 				" SUP            Scif speed UP (Change to speed up baud rate setting)",
 				" H              help",

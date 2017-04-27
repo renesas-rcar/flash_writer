@@ -1,5 +1,5 @@
 ;/*
-; * Copyright (c) 2015-2016, Renesas Electronics Corporation
+; * Copyright (c) 2015-2017, Renesas Electronics Corporation
 ; * All rights reserved.
 ; *
 ; * Redistribution and use in source and binary forms, with or without
@@ -41,12 +41,12 @@
 ;########################################################
 
 ;#System RAM
-.EQU	STACK_IRQ_ADR,	0xE6330000		;# IRQ mode (unused)
-.EQU	STACK_FIQ_ADR,	0xE632FE00		;# FIQ mode (unused)
-.EQU	STACK_ABT_ADR,	0xE632FC00		;# ABT mode (unused)
-.EQU	STACK_SVC_ADR,	0xE632FA00		;# SVC(SWI) mode (unused)
-.EQU	STACK_UND_ADR,	0xE632F800		;# UND mode(unused)
-.EQU	STACK_SYS_ADR,	0xE632F600		;# SYS mode
+.EQU	STACK_IRQ_ADR,	__STACKS_END__		;# IRQ mode (unused)
+.EQU	STACK_FIQ_ADR,	__STACKS_END__		;# FIQ mode (unused)
+.EQU	STACK_ABT_ADR,	__STACKS_END__		;# ABT mode (unused)
+.EQU	STACK_SVC_ADR,	__STACKS_END__		;# SVC(SWI) mode (unused)
+.EQU	STACK_UND_ADR,	__STACKS_END__		;# UND mode(unused)
+.EQU	STACK_SYS_ADR,	__STACKS_END__		;# SYS mode
 
 
 ;#################### CPSR bit ##########################

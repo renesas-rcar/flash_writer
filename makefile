@@ -29,7 +29,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-#/* Select BOOT("AREA0"or"SPI"or"WRITER"or"WRITER_WITH_CERT" )******************
+#/* Select BOOT("AREA0"or"WRITER"or"WRITER_WITH_CERT" )*************************
 ifeq ("$(BOOT)", "")
 BOOT = WRITER_WITH_CERT
 endif
@@ -54,13 +54,15 @@ endif
 
 ifeq ("$(AArch)", "32")
 	THUMB   = -marm
-	AS_NEON = -mfpu=neon-vfpv4
-	CC_NEON = -mfpu=neon-vfpv4
+	AS_NEON = 
+	CC_NEON = 
+	ALIGN   = -mno-unaligned-access
 endif
 ifeq ("$(AArch)", "64")
 	THUMB   = 
 	AS_NEON = 
 	CC_NEON = -mgeneral-regs-only
+	ALIGN   = -mstrict-align
 endif
 
 ifeq ("$(AArch)", "32")
@@ -80,6 +82,7 @@ endif
 
 LIBS        = -L$(subst libc.a, ,$(shell $(CC) -print-file-name=libc.a 2> /dev/null)) -lc
 LIBS        += -L$(subst libgcc.a, ,$(shell $(CC) -print-libgcc-file-name 2> /dev/null)) -lgcc
+LIBS        += -L./$(AArch32_64)_lib/ -lusb
 
 INCLUDE_DIR = include
 TOOL_DEF = "REWRITE_TOOL"
@@ -88,12 +91,6 @@ ifeq ("$(BOOT)", "AREA0")
 	BOOT_DEF    = Area0Boot
 	MEMORY_DEF = memory_area0.def
 	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_eMMC_Writer_Area0
-endif
-
-ifeq ("$(BOOT)", "SPI")
-	BOOT_DEF    = SpiBoot
-	MEMORY_DEF = memory_spi.def
-	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_eMMC_Writer_Spi_E6330000
 endif
 
 ifeq ("$(BOOT)", "WRITER")
@@ -119,112 +116,48 @@ endif
 OUTPUT_FILE = $(FILE_NAME).axf
 
 #Object file
-OBJ_FILE_BOOT = $(OBJECT_DIR)/boot_mon.o
+OBJ_FILE_BOOT =							\
+	$(OBJECT_DIR)/boot_mon.o			\
+	$(OBJECT_DIR)/stack.o
 
-ifeq ("$(BOOT)", "SPI")
-OBJ_FILE =								\
-	$(OBJECT_DIR)/main.o				\
-	$(OBJECT_DIR)/scifdrv.o				\
-	$(OBJECT_DIR)/devdrv.o				\
-	$(OBJECT_DIR)/common.o				\
-	$(OBJECT_DIR)/dginit.o				\
-	$(OBJECT_DIR)/dgtable.o				\
-	$(OBJECT_DIR)/dgmodul1.o			\
-	$(OBJECT_DIR)/Message.o				\
-	$(OBJECT_DIR)/ramckmdl.o			\
-	$(OBJECT_DIR)/armasm.o				\
-	$(OBJECT_DIR)/cpudrv.o				\
-	$(OBJECT_DIR)/b_boarddrv.o			\
-	$(OBJECT_DIR)/dg_emmc_config.o		\
-	$(OBJECT_DIR)/dg_emmc_access.o		\
-	$(OBJECT_DIR)/timer_api.o			\
-	$(OBJECT_DIR)/emmc_cmd.o			\
-	$(OBJECT_DIR)/emmc_init.o			\
-	$(OBJECT_DIR)/emmc_interrupt.o		\
-	$(OBJECT_DIR)/emmc_mount.o			\
-	$(OBJECT_DIR)/emmc_write.o			\
-	$(OBJECT_DIR)/emmc_erase.o			\
-	$(OBJECT_DIR)/emmc_utility.o		\
-	$(OBJECT_DIR)/boot_init_lbsc.o		\
+SRC_FILE :=						\
+	main.c						\
+	scifdrv.c					\
+	devdrv.c					\
+	common.c					\
+	dginit.c					\
+	dgtable.c					\
+	dgmodul1.c					\
+	Message.c					\
+	ramckmdl.c					\
+	armasm.c					\
+	cpudrv.c					\
+	b_boarddrv.c					\
+	dg_emmc_config.c				\
+	dg_emmc_access.c				\
+	timer_api.c					\
+	emmc_cmd.c					\
+	emmc_init.c					\
+	emmc_interrupt.c				\
+	emmc_mount.c					\
+	emmc_write.c					\
+	emmc_erase.c					\
+	emmc_utility.c					\
+	boot_init_lbsc.c				\
+	boot_init_port_M3.c				\
+	boot_init_gpio.c				\
+	micro_wait.c					\
 
-#Dependency File
-DEPEND_FILE = $(patsubst %.lib, ,$(OBJ_FILE:%.o=%.d))
-
-#BOOT= "WRITER_WITH_CERT"
-else
 ifeq ("$(BOOT)", "WRITER_WITH_CERT")
-OBJ_FILE =								\
-	$(OBJECT_DIR)/cert_param.o			\
-	$(OBJECT_DIR)/main.o				\
-	$(OBJECT_DIR)/scifdrv.o				\
-	$(OBJECT_DIR)/devdrv.o				\
-	$(OBJECT_DIR)/common.o				\
-	$(OBJECT_DIR)/dginit.o				\
-	$(OBJECT_DIR)/dgtable.o				\
-	$(OBJECT_DIR)/dgmodul1.o			\
-	$(OBJECT_DIR)/Message.o				\
-	$(OBJECT_DIR)/ramckmdl.o			\
-	$(OBJECT_DIR)/armasm.o				\
-	$(OBJECT_DIR)/cpudrv.o				\
-	$(OBJECT_DIR)/b_boarddrv.o			\
-	$(OBJECT_DIR)/dg_emmc_config.o		\
-	$(OBJECT_DIR)/dg_emmc_access.o		\
-	$(OBJECT_DIR)/timer_api.o			\
-	$(OBJECT_DIR)/emmc_cmd.o			\
-	$(OBJECT_DIR)/emmc_init.o			\
-	$(OBJECT_DIR)/emmc_interrupt.o		\
-	$(OBJECT_DIR)/emmc_mount.o			\
-	$(OBJECT_DIR)/emmc_write.o			\
-	$(OBJECT_DIR)/emmc_erase.o			\
-	$(OBJECT_DIR)/emmc_utility.o		\
-	$(OBJECT_DIR)/boot_init_lbsc.o		\
-	$(OBJECT_DIR)/boot_init_port_M3.o	\
-	$(OBJECT_DIR)/boot_init_gpio.o		\
-	$(OBJECT_DIR)/boot_init_dram.o		\
-	$(OBJECT_DIR)/dram_sub_func.o		\
-	$(OBJECT_DIR)/micro_wait.o
+	SRC_FILE += cert_param.c
+endif
+
+include ddr/ddr.mk
+
+OBJ_FILE := $(addprefix $(OBJECT_DIR)/,$(patsubst %.c,%.o,$(SRC_FILE)))
 
 #Dependency File
 DEPEND_FILE = $(patsubst %.lib, ,$(OBJ_FILE:%.o=%.d))
-
-
-#BOOT= "AREA0" or "WRITER"
-else
-OBJ_FILE =								\
-	$(OBJECT_DIR)/main.o				\
-	$(OBJECT_DIR)/scifdrv.o				\
-	$(OBJECT_DIR)/devdrv.o				\
-	$(OBJECT_DIR)/common.o				\
-	$(OBJECT_DIR)/dginit.o				\
-	$(OBJECT_DIR)/dgtable.o				\
-	$(OBJECT_DIR)/dgmodul1.o			\
-	$(OBJECT_DIR)/Message.o				\
-	$(OBJECT_DIR)/ramckmdl.o			\
-	$(OBJECT_DIR)/armasm.o				\
-	$(OBJECT_DIR)/cpudrv.o				\
-	$(OBJECT_DIR)/b_boarddrv.o			\
-	$(OBJECT_DIR)/dg_emmc_config.o		\
-	$(OBJECT_DIR)/dg_emmc_access.o		\
-	$(OBJECT_DIR)/timer_api.o			\
-	$(OBJECT_DIR)/emmc_cmd.o			\
-	$(OBJECT_DIR)/emmc_init.o			\
-	$(OBJECT_DIR)/emmc_interrupt.o		\
-	$(OBJECT_DIR)/emmc_mount.o			\
-	$(OBJECT_DIR)/emmc_write.o			\
-	$(OBJECT_DIR)/emmc_erase.o			\
-	$(OBJECT_DIR)/emmc_utility.o		\
-	$(OBJECT_DIR)/boot_init_lbsc.o		\
-	$(OBJECT_DIR)/boot_init_port_M3.o	\
-	$(OBJECT_DIR)/boot_init_gpio.o		\
-	$(OBJECT_DIR)/boot_init_dram.o		\
-	$(OBJECT_DIR)/dram_sub_func.o		\
-	$(OBJECT_DIR)/micro_wait.o
-
-#Dependency File
-DEPEND_FILE = $(patsubst %.lib, ,$(OBJ_FILE:%.o=%.d))
-endif
-endif
-
 
 ###################################################
 #C compiler
@@ -241,7 +174,7 @@ OBJDMP = $(CROSS_COMPILE)objdump
 OBJCOPY = $(CROSS_COMPILE)objcopy
 
 #clean
-CL = rm -f
+CL = rm -rf
 
 ###################################################
 # Suffixes
@@ -251,7 +184,7 @@ CL = rm -f
 # Command
 
 .PHONY: all
-all: $(OBJECT_DIR) $(OUTPUT_DIR) $(OBJ_FILE_BOOT) $(OBJ_FILE)  $(OUTPUT_FILE)
+all: $(OBJECT_DIR) $(OUTPUT_DIR) $(OBJ_FILE_BOOT) $(OBJ_FILE) $(OUTPUT_FILE)
 
 #------------------------------------------
 # Make Directory
@@ -268,15 +201,16 @@ $(OUTPUT_DIR):
 %.o:../$(BOOTDIR)/%.s
 	$(AS)  -g $(CPU) $(AS_NEON) --MD $(patsubst %.o,%.d,$@) -I $(BOOTDIR) -I $(INCLUDE_DIR) $< -o $@ --defsym $(AArch32_64)=0 --defsym $(BOOT_DEF)=0 --defsym $(TOOL_DEF)=0 --defsym $(SCIF_DEF)=0
 
-%.o:../%.c
-	$(CC) -g -Os $(CPU) $(CC_NEON) $(THUMB) -MMD -MP -c -I $(BOOTDIR) -I $(INCLUDE_DIR) $< -o $@ -D$(AArch32_64)=0 -D$(BOOT_DEF)=0 -D$(TOOL_DEF)=0 -D$(SCIF_DEF)=0
-
+#%.o:../%.c
+$(OBJECT_DIR)/%.o:%.c
+	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
+	$(CC) -g -Os $(ALIGN) $(CPU) $(CC_NEON) $(THUMB) -MMD -MP -c -I $(BOOTDIR) -I $(INCLUDE_DIR) $< -o $@ -D$(AArch32_64)=0 -D$(BOOT_DEF)=0 -D$(TOOL_DEF)=0 -D$(SCIF_DEF)=0
 
 #------------------------------------------
 # Linker
 #------------------------------------------
-$(OUTPUT_FILE): $(OBJ_FILE_BOOT) $(OBJ_FILE)  $(MEMORY_DEF)
-	$(LD) $(OBJ_FILE_BOOT) $(OBJ_FILE)  \
+$(OUTPUT_FILE): $(OBJ_FILE_BOOT) $(OBJ_FILE) $(MEMORY_DEF)
+	$(LD) $(OBJ_FILE_BOOT) $(OBJ_FILE) \
 	-T '$(MEMORY_DEF)'			\
 	-o '$(OUTPUT_FILE)'			\
 	-Map '$(FILE_NAME).map' 	\

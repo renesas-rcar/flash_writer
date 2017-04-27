@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,8 +29,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include	"types.h"
 #include	"common.h"
 #include	"devdrv.h"
+#include	"usb_lib.h"
+
+__attribute__((aligned(32))) uint8_t		gCOMMAND_Area[COMMAND_BUFFER_SIZE];
+extern uint32_t	gTerminal;
 
 /************************************************************************/
 /*NAME		: PutMes													*/
@@ -62,6 +67,39 @@ int32_t	PutStr(const char *str,char rtn)
 
 }
 
+int32_t PutCharUSB(char outChar)
+{
+	char outCh;
+	outCh = outChar;
+	
+	(void)USB_WriteData(&outCh, 1);
+	USB_IntCheck();
+	return(0);
+}
+
+int32_t GetCharUSB(char *inChar)
+{
+	static int32_t numOfChar = 0;
+	static int32_t index = 0;
+	int32_t length = 0;
+	
+	while(numOfChar == 0)
+	{
+		numOfChar = USB_ReadCount();
+		length = USB_ReadData(gCOMMAND_Area, numOfChar);
+		USB_IntCheck();
+	}
+	*inChar = *((char*)(gCOMMAND_Area + index));
+	index++;
+	if (numOfChar == index)
+	{
+		index = 0;
+		numOfChar = 0;
+	}
+	return(0);
+}
+
+
 /************************************************************************/
 /*NAME		: GetStr													*/
 /************************************************************************/
@@ -71,7 +109,6 @@ int32_t	GetStr(char *str,char *chCnt)
 	int32_t	i;
 
 	intstr = str;
-	*chCnt=0;
 
 	while(1)
 	{
@@ -174,7 +211,7 @@ uint32_t Hex2Ascii(int32_t hexdata,char *str,int32_t *chcnt)
 
         *(str + i) = ch;
     }
-    *(str + 8) = NULL;
+    *(str + 8) = '\0';
 	*chcnt = 8;
 
 	return 0U;
@@ -218,7 +255,7 @@ uint32_t Hex2DecAscii(int32_t hexdata,char *str,int32_t *chcnt)
 	if(Count==0){
 		*str = '0';	str++;	Count++;
 	}
-	*str = NULL;
+	*str = '\0';
 	*chcnt = Count;
 	return(0);
 
@@ -426,3 +463,12 @@ char WaitKeyIn_YorN(void)
 	}
 }
 
+void *memset(void *dst, int val, unsigned long count)
+{
+	char *ptr = dst;
+
+	while (count--)
+		*ptr++ = val;
+
+	return dst;
+}
