@@ -44,6 +44,8 @@
 #include	"dgmodul1.h"
 #include	"devdrv.h"
 #include	"b_boarddrv.h"
+#include	"boardid.h"
+#include	"switch.h"
 #include	"usb_lib.h"
 
 #define		SIZE2SECTOR(x)				( (x) >> 9 )	/* 512Byte		*/
@@ -66,11 +68,6 @@
 #define		DMA_TRANSFER_SIZE       (0x20)                /* DMA Transfer size =  32 Bytes*/
 #define		DMA_ROUNDUP_VALUE       (0xFFFFFFE0)
 
- /* Product Register */
-#define		PRR							(0xFFF00044U)
-#define		PRR_PRODUCT_MASK			(0x00007F00U)
-#define		PRR_PRODUCT_H3				(0x00004F00U)	/* R-Car H3 */
-#define		PRR_PRODUCT_M3				(0x00005200U)	/* R-Car M3 */
 
 typedef enum
 {
@@ -117,7 +114,6 @@ static int32_t ChkSectorSize( uint32_t maxSectorCnt, uint32_t startSector, uint3
 static void SetSectorData(EMMC_SECTOR *sectorData);
 static void DispAreaData(EMMC_SECTOR sectorData);
 static int8_t dg_emmc_mot_load(uint32_t *maxADD ,uint32_t *minADD, uint32_t gUserPrgStartAdd );
-static void SwChgMmcVoltage(void);
 
 static uint32_t emmcInit;		/* eMMC drv init */
 
@@ -259,7 +255,7 @@ void	dg_emmc_write(EMMC_WRITE_COMMAND wc)
 	DispAreaData( sectorData );
 
 //Sw check
-	SwChgMmcVoltage();
+	SwChgeMMC[gBoardFlag].program();
 
 //Select Partition
 	chkInput = InputEmmcSectorArea( &partitionArea );
@@ -492,7 +488,7 @@ void	dg_emmc_erase(void)
 	DispAreaData( sectorData );
 
 //Sw check
-	SwChgMmcVoltage();
+	SwChgeMMC[gBoardFlag].program();
 
 //Select Partition
 	chkInput = InputEmmcSectorArea( &partitionArea );
@@ -1068,26 +1064,4 @@ static void DispAreaData(EMMC_SECTOR sectorData)
 
 	PutStr("---------------------------------------------------------",1);
 
-}
-
-/****************************************************************
-	MODULE				: SwChgMmcVoltage						*
-	FUNCTION			: Check SW								*
-	COMMAND				: 										*
-	INPUT PARAMETER		: 										*
-*****************************************************************/
-static void SwChgMmcVoltage(void)
-{
-	uint32_t product;
-
-	product = *((volatile uint32_t*)PRR) & PRR_PRODUCT_MASK;
-
-	if (product == PRR_PRODUCT_M3) {
-		if (SSI_WS6_OpenCheck()) {
-			PutStr("SW32 All OFF! Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(39);
-			PutStr("SW33 All ON!  Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(39);
-			PutStr("SW35 SW36 SW37 OFF! Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(45);
-			PutStr("SW39 SW40 SW41 ON!  Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(45);
-		}
-	}
 }

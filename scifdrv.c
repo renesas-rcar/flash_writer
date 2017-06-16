@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,14 +35,6 @@
 #include "reg_rcarh3.h"
 #include "devdrv.h"
 
-
- /* Product Register */
-#define PRR					(0xFFF00044U)
-#define PRR_PRODUCT_MASK	(0x00007F00U)
-#define PRR_CUT_MASK		(0x000000FFU)
-#define PRR_PRODUCT_H3		(0x00004F00U)           /* R-Car H3 */
-#define PRR_PRODUCT_M3		(0x00005200U)           /* R-Car M3 */
-#define RCAR_PRODUCT_H3_CUT10	(PRR_PRODUCT_H3 | 0x00U) /* H3 WS1.0 */
 
 //////////////////////////////////////////////////////////////////////////////////
 //                                                                              //
@@ -111,6 +103,7 @@ void InitScif2_SCIFCLK(void)
 
 	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0000;	/* clear SCR.TE & SCR.RE*/
 	*((volatile uint16_t*)SCIF2_SCFCR) = 0x0006;	/* reset tx-fifo, reset rx-fifo. */
+	*((volatile uint16_t*)SCIF2_SCFSR) = 0x0000;	/* clear ER, TEND, TDFE, BRK, RDF, DR */
 
 #ifdef SCIF_CLK_EXTERNAL
 	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0002;	/* external clock, SC_CLK pin used for input pin */
@@ -121,7 +114,7 @@ void InitScif2_SCIFCLK(void)
 	prr = *((volatile uint32_t*)PRR);
 	prr &= (PRR_PRODUCT_MASK | PRR_CUT_MASK);
 
-	if (prr == RCAR_PRODUCT_H3_CUT10) {
+	if (prr == (PRR_PRODUCT_H3 | PRR_CUT_10)) {
 		*((volatile uint16_t*)SCIF2_DL)    = 0x0010;	/* 14.7456MHz/ (57600*16) =  16 */
 	} else {
 		*((volatile uint16_t*)SCIF2_DL)    = 0x0008;	/* 14.7456MHz/ (115200*16) =  8 */
@@ -147,7 +140,7 @@ void InitScif2_SCIFCLK(void)
 	prr = *((volatile uint32_t*)PRR);
 	prr &= (PRR_PRODUCT_MASK | PRR_CUT_MASK);
 
-	if (prr == RCAR_PRODUCT_H3_CUT10) {
+	if (prr == PRR_PRODUCT_H3 | PRR_CUT_10)) {
 		*((volatile uint8_t*)SCIF2_SCBRR)  = 0x08;	/* 115200bps@33MHz */
 	} else {
 		*((volatile uint8_t*)SCIF2_SCBRR)  = 0x11;	/* 115200bps@66MHz */

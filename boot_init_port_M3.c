@@ -38,17 +38,6 @@
 #include "reg_rcarh3.h"
 #include "boot_init_port_M3.h"
 
- /* Product Register */
-#define PRR					(0xFFF00044U)
-#define PRR_PRODUCT_MASK	(0x00007F00U)
-#define PRR_CUT_MASK		(0x000000FFU)
-#define PRR_PRODUCT_H3		(0x00004F00U)           /* R-Car H3 */
-#define PRR_PRODUCT_M3		(0x00005200U)           /* R-Car M3 */
-#define PRR_PRODUCT_10		(0x00U)
-#define PRR_PRODUCT_11		(0x01U)
-#define PRR_PRODUCT_20		(0x10U)
-
-
 
 #define PFC_WR(m,n)   *((volatile uint32_t*)PFC_PMMR)=~(n);*((volatile uint32_t*)(m))=(n);
 
@@ -104,7 +93,7 @@ void InitPORT(void)
 	switch (product) {
 	case PRR_PRODUCT_H3:
 		InitMODSEL();
-	if (cut < PRR_PRODUCT_20) {
+	if (cut < PRR_CUT_20) {
 			InitIPSR_H3();
 			InitGPSR_H3();
 	} else {
@@ -316,7 +305,7 @@ static void StartRtDma0_Descriptor(void)
 
 	reg = *((volatile uint32_t *)PRR);
 	reg &= (PRR_CUT_MASK);
-	if (reg == (PRR_PRODUCT_10)) {
+	if (reg == (PRR_CUT_10)) {
 		/* Module stop clear */
 		while((*((volatile uint32_t *)CPG_RMSTPCR0) & RMSTPCR0_RTDMAC) != 0U) {
 			reg = *((volatile uint32_t *)CPG_RMSTPCR0);

@@ -16,6 +16,7 @@ SECTIONS
 	.data : {
 		__DATA_START__ = .;
 		 *(.data)
+		. = NEXT(64);
 		__DATA_END__ = .;
 	} > RAM AT > ROM
 

@@ -1,5 +1,4 @@
 #
-# Copyright (c) 2013-2015, ARM Limited and Contributors. All rights reserved.
 # Copyright (c) 2015-2017, Renesas Electronics Corporation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -87,22 +86,30 @@ LIBS        += -L./$(AArch32_64)_lib/ -lusb
 INCLUDE_DIR = include
 TOOL_DEF = "REWRITE_TOOL"
 
+ifeq ("$(BOARD)", "ULCB")
+	FILENAME_ADD = _ULCB
+	CFLAGS += -DRCAR_GEN3_ULCB=1
+else
+	FILENAME_ADD = 
+	CFLAGS += -DRCAR_GEN3_ULCB=0
+endif
+
 ifeq ("$(BOOT)", "AREA0")
 	BOOT_DEF    = Area0Boot
 	MEMORY_DEF = memory_area0.def
-	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_eMMC_Writer_Area0
+	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_Flash_writer_Area0$(FILENAME_ADD)
 endif
 
 ifeq ("$(BOOT)", "WRITER")
 	BOOT_DEF    = Writer
 	MEMORY_DEF = memory_writer.def
-	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_eMMC_writer_SCIF_E6304000
+	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_Flash_writer_SCIF_E6304000$(FILENAME_ADD)
 endif
 
 ifeq ("$(BOOT)", "WRITER_WITH_CERT")
 	BOOT_DEF    = Writer
 	MEMORY_DEF  = memory_writer_with_cert.def
-	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_eMMC_writer_SCIF_DUMMY_CERT_E6300400
+	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_Flash_writer_SCIF_DUMMY_CERT_E6300400$(FILENAME_ADD)
 endif
 
 ifeq ("$(SCIF_CLK)", "EXTERNAL")
@@ -116,7 +123,7 @@ endif
 OUTPUT_FILE = $(FILE_NAME).axf
 
 #Object file
-OBJ_FILE_BOOT =							\
+OBJ_FILE_BOOT =						\
 	$(OBJECT_DIR)/boot_mon.o			\
 	$(OBJECT_DIR)/stack.o
 
@@ -129,10 +136,19 @@ SRC_FILE :=						\
 	dgtable.c					\
 	dgmodul1.c					\
 	Message.c					\
+	spiflash1drv.c					\
+	spiflash0drv.c					\
+	dmaspi.c					\
 	ramckmdl.c					\
+	rpcqspidrv.c					\
+	dgmodul4.c					\
 	armasm.c					\
+	rpchyperdrv.c					\
+	hyperflashdrv.c					\
 	cpudrv.c					\
 	b_boarddrv.c					\
+	boardid.c					\
+	switch.c					\
 	dg_emmc_config.c				\
 	dg_emmc_access.c				\
 	timer_api.c					\
@@ -204,7 +220,7 @@ $(OUTPUT_DIR):
 #%.o:../%.c
 $(OBJECT_DIR)/%.o:%.c
 	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
-	$(CC) -g -Os $(ALIGN) $(CPU) $(CC_NEON) $(THUMB) -MMD -MP -c -I $(BOOTDIR) -I $(INCLUDE_DIR) $< -o $@ -D$(AArch32_64)=0 -D$(BOOT_DEF)=0 -D$(TOOL_DEF)=0 -D$(SCIF_DEF)=0
+	$(CC) -g -Os $(ALIGN) $(CPU) $(CC_NEON) $(THUMB) -MMD -MP -c -I $(BOOTDIR) -I $(INCLUDE_DIR) $< -o $@ -D$(AArch32_64)=0 -D$(BOOT_DEF)=0 -D$(TOOL_DEF)=0 -D$(SCIF_DEF)=0 $(CFLAGS)
 
 #------------------------------------------
 # Linker

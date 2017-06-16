@@ -1,27 +1,30 @@
 # 1. Overview
 -------------
 ## 1.1. Overview
-This document explains about R-Car H3/M3 eMMC writer sample software.
-The eMMC writer is downloaded from the Host PC via SCIF or USB by boot ROM.
-And the eMMC writer downloads the some of the raw images from Host PC via SCIF or USB, and writes the raw images to the eMMC.<BR>
-The eMMC writer supports High Speed SDR(i.e. 50MHz) and x8 bus width mode, and supports only MMC0 channel.<BR>
+This document explains about R-Car H3/M3 Flash writer sample software.
+The Flash writer is downloaded from the Host PC via SCIF or USB by boot ROM.
+And the Flash writer downloads the some of the raw images from Host PC via SCIF or USB, and writes the raw images to the Serial NOR Flash and HyperFlash&trade;(hereafter referred to as “Serial Flash”), eMMC.<BR>
+The Flash wrriter Serial Flash writing support is HyperFlash&trade; in SiP packge, and on-board Serial NOR Flash(i.e. S25FS128S).<BR>
+The Flash writer eMMC writing support is High Speed SDR(i.e. 50MHz) and x8 bus width mode, and supports only MMC0 channel.<BR>
 
 [Chapter 2](#2-operating-environment) describes the operating environment.<BR>
 [Chapter 3](#3-software) describes the software.<BR>
-[Chapter 4](#4-how-to-build-the-emmc-writer) explains example of how to build the eMMC writer.<BR>
-[Chapter 5](#5-how-to-run-emmc-writer) explains example of how to perform the eMMC writer.<BR>
+[Chapter 4](#4-how-to-build-the-flash-writer) explains example of how to build the Flash writer.<BR>
+[Chapter 5](#5-how-to-run-flash-writer) explains example of how to perform the Flash writer.<BR>
 [Chapter 6](#-6-usb-download-api) explains specifications of USB download API.<BR>
 [Chapter 7](#7-error-case-to-handle)  explains how to handle error case.<BR>
 
-*Note) This sample software does not support the file system. Therefore, can be write the raw image to the eMMC.*
+*Note) This sample software does not support the file system. Therefore, can be write the raw image to the Serial NOR Flash and HyperFlash&trade;, eMMC.*
 
 ## 1.2. References
 The following table shows the document related to this function.
 
 ##### Related Document
-| Number | Issue | Title                                                        | Edition      |
-|--------|-------|--------------------------------------------------------------|--------------|
-| 1      | JEDEC | Embedded Multi-Media Card (eMMC) Electrical Standard  (5.01) | JESD84-B50.1 |
+| Number | Issue   | Title                                                          | Edition      |
+|--------|---------|----------------------------------------------------------------|--------------|
+| 1      | JEDEC   | Embedded Multi-Media Card (eMMC) Electrical Standard (5.01)    | JESD84-B50.1 |
+| 2      | Cypress | S25FS128S, S25FS256S 1.8V, Serial Peripheral Interface with Multi-I/O, MirrorBit&reg; Non-Volatile Flash Datasheet | Rev. *J |
+| 3      | Cypress | 512 MBIT, 256 MBIT, 128 MBIT HYPERFLASH FAMILY Datasheet       | Rev. *H      |
 
 ## 1.3. Restrictions
 There is no restriction in this revision.
@@ -34,23 +37,23 @@ The following table lists the hardware needed to use this function.
 ##### Hardware environment (R-Car H3/M3)
 | Name                          | Note                                      |
 |-------------------------------|-------------------------------------------|
-| R-Car H3-SiP System Evaluation Board Salvator-X<BR>R-Car M3-SiP System Evaluation Board Salvator-X<BR>R-Car H3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3-SiP System Evaluation Board Salvator-XS|RTP0RC7795SIPB0010S / RTP0RC7795SIPB0011S<BR>RTP0RC7796SIPB0010S / RTP0RC7796SIPB0011S<BR>RTP0RC7795SIPB0011S<BR>RTP0RC7795SIPB0012S |
+| R-Car H3-SiP System Evaluation Board Salvator-X<BR>R-Car M3-SiP System Evaluation Board Salvator-X<BR>R-Car H3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3-SiP System Evaluation Board Salvator-XS|RTP0RC7795SIPB0010S / RTP0RC7795SIPB0011S<BR>RTP0RC7796SIPB0010S / RTP0RC7796SIPB0011S<BR>RTP0RC7795SIPB0012S<BR>RTP0RC7796SIPB0012S |
 | Host PC                       | Ubuntu Desktop 14.04(64bit) or later          |
 | USB cable (type A to micro B) | Connect to CN25 when using UART connection. (SCIF2)<BR>Connect to CN9 when using USB connection. (HS-USB) |
 
 *Note) RTP0RC7795SIPB0010S needs to update to the latest PMIC-EEPROM settings.*<BR>
-*Note) After starting the eMMC writer, CN9 and CN25 can not be used in parallel. Please use only either one.*
+*Note) After starting the Flash writer, CN9 and CN25 can not be used in parallel. Please use only either one.*
 
-The following table shows eMMC support for each SoC.
+The following table shows Serial Flash and eMMC support for each SoC.
 
-##### eMMC support status of each SoC
-| SoC              | Read/Write the eMMC | Boot from the eMMC |
-|------------------|---------------------|--------------------|
-| R-Car M3 Ver.1.1 | Support             | Support            |
-| R-Car M3 Ver.1.0 | Support             | Support            |
-| R-Car H3 Ver.2.0 | Support             | Support            |
-| R-Car H3 Ver.1.1 | Support             | Not support        |
-| R-Car H3 Ver.1.0 | Support             | Not support        |
+##### Serial Flash / eMMC support status of each SoC
+| SoC              | Read/Write the Serial Flash | Boot from the Serial Flash | Read/Write the eMMC | Boot from the eMMC |
+|------------------|-----------------------------|----------------------------|---------------------|--------------------|
+| R-Car M3 Ver.1.1 | Support                     | Support                    | Support             | Support            |
+| R-Car M3 Ver.1.0 | Support                     | Support                    | Support             | Support            |
+| R-Car H3 Ver.2.0 | Support                     | Support                    | Support             | Support            |
+| R-Car H3 Ver.1.1 | Support                     | Support                    | Support             | Not support        |
+| R-Car H3 Ver.1.0 | Support                     | Support                    | Support             | Not support        |
 
 The following table shows USB support for each SoC.
 
@@ -63,7 +66,7 @@ The following table shows USB support for each SoC.
 | R-Car H3 Ver.1.1 | Support               | Not support                     |
 | R-Car H3 Ver.1.0 | Support               | Not support                     |
 
-USB 2.0 High-speed is supported. USB device class is CDC ACM  compliant.<BR>
+USB 2.0 High-speed is supported. USB device class is CDC ACM compliant.<BR>
 Host PC's USB driver uses OS standard in-box driver.<BR>
 
 The following table shows USB Vendor ID and Product ID.
@@ -91,6 +94,8 @@ The following table lists the software needed to use this function.
 -------------
 ## 3.1. Function
 This package has the following functions.
+- Write to the images to the Serial Flash.
+- Erase the Serial Flash.
 - Display the CID/CSD/EXT_CSD registers of eMMC.
 - Modify the EXT_CSD registers of eMMC.
 - Write to the images to the boot partition of eMMC.
@@ -104,7 +109,7 @@ This package has the following functions.
 This module structure is shown below.
 #### Module structure
 ```text
-emmc_writer                     : root directory of eMMC writer
+flash_writer                    : root directory of Flash writer
 |-- AArch32_boot                : boot code for AArch32
 |-- AArch64_boot                : boot code for AArch64
 |-- AArch32_obj                 : object file output directory for AArch32
@@ -116,6 +121,7 @@ emmc_writer                     : root directory of eMMC writer
 |-- ddr                         : DRAM initialize code directory
 |-- include                     : header files directory
 |-- b_boarddrv.c                : identify the board type
+|-- boardid.c                   : identify the board type
 |-- boot_init_gpio.c            : GPIO initialize code
 |-- boot_init_lbsc.c            : Local bus state controller initialize code
 |-- boot_init_port_M3.c         : Pin function initialize code
@@ -127,19 +133,26 @@ emmc_writer                     : root directory of eMMC writer
 |-- dg_emmc_config.c            : eMMC device configuration code
 |-- dginit.c                    : initialize code
 |-- dgmodul1.c                  : miscellaneous code
+|-- dgmodul4.c                  : Serial NOR Flash/HyperFlash writer code
 |-- dgtable.c                   : command table
-|-- emmc_cmd.c                  : eMMC driver files
-|-- emmc_erase.c                : eMMC driver files
-|-- emmc_init.c                 : eMMC driver files
-|-- emmc_interrupt.c            : eMMC driver files
-|-- emmc_mount.c                : eMMC driver files
-|-- emmc_utility.c              : eMMC driver files
-|-- emmc_write.c                : eMMC driver files
+|-- dmaspi.c                    : DMA driver code
+|-- emmc_cmd.c                  : eMMC driver code
+|-- emmc_erase.c                : eMMC driver code
+|-- emmc_init.c                 : eMMC driver code
+|-- emmc_interrupt.c            : eMMC driver code
+|-- emmc_mount.c                : eMMC driver code
+|-- emmc_utility.c              : eMMC driver code
+|-- emmc_write.c                : eMMC driver code
 |-- main.c                      : main program
 |-- Message.c                   : Help message
 |-- micro_wait.c                : miscellaneous code
 |-- ramckmdl.c                  : memory clear code(i.e. memset)
+|-- rpchyperdrv.c               : HyperFlash driver code
+|-- rpcqspidrv.c                : Serial NOR Flash driver code
 |-- scifdrv.c                   : SCIF driver
+|-- spiflash0drv.c              : Serial NOR Flash driver code
+|-- spiflash1drv.c              : Serial NOR Flash driver code
+|-- switch.c                    : Dip-switch setting messages
 |-- timer_api.c                 : timer API for eMMC driver
 |-- memory_area0.def            : Linker script
 |-- memory_writer.def           : Linker script
@@ -148,18 +161,18 @@ emmc_writer                     : root directory of eMMC writer
 ```
 
 ## 3.3. Option setting
-The eMMC writer support the following build options.
+The Flash writer support the following build options.
 
 ### 3.3.1. AArch
 Select from the following table according to the target CPU architecture.<BR>
-If this option is not selected, the default value is 32.<BR>
+This option must match the using compiler.<BR>
 
 ##### Association table for the AArch value and valid CPU architecture
 
-| AArch | CPU architecture setting                                                                                                                            |
-|-------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| 32    | Generate binary that works on AArch32. (default)<BR>It works on both the AP-system Core(i.e. Cortex-A57) and the ARM Realtime Core(i.e. Cortex-R7). |
-| 64    | Generate binary that works on AArch64.<BR>It works on only the AP-System Core(i.e. Cortex-A57).                                                     |
+| AArch | CPU architecture setting                                                                                                                  |
+|-------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| 32    | Generate binary that works on AArch32.<BR>It works on both the AP-system Core(i.e. Cortex-A57) and the ARM Realtime Core(i.e. Cortex-R7). |
+| 64    | Generate binary that works on AArch64.<BR>It works on only the AP-System Core(i.e. Cortex-A57).                                 |
 
 
 
@@ -197,6 +210,9 @@ The following table shows the command list.
 ##### Command list
 | Command  | Description                                                                                        |
 |----------|----------------------------------------------------------------------------------------------------|
+| XLS2     | Write to the S-record format images to the Serial Flash.                                           |
+| XLS3     | Write to the raw binary images to the Serial Flash.                                                |
+| XCS      | Erase the Serial Flash.                                                                            |
 | EM_DCID  | Display the CID registers of eMMC.                                                                 |
 | EM_DCSD  | Display the CSD registers of eMMC.                                                                 |
 | EM_DECSD | Display the EXT_CSD registers of eMMC.                                                             |
@@ -207,7 +223,410 @@ The following table shows the command list.
 | SUP      | Change the SCIF baud rate setting.                                                                 |
 | H        | Display the command help.                                                                          |
 
-### 3.4.1. Display the CID registers command
+### 3.4.1. Write to the S-record format images to the Serial Flash
+This command writes the S-record format image to Serial Flash.<BR>
+
+##### Example of writing data for the Serial Flash boot
+| Filename                 | Program Top Address | Flash Save Address | Description            |
+|--------------------------|---------------------|--------------------|------------------------|
+| bootparam_sa0.srec       | H'E6320000          | H'000000           | Loader(Boot parameter) |
+| bl2-`<board_name>`.srec  | H'E6304000          | H'040000           | Loader                 |
+| cert_header_sa6.srec     | H'E6320000          | H'180000           | Loader(Certification)  |
+| bl31-`<board_name>`.srec | H'44000000          | H'1C0000           | ARM Trusted Firmware   |
+| tee-`<board_name>`.srec  | H'44100000          | H'200000           | OP-TEE                 |
+| u-boot-elf.srec          | H'50000000          | H'640000           | U-boot                 |
+
+The following shows the procedure of this command.
+
+```text
+>XLS2
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>
+```
+
+Please enter the Serial Flash to write.<BR>
+In case of on-board Serial NOR Flash, enter 1.<BR>
+In case of HyperFlash&trade; in SiP packge, enter 3.
+```text
+>XLS2
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+SW1 SW2 All OFF!   Setting OK? (Push Y key)
+```
+
+Please set the Dip-Switch according to the message.<BR>
+Please enter the 'y' key.
+```text
+>XLS2
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+SW3 ON!            Setting OK? (Push Y key)
+```
+
+Please set the Dip-Switch according to the message.<BR>
+Please enter the 'y' key.
+```text
+>XLS2
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+ READ ID OK.
+Program Top Address & Qspi/HyperFlash Save Address
+===== Please Input Program Top Address ============
+  Please Input : H'
+```
+
+Please enter the program top address of the write image in hexadecimal.
+```text
+>XLS2
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+ READ ID OK.
+Program Top Address & Qspi/HyperFlash Save Address
+===== Please Input Program Top Address ============
+  Please Input : H'e6304000
+
+===== Please Input Qspi/HyperFlash Save Address ===
+  Please Input : H'
+```
+
+Please enter the flash save address in hexadecimal.
+```text
+>XLS2
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+ READ ID OK.
+Program Top Address & Qspi/HyperFlash Save Address
+===== Please Input Program Top Address ============
+  Please Input : H'e6304000
+
+===== Please Input Qspi/HyperFlash Save Address ===
+  Please Input : H'40000
+Work RAM(H'50000000-H'53FFFFFF) Clear....
+please send ! ('.' & CR stop load)
+```
+
+Please download the write image in S-record format.
+```text
+>XLS2
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+ READ ID OK.
+Program Top Address & Qspi/HyperFlash Save Address
+===== Please Input Program Top Address ============
+  Please Input : H'e6304000
+
+===== Please Input Qspi/HyperFlash Save Address ===
+  Please Input : H'40000
+Work RAM(H'50000000-H'53FFFFFF) Clear....
+please send ! ('.' & CR stop load)
+SPI Data Clear(H'FF) Check :H'00040000-0007FFFF,Clear OK?(y/n)
+```
+
+Please enter the 'y' key when asked to clear.<BR>
+If Flash is erased, it will not be asked.
+```text
+>XLS2
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+  1 : QspiFlash       (U5 : S25FS128S)
+  2 : QspiFlash Board (CN3: S25FL512S)
+  3 : HyperFlash      (SiP internal)
+ Select (1-3)>3
+READ ID OK.
+Program Top Address & Qspi/HyperFlash Save Address
+===== Please Input Program Top Address ============
+ Please Input : H'e6304000
+
+===== Please Input Qspi/HyperFlash Save Address ===
+ Please Input : H'40000
+Work RAM(H'50000000-H'53FFFFFF) Clear....
+please send ! ('.' & CR stop load)
+SPI Data Clear(H'FF) Check :H'00040000-0007FFFF Erasing..Erase Completed
+SAVE SPI-FLASH....... complete!
+
+======= Qspi/HyperFlash Save Information  =================
+SpiFlashMemory Stat Address : H'00040000
+SpiFlashMemory End Address  : H'0005903B
+===========================================================
+
+>
+```
+
+Image writing has been completed.
+
+### 3.4.2. Write to the raw binary images to the Serial Flash
+
+This command writes the raw binary image to Serial Flash.<BR>
+The following shows the procedure of this command.
+```text
+>XLS3
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>
+```
+
+Please enter the Serial Flash to write.<BR>
+In case of on-board Serial NOR Flash, enter 1.<BR>
+In case of HyperFlash&trade; in SiP packge, enter 3.
+```text
+>XLS3
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+SW1 SW2 All OFF!   Setting OK? (Push Y key)
+```
+
+Please set the Dip-Switch according to the message.<BR>
+Please enter the 'y' key.
+```text
+>XLS3
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+SW3 ON!            Setting OK? (Push Y key)
+```
+
+Please set the Dip-Switch according to the message.<BR>
+Please enter the 'y' key.
+```text
+>XLS3
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+ READ ID OK.
+Program size & Qspi/HyperFlash Save Address
+===== Please Input Program size ============
+  Please Input : H'
+```
+
+Please enter the write image size in hexadecimal.
+```text
+>XLS3
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+ READ ID OK.
+Program size & Qspi/HyperFlash Save Address
+===== Please Input Program size ============
+  Please Input : H'1b03c
+
+===== Please Input Qspi/HyperFlash Save Address ===
+  Please Input : H'
+```
+
+Please enter the flash save address in hexadecimal.
+```text
+>XLS3
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+ READ ID OK.
+Program size & Qspi/HyperFlash Save Address
+===== Please Input Program size ============
+  Please Input : H'1b03c
+
+===== Please Input Qspi/HyperFlash Save Address ===
+  Please Input : H'40000
+Work RAM(H'50000000-H'53FFFFFF) Clear....
+please send ! (binary)
+```
+
+Please download the raw binary write image.
+```text
+>XLS3
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+ READ ID OK.
+Program size & Qspi/HyperFlash Save Address
+===== Please Input Program size ============
+  Please Input : H'1b03c
+
+===== Please Input Qspi/HyperFlash Save Address ===
+  Please Input : H'40000
+Work RAM(H'50000000-H'53FFFFFF) Clear....
+please send ! (binary)
+SPI Data Clear(H'FF) Check :H'00040000-0007FFFF,Clear OK?(y/n)
+```
+
+Please enter the 'y' key when asked to clear.<BR>
+If Flash is erased, it will not be asked.
+```text
+>XLS3
+===== Qspi/HyperFlash writing of Gen3 Board Command =============
+Load Program to Spiflash
+Writes to any of SPI address.
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+ READ ID OK.
+Program size & Qspi/HyperFlash Save Address
+===== Please Input Program size ============
+  Please Input : H'1b03c
+
+===== Please Input Qspi/HyperFlash Save Address ===
+  Please Input : H'40000
+Work RAM(H'50000000-H'53FFFFFF) Clear....
+please send ! (binary)
+SPI Data Clear(H'FF) Check :H'00040000-0007FFFF Erasing..Erase Completed
+SAVE SPI-FLASH....... complete!
+
+======= Qspi/HyperFlash Save Information  =================
+ SpiFlashMemory Stat Address : H'00040000
+ SpiFlashMemory End Address  : H'0005B03B
+===========================================================
+
+>
+```
+
+Image writing has been completed.
+
+### 3.4.3. Erase the Serial NOR Flash and HyperFlash.
+This command erases all sectors of Serial Flash.<BR>
+The following shows the procedure of this command.
+```text
+>XCS
+ALL ERASE SpiFlash or HyperFlash memory
+Clear OK?(y/n)
+```
+
+Please enter the 'y' key.
+```text
+>XCS
+ALL ERASE SpiFlash or HyperFlash memory
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>
+```
+
+Please enter the Serial Flash to erase.<BR>
+In case of on-board Serial NOR Flash, enter 1.<BR>
+In case of HyperFlash&trade; in SiP packge, enter 3.
+```text
+>XCS
+ALL ERASE SpiFlash or HyperFlash memory
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+SW1 SW2 All OFF!   Setting OK? (Push Y key)
+```
+
+Please set the Dip-Switch according to the message.<BR>
+Please enter the 'y' key.
+```text
+>XCS
+ALL ERASE SpiFlash or HyperFlash memory
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+SW3 ON!            Setting OK? (Push Y key)
+```
+
+Please set the Dip-Switch according to the message.<BR>
+Please enter the 'y' key.
+```text
+>XCS
+ALL ERASE SpiFlash or HyperFlash memory
+Please select,FlashMemory.
+   1 : QspiFlash       (U5 : S25FS128S)
+   2 : QspiFlash Board (CN3: S25FL512S)
+   3 : HyperFlash      (SiP internal)
+  Select (1-3)>3
+ READ ID OK.
+ ERASE HYPER-FLASH (96sec[typ]).... complete!
+>
+```
+
+Selected serial flash has been erased.
+
+### 3.4.4. Display the CID registers command
 This command displays the contents of the CID registers of the eMMC.<BR>
 The following shows the procedure of this command.
 ```text
@@ -223,7 +642,7 @@ The following shows the procedure of this command.
 [ 15:  8]  MDT  0xB2
 [  7:  1]  CRC  0x00
 ```
-### 3.4.2. Display the CSD registers command
+### 3.4.5. Display the CSD registers command
 This command displays the contents of the CSD registers of eMMC.<BR>
 The following shows the procedure of this command.
 ```text
@@ -238,7 +657,7 @@ The following shows the procedure of this command.
 [  9:  8]  ECC                 0x00
 [  7:  1]  CRC                 0x00
 ```
-### 3.4.3. Display the EXT_CSD registers command
+### 3.4.6. Display the EXT_CSD registers command
 This command displays the contents of the EXT_CSD registers of the eMMC.<BR>
 The following shows the procedure of this command.
 ```text
@@ -248,12 +667,12 @@ The following shows the procedure of this command.
 [505:505]  EXT_SECURITY_ERR                           0x00
 [504:504]  S_CMD_SET                                  0x01
 [503:503]  HPI_FEATURES                               0x01
-…
+...
 [142:140]  ENH_SIZE_MULT                              0x000000
 [139:136]  ENH_START_ADDR                             0x00000000
 [134:134]  SEC_BAD_BLK_MGMNT                          0x00
 ```
-### 3.4.4. Modify the EXT_CSD registers of eMMC command
+### 3.4.7. Modify the EXT_CSD registers of eMMC command
 This command modifies the contents of the registers of EXT_CSD of the eMMC.<BR>
 The following shows the procedure of this command.<BR>
 ```text
@@ -277,7 +696,7 @@ Enter the settings of EXT_CSD register in hexadecimal.
 ```
 The EXT_CSD register has been modified.
 
-### 3.4.5. Write to the S-record format images to the eMMC
+### 3.4.8. Write to the S-record format images to the eMMC
 This command writes the S-record format image to any partition of the eMMC.<BR>
 
 ##### Example of writing data for the eMMC boot
@@ -384,7 +803,7 @@ EM_W Complete!
 ```
 Image writing has been completed.
 
-### 3.4.6. Write to the raw binary images to the eMMC
+### 3.4.9. Write to the raw binary images to the eMMC
 This command writes the raw binary image to any partition of the eMMC.<BR>
 The following shows the procedure of this command.
 ```text
@@ -481,7 +900,7 @@ EM_WB Complete!
 ```
 Image writing has been completed.
 
-### 3.4.7. Erase the eMMC
+### 3.4.10. Erase the eMMC
 This command erases any partition of the eMMC.<BR>
 The following shows the procedure of this command.<BR>
 ```text
@@ -516,7 +935,7 @@ EM_E Complete!
 ```
 Selected partition has been erased.
 
-### 3.4.8. Change the SCIF baud rate setting
+### 3.4.11. Change the SCIF baud rate setting
 This command will change the baud rate of the SCIF.<BR>
 Baud rate is dependent on the SoC and the SCIF clock.<BR>
 
@@ -544,11 +963,16 @@ Scif speed UP
 Please change to 921.6Kbps baud rate setting of the terminal.
 ```
 
-### 3.4.9. Display the command help
+### 3.4.12. Display the command help
 Displays a description of the commands.<BR>
 The following shows the procedure of this command.<BR>
 ```text
 >H
+        HyperFlash/SPI Flash write command
+ XCS            erase program to HyperFlash/SPI Flash
+ XLS2           write program to HyperFlash/SPI Flash
+ XLS3           write program to HyperFlash/SPI Flash(Binary)
+
         eMMC write command
  EM_DCID        display register CID
  EM_DCSD        display register CSD
@@ -559,10 +983,11 @@ The following shows the procedure of this command.<BR>
  EM_E           erase program to eMMC
  SUP            Scif speed UP (Change to speed up baud rate setting)
  H              help
+>
 ```
-# 4. How to build the eMMC writer
+# 4. How to build the Flash writer
 ---------------------------------
-This chapter is described how to build the eMMC writer of 32bit version and 64bit version.
+This chapter is described how to build the Flash writer of 32bit version and 64bit version.
 Command is executed in the user's home directory (~ /).
 ## 4.1. Prepare the compiler
 Gets cross compiler. To decompress it. Command is the following.<BR>
@@ -581,15 +1006,15 @@ $ tar xvf gcc-linaro-5.2-2015.11-2-x86_64_aarch64-elf.tar.xz
 ```
 
 ## 4.2. Prepare the source code
-Source code of eMMC writer is decompressed by the following command.<BR>
+Source code of Flash writer is decompressed by the following command.<BR>
 ```shell
 $ cd ~/
-$ git clone https://github.com/renesas-rcar/emmc_writer.git
-$ cd emmc_writer
+$ git clone https://github.com/renesas-rcar/flash_writer.git
+$ cd flash_writer
 $ git checkout rcar_gen3
 ```
 
-## 4.3. Build the eMMC writer
+## 4.3. Build the Flash writer
 S-record file is built by the following command.<BR>
 32 bit compiler:
 ```shell
@@ -597,7 +1022,7 @@ $ make AArch=32 clean
 $ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_arm-eabi/bin/arm-eabi- make AArch=32
 ```
 Output the following image.<BR>
-* ./AArch32_output/AArch32_eMMC_writer_SCIF_DUMMY_CERT_E6300400.mot
+* ./AArch32_output/AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot
 
 64 bit compiler:
 ```shell
@@ -605,27 +1030,27 @@ $ make AArch=64 clean
 $ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64
 ```
 Output the following image.<BR>
-* ./AArch64_output/AArch64_eMMC_writer_SCIF_DUMMY_CERT_E6300400.mot
+* ./AArch64_output/AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot
 
 The target file name changes depending on the build options.<BR>
 The following table lists the relationship between build option and target files.
 
 ##### Description of build options and target files
-| Build options           || Target directory | Target filename                                                                                      |
-|-------|------------------|------------------|------------------------------------------------------------------------------------------------------|
-| AArch | BOOT             |                  |                                                                                                      |
-| 32    | WRITER           | AArch32_output   | AArch32_eMMC_writer_SCIF_E6304000.mot<BR>AArch32_eMMC_writer_SCIF_E6304000.bin                       |
-|       | WRITER_WITH_CERT |                  | AArch32_eMMC_writer_SCIF_DUMMY_CERT_E6300400.mot<BR>AArch32_eMMC_writer_SCIF_DUMMY_CERT_E6300400.bin |
-| 64    | WRITER           | AArch64_output   | AArch64_eMMC_writer_SCIF_E6304000.mot<BR>AArch64_eMMC_writer_SCIF_E6304000.bin                       |
-|       | WRITER_WITH_CERT |                  | AArch64_eMMC_writer_SCIF_DUMMY_CERT_E6300400.mot<BR>AArch64_eMMC_writer_SCIF_DUMMY_CERT_E6300400.bin |
+| Build options           || Target directory | Target filename                                                                                        |
+|-------|------------------|------------------|--------------------------------------------------------------------------------------------------------|
+| AArch | BOOT             |                  |                                                                                                        |
+| 32    | WRITER           | AArch32_output   | AArch32_Flash_writer_SCIF_E6304000.mot<BR>AArch32_Flash_writer_SCIF_E6304000.bin                       |
+|       | WRITER_WITH_CERT |                  | AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot<BR>AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400.bin |
+| 64    | WRITER           | AArch64_output   | AArch64_Flash_writer_SCIF_E6304000.mot<BR>AArch64_Flash_writer_SCIF_E6304000.bin                       |
+|       | WRITER_WITH_CERT |                  | AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot<BR>AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400.bin |
 
-# 5. How to run eMMC writer
+# 5. How to run Flash writer
 ---------------------------------
-## 5.1. Prepare for write to the eMMC
-Start the target in the SCIF download mode and run eMMC writer sample code.<BR>
+## 5.1. Prepare for write to the Serial Flash and eMMC
+Start the target in the SCIF download mode and run Flash writer sample code.<BR>
 The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 
-##### Dip switch configuration for write to the eMMC (SCIF download mode)
+##### Dip switch configuration for SCIF download mode
 | SoC                                           | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |--------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
 | R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
@@ -651,7 +1076,7 @@ The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 
 The following table shows the Dip-Switch Setting for USB download mode.
 
-##### Dip switch configuration for write to the eMMC (USB download mode)
+##### Dip switch configuration for USB download mode
 | SoC                 | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
 | R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 *2 | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
@@ -666,6 +1091,28 @@ The following table shows the Dip-Switch Setting for USB download mode.
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 \*2: M3 Ver.1.0 and M3 Ver.1.1 cannot be boot from the USB download mode.<BR>
 \*3: H3 Ver.1.0 and H3 Ver.1.1 cannot be boot from the USB download mode.<BR>
+
+To write to Serial NOR Flash, the following additional settings are required in addition to the setting for SCIF/USB download mode.
+
+##### Additional dip switch configuration for write to the Serial NOR Flash (SCIF/USB download mode)
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------|-------------|------|------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW2           | QSPI-B      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW3           | QSPI-C      | OFF  | -    | -    | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
+
+To write to HyperFlash&trade;, the following additional settings are required in addition to the setting for SCIF/USB download mode.
+
+##### Additional dip switch configuration for write to the HyperFlash&trade; (SCIF/USB download mode)
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------|-------------|------|------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW2           | QSPI-B      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
+
+To write to eMMC, additional Dip-switch setting is not necessary.
 
 Connect the Host PC to CN25 or CN9 connector using the USB cable.<BR>
 The following table shows the setting of terminal software.<BR>
@@ -690,21 +1137,26 @@ please send !
 ```
 Transfer S-record file after the log output.<BR>
 S-record file for Cortex-A57 AArch64:<BR>
-- AArch64_output/AArch64_eMMC_writer_SCIF_DUMMY_CERT_E6300400.mot
+- AArch64_output/AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot
 
 S-record file for Cortex-A57 AArch32 or Cortex-R7:
-- AArch32_output/AArch32_eMMC_writer_SCIF_DUMMY_CERT_E6300400.mot
+- AArch32_output/AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot
 
 When the transfer is successful, the following log is output.
 ```text
-eMMC Writer for R-Car H3/M3 Series V1.02 Apr.28,2017
+Flash writer for R-Car H3/M3 Series V1.03 Jun.09,2017
  Work Memory SystemRAM (H'E6328000-H'E632FFFF)
 >
 ```
-For details on how to write to the eMMC, please refer to [Section 3.4](#34-command-specification).
+Please enter the any key from the console after starting Flash writer.<BR>
+To use SCIF, enter the key from the console connected to CN25, if using USB, enter the key from the console connected to CN9.<BR>
+*Note) After entering the key, the other console becomes unusable.*
 
-## 5.2. Prepare for boot from the eMMC
-To boot from the eMMC, need to change the Dip switch setting.<BR>
+For details on how to write to the Serial Flash and eMMC, please refer to [Section 3.4](#34-command-specification).
+
+## 5.2. Prepare for boot from the Serial Flash and eMMC
+
+To boot from the eMMC, need to change the Dip-switch setting.<BR>
 The following table shows the Dip-Switch Setting.<BR>
 
 #### Dip switch configuration for boot from the eMMC (50MHz x8 bus width mode)
@@ -721,6 +1173,71 @@ The following table shows the Dip-Switch Setting.<BR>
 
 \*1: Don't care this setting for Coretex-R7 boot mode.<BR>
 \*2: H3 Ver.1.0 and H3 Ver.1.1 cannot be boot from the eMMC.<BR>
+
+#### Dip switch configuration for boot from the Serial NOR Flash (Single read 40MHz)
+| SoC                                        | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|--------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
+|                                                        |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+|                                                        | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
+|                                                        |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+|                                                        | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | ON  | OFF | OFF |
+|                                                        |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+| R-Car H3 Ver.1.1                                       | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | ON  | OFF | OFF |
+|                                                        |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                        | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | ON  | OFF | OFF |
+|                                                        |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                        | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | ON  | OFF | OFF |
+|                                                        |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+| R-Car H3 Ver.1.0                                       | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | ON  | OFF | OFF |
+|                                                        |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+|                                                        | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | ON  | OFF | OFF |
+|                                                        |                    | SW12 | MODESW-C | ON  | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+|                                                        | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | OFF | ON  | OFF | OFF |
+|                                                        |                    | SW12 | MODESW-C | -*1 | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+
+\*1: Don't care this setting for Coretex-R7 boot mode.<BR>
+
+##### Additional dip switch configuration for boot from the Serial NOR Flash
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------|-------------|------|------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW2           | QSPI-B      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW3           | QSPI-C      | OFF  | -    | -    | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
+
+#### Dip switch configuration for boot from the HyperFlash&trade; (160MHz DDR)
+| SoC                                        | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|--------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
+|                                                        |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+|                                                        | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
+|                                                        |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+|                                                        | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | OFF | ON  | OFF |
+|                                                        |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+| R-Car H3 Ver.1.1                                       | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | ON  | ON*2 |
+|                                                        |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                        | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | ON  | ON*2 |
+|                                                        |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                        | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | ON  | ON*2 |
+|                                                        |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+| R-Car H3 Ver.1.0                                       | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | ON  | ON*2 |
+|                                                        |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+|                                                        | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | ON  | OFF |
+|                                                        |                    | SW12 | MODESW-C | ON  | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+|                                                        | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | OFF | OFF | ON  | OFF |
+|                                                        |                    | SW12 | MODESW-C | -*1 | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+
+\*1: Don't care this setting for Coretex-R7 boot mode.<BR>
+\*2: Set to 80MHz DDR mode, because LSI specification.<BR>
+
+##### Additional dip switch configuration for boot from the HyperFlash&trade;
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------|-------------|------|------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW2           | QSPI-B      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
 
 # 6. USB download API
 

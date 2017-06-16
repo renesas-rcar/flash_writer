@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,11 +33,6 @@
 #include "reg_rcarh3.h"
 #include "boot_init_lbsc.h"
 
- /* Product Register */
-#define PRR					(0xFFF00044U)
-#define PRR_PRODUCT_MASK	(0x00007F00U)
-#define PRR_PRODUCT_H3		(0x00004F00U)           /* R-Car H3 */
-#define PRR_PRODUCT_M3		(0x00005200U)           /* R-Car M3 */
 
 void InitLBSC(void)
 {

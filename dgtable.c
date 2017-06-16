@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,7 @@
 #include	"dgtable.h"
 #include	"dginit.h"
 #include	"dgmodul1.h"
+#include	"dgmodul4.h"
 #include	"boot_init_lbsc.h"
 #include	"dgemmc.h"
 
@@ -42,6 +43,14 @@
 const com_menu MonCom[COMMAND_UNIT] = {
 /*--------------------- Basic command ------------------------------*/
 	 "H"				, dgHelp						,  0	,
+	 "XCS"				, dgClearSpiflash0				,  0	,
+	 "XLS"				, dgGen3LoadSpiflash0			,  0	,
+	 "XLS2"				, dgGen3LoadSpiflash0_2			,  0	,
+	 "XLS3"				, dgGen3LoadSpiflash0_3			,  0	,
+	 "XINFO_SA0"			, dgGen3InfoSpiflash0_SA0		,  0	,
+	 "XINFO_SA0_S"			, dgGen3InfoSetSpiflash0_SA0	,  0	,
+	 "XINFO"			, dgGen3InfoSpiflash0			,  0	,
+	 "XINFO_S"			, dgGen3InfoSetSpiflash0		,  0	,
 	 "EM_DCID"			, &dg_emmc_disp_cid				,  0	,
 	 "EM_DCSD"			, &dg_emmc_disp_csd				,  0	,
 	 "EM_DECSD"			, &dg_emmc_disp_ext_csd			,  0	,

@@ -29,37 +29,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include	"dgtable.h"
-/**********************
-*  TITLE              *
-***********************/
 
-const char *const StartMessMonitor[START_MESS_MON_LINE] = {
-				"Flash writer for R-Car H3/M3 Series V1.03 Jun.09,2017",
-				MESSAGE_END,
-};
+#include "common.h"
+#include "reg_rcarh3.h"
+#include "b_boarddrv.h"
+#include "boardid.h"
 
 
-const char *const StartMessWorkMem[START_MESS_MEM_LINE] = {
-				" Work Memory SystemRAM (H'E6328000-H'E632FFFF) ",
-				MESSAGE_END,
-};
+uint32_t gBoardFlag;
 
-const char *const AllHelpMess[ALL_HELP_MESS_LINE] = {
-				"        HyperFlash/SPI Flash write command",
-				" XCS            erase program to HyperFlash/SPI Flash",
-				" XLS2           write program to HyperFlash/SPI Flash",
-				" XLS3           write program to HyperFlash/SPI Flash(Binary)",
-				"",
-				"        eMMC write command",
-				" EM_DCID        display register CID",
-				" EM_DCSD        display register CSD",
-				" EM_DECSD       display register EXT_CSD",
-				" EM_SECSD       change register EXT_CSD byte",
-				" EM_W           write program to eMMC",
-				" EM_WB          write program to eMMC (Binary)",
-				" EM_E           erase program to eMMC",
-				" SUP            Scif speed UP (Change to speed up baud rate setting)",
-				" H              help",
-				MESSAGE_END,
-};
+
+void CheckBoard(void)
+{
+#if (RCAR_GEN3_ULCB==0)
+	if( !SSI_WS6_OpenCheck() ){
+		// Connect=Salvator
+		gBoardFlag = BD_SALVATOR;
+	}else{
+		// Connect=Kriek
+		gBoardFlag = BD_KRIEK;
+	}
+#else  /* (RCAR_GEN3_ULCB==0) */
+	gBoardFlag = BD_STARTERKIT;
+#endif /* (RCAR_GEN3_ULCB==0) */
+}

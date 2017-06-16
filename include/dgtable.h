@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 /**********************
 * COMMAND_UNITE       *
 ***********************/
-#define		COMMAND_UNIT		17
+#define		COMMAND_UNIT		18
 #define		NORMAL_END			0
 #define		ERROR_END			1
 

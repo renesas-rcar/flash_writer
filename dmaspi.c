@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2016, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,37 +29,54 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include	"dgtable.h"
-/**********************
-*  TITLE              *
-***********************/
+#include "common.h"
+#include "dmaspi.h"
+#include "bit.h"
+#include "spiflash1drv.h"
+#include "reg_rcarh3.h"
 
-const char *const StartMessMonitor[START_MESS_MON_LINE] = {
-				"Flash writer for R-Car H3/M3 Series V1.03 Jun.09,2017",
-				MESSAGE_END,
-};
+void InitDma01_Data(uint32_t prgStartAd, uint32_t sector_Ad, uint32_t accessCount)
+{
+	//DMA Setting
+	*((volatile uint32_t*)SYSDMAC_DMASAR_0)    =  sector_Ad;		//	RPC area
+	*((volatile uint32_t*)SYSDMAC_DMADAR_0)    =  prgStartAd;		//	
+	*((volatile uint32_t*)SYSDMAC_DMATCR_0)    =  accessCount;		//
+	*((volatile uint32_t*)SYSDMAC_DMACHCR_0)   =  0x00105409;		//64Byte/AutoRequest mode
+}
 
+void DisableDma01(void)
+{
+	*((volatile uint32_t*)SYSDMAC_DMACHCR_0)   &=  0x00105410;		//64Byte/AutoRequest mode
+}
 
-const char *const StartMessWorkMem[START_MESS_MEM_LINE] = {
-				" Work Memory SystemRAM (H'E6328000-H'E632FFFF) ",
-				MESSAGE_END,
-};
+void ClearDmaCh01(void)
+{
+	*((volatile uint32_t*)SYSDMAC_DMACHCLR_0) |= BIT0;
+}
 
-const char *const AllHelpMess[ALL_HELP_MESS_LINE] = {
-				"        HyperFlash/SPI Flash write command",
-				" XCS            erase program to HyperFlash/SPI Flash",
-				" XLS2           write program to HyperFlash/SPI Flash",
-				" XLS3           write program to HyperFlash/SPI Flash(Binary)",
-				"",
-				"        eMMC write command",
-				" EM_DCID        display register CID",
-				" EM_DCSD        display register CSD",
-				" EM_DECSD       display register EXT_CSD",
-				" EM_SECSD       change register EXT_CSD byte",
-				" EM_W           write program to eMMC",
-				" EM_WB          write program to eMMC (Binary)",
-				" EM_E           erase program to eMMC",
-				" SUP            Scif speed UP (Change to speed up baud rate setting)",
-				" H              help",
-				MESSAGE_END,
-};
+void StartDma01(void)
+{
+	*((volatile uint16_t*)SYSDMAC_DMAOR_0)  =  0x0001;				//Start DMA	  ( Priority Mode:Fixed )
+}
+
+uint32_t WaitDma01(void)
+{
+	uint32_t dataL=0;
+
+	////////////////////////////////
+	// DMA transfer complite check
+	////////////////////////////////
+	while(1){
+		dataL = *((volatile uint32_t*)SYSDMAC_DMACHCR_0);
+		if(dataL & BIT1){
+			*((volatile uint32_t*)SYSDMAC_DMACHCR_0) &= ~BIT1;		// TE Clear
+			break;
+		}
+		if(dataL & BIT31){
+			*((volatile uint32_t*)SYSDMAC_DMACHCR_0) &= ~BIT31;	// CAE Clear
+			return(1);
+		}
+	}
+	*((volatile uint16_t*)SYSDMAC_DMAOR_0) = 0x0000;				//0: Disables DMA transfers on all channels
+	return(0);
+}

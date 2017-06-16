@@ -39,6 +39,7 @@
 #include	"usb_lib.h"
 #include	"scifdrv.h"
 #include	"devdrv.h"
+#include	"boardid.h"
 
 extern const char *const StartMessMonitor[START_MESS_MON_LINE];
 extern const char *const StartMessWorkMem[START_MESS_MEM_LINE];
@@ -52,6 +53,7 @@ int32_t gComNo;
 
 void Main(void)
 {
+	CheckBoard();
 	InitMain();
 	StartMess();
 	DecCom();
