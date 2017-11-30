@@ -356,7 +356,7 @@ const EMMC_DISP_REGISTER_DATA dg_ext_csd_data[EXT_CSD_FIELD_MAX] = {
 	{	181,	181,	"ERASED_MEM_CONT                            "},
 	{	179,	179,	"PARTITION_CONFIG                           "},
 	{	178,	178,	"BOOT_CONFIG_PROT                           "},
-	{	177,	177,	"BOOT_BUS_WIDTH                             "},
+	{	177,	177,	"BOOT_BUS_CONDITIONS                        "},
 	{	175,	175,	"ERASE_GROUP_DEF                            "},
 	{	173,	173,	"BOOT_WP                                    "},
 	{	171,	171,	"USER_WP                                    "},

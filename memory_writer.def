@@ -1,5 +1,6 @@
 MEMORY {
-	RAM (rwxa): ORIGIN = 0xE6304000, LENGTH = 0x0005BFFF
+	RAM  (rwxa): ORIGIN = 0xE6304000, LENGTH = 0x0002A800
+	RAM2 (rwxa): ORIGIN = 0xE632E800, LENGTH = 0x00031800
 }
 
 SECTIONS
@@ -26,13 +27,13 @@ SECTIONS
 		 *(COMMON)
 		 . = NEXT(64);
 		__BSS_END__ = .;
-	} > RAM
+	} > RAM2
 
 	stacks (NOLOAD) : ALIGN(64) {
 		__STACKS_START__ = .;
 		KEEP(*(writer_stack))
 		__STACKS_END__ = .;
-	} >RAM
+	} > RAM2
 
 	__BSS_SIZE__ = SIZEOF(.bss);
 }

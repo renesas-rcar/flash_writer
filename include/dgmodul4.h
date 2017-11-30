@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -90,9 +90,6 @@ void dgGen3LoadSpiflash0(void);
 void SelQspiFlashSetSw(void);
 void InitRPC_Mode(void);
 uint32_t CheckQspiFlashId(void);
-void SwChgDefaultToExSPI_QSPI0(void);
-void SwChgDefaultToOnBoard_QSPI0(void);
-void SwChgDefaultToHyperFlash(void);
 int32_t CkQspiFlash0ClearSectorSize(uint32_t rdBufAdd,uint32_t spiFlashStatAdd,uint32_t checkSize,uint32_t accessSize);
 int32_t CkQspiFlash1ClearSectorSize(uint32_t rdBufAdd,uint32_t spiFlashStatAdd,uint32_t checkSize,uint32_t accessSize);
 int32_t CkHyperFlashClearSectorSize(uint32_t rdBufAdd,uint32_t spiFlashStatAdd,uint32_t checkSize,uint32_t accessSize);
@@ -104,6 +101,7 @@ void XLoadSpiflash0_2(uint32_t mode);
 void SetData(uint32_t *setAdd);
 int32_t CkSpiFlashAllF(int32_t sAdd,int32_t cap);
 void SetAddInputKey(uint32_t *Address);
+void SetSizeInputKey(uint32_t *size);
 void dgGen3InfoSpiflash0_SA0(void);
 int32_t CheckDataChange(uintptr_t checkAdd);
 void dgGen3InfoSetSpiflash0_SA0(void);

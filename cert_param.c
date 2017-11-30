@@ -31,6 +31,8 @@
 
 /* 0xE6300400 */
 const unsigned int __attribute__ ((section (".boot_param"))) boot_param = 0x00000000;
+/* 0xE630048C */
+const unsigned int __attribute__ ((section (".cert_offset"))) reserved = 0x00000000;
 /* 0xE63005D4 */
 const unsigned int __attribute__ ((section (".cert_addr"))) cert_addr = 0xE6304000;
 /* 0xE63006E4 */

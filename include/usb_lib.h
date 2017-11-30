@@ -32,6 +32,17 @@
 #ifndef USB_LIB_H_
 #define USB_LIB_H_
 
+/* return value for USB_GET_STATUS function */
+typedef enum {
+    ATTACHED,
+    POWERED,
+    DEFAULT,
+    ADDRESS,
+    CONFIGURED,
+    SUSPENDED
+} State;
+
+
 int32_t USB_Init(void);
 int32_t USB_TerminalInputCheck(uint8_t *command_area);
 void USB_IntCheck(void);
@@ -39,5 +50,6 @@ int USB_ReadCount(void);
 int USB_ReadData(uint8_t *pBuff, int iDataSize);
 int USB_WriteData(uint8_t *pBuff, int iDataSize);
 void USB_ReadDataWithDMA(unsigned long bufferAddress, uint32_t totalDownloadSize);
+State USB_Get_Status(void);
 
 #endif /* USB_LIB_H_ */

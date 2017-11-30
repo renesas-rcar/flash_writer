@@ -60,6 +60,7 @@ void InitCSWCR(void)
 		*((volatile uint32_t*)LBSC_CSWCR1)=0xFF70FF70;			//Initial value
 		break;
 	case PRR_PRODUCT_M3:
+	case PRR_PRODUCT_M3N:
 		*((volatile uint32_t*)LBSC_CSWCR0)=0x2A103320;
 		*((volatile uint32_t*)LBSC_CSWCR1)=0x2A103320;
 		break;

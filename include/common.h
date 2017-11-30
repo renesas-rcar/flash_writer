@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,16 +65,27 @@
 #define		SIZE_32BIT		4			// Old name : LONG_SIZE
 #define		SIZE_64BIT		8			// New
 
+#define		COMMAND_BUFFER_SIZE	1024
+
+#if USB_ENABLE == 1
 #define		SCIF2_TERMINAL		0
 #define		USB_TERMINAL		1
-#define		COMMAND_BUFFER_SIZE	1024
+#define		DMA_TRANSFER_SIZE       (0x20)                /* DMA Transfer size =  32 Bytes */
+
+extern uint32_t	gTerminal;
+#endif /* USB_ENABLE == 1 */
+
 /****************************
 	Module Proto Type		*
 ****************************/
 int32_t PutMess(const char *const mess[]);
 int32_t	PutStr(const char *str,char rtn);
+#if USB_ENABLE == 1
+int32_t PutMessUSB(const char *const mess[]);
+int32_t	PutStrUSB(const char *str,char rtn);
 int32_t PutCharUSB(char outChar);
 int32_t GetCharUSB(char *inChar);
+#endif /* USB_ENABLE == 1 */
 int32_t	GetStr(char *str,char *chCnt);
 int32_t	GetStr_MemEd(char *str,char *chCnt);
 uint32_t Hex2Ascii(int32_t hexdata,char *str,int32_t *chcnt);

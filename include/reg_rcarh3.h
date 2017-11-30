@@ -1403,6 +1403,7 @@
 #define PRR_CUT_MASK		(0x000000FFU)
 #define PRR_PRODUCT_H3		(0x00004F00U)           /* R-Car H3 */
 #define PRR_PRODUCT_M3		(0x00005200U)           /* R-Car M3 */
+#define PRR_PRODUCT_M3N		(0x00005500U)           /* R-Car M3N */
 #define PRR_CUT_10		(0x00U)
 #define PRR_CUT_11		(0x01U)
 #define PRR_CUT_20		(0x10U)

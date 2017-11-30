@@ -43,6 +43,16 @@ ifeq ("$(AArch)", "")
 AArch = 64
 endif
 
+#/* Select USB("ENABLE"or"DISABLE" )********************************************
+ifeq ("$(USB)", "")
+USB = ENABLE
+endif
+
+#/* Select SERIAL_FLASH("ENABLE"or"DISABLE" )***********************************
+ifeq ("$(SERIAL_FLASH)", "")
+SERIAL_FLASH = ENABLE
+endif
+
 #CPU
 ifeq ("$(AArch)", "64")
 CPU = -march=armv8-a
@@ -79,13 +89,6 @@ ifeq ("$(AArch)", "64")
 	CROSS_COMPILE ?= aarch64-elf-
 endif
 
-LIBS        = -L$(subst libc.a, ,$(shell $(CC) -print-file-name=libc.a 2> /dev/null)) -lc
-LIBS        += -L$(subst libgcc.a, ,$(shell $(CC) -print-libgcc-file-name 2> /dev/null)) -lgcc
-LIBS        += -L./$(AArch32_64)_lib/ -lusb
-
-INCLUDE_DIR = include
-TOOL_DEF = "REWRITE_TOOL"
-
 ifeq ("$(BOARD)", "ULCB")
 	FILENAME_ADD = _ULCB
 	CFLAGS += -DRCAR_GEN3_ULCB=1
@@ -120,6 +123,34 @@ ifeq ("$(SCIF_CLK)", "INTERNAL")
 	SCIF_DEF    = SCIF_CLK_INTERNAL
 endif
 
+#USB download function can not be used with the starter kit.
+ifeq ("$(USB)", "ENABLE")
+	CFLAGS += -DUSB_ENABLE=1
+endif
+
+ifeq ("$(USB)", "DISABLE")
+	CFLAGS += -DUSB_ENABLE=0
+endif
+
+ifeq ("$(SERIAL_FLASH)", "ENABLE")
+	CFLAGS += -DSERIAL_FLASH=1
+endif
+
+ifeq ("$(SERIAL_FLASH)", "DISABLE")
+	CFLAGS += -DSERIAL_FLASH=0
+endif
+
+DDR_DEF = ddr_qos_init_setting
+
+LIBS        = -L$(subst libc.a, ,$(shell $(CC) -print-file-name=libc.a 2> /dev/null)) -lc
+LIBS        += -L$(subst libgcc.a, ,$(shell $(CC) -print-libgcc-file-name 2> /dev/null)) -lgcc
+ifeq ("$(USB)", "ENABLE")
+LIBS        += -L./$(AArch32_64)_lib/ -lusb
+endif
+
+INCLUDE_DIR = include
+TOOL_DEF = "REWRITE_TOOL"
+
 OUTPUT_FILE = $(FILE_NAME).axf
 
 #Object file
@@ -136,15 +167,9 @@ SRC_FILE :=						\
 	dgtable.c					\
 	dgmodul1.c					\
 	Message.c					\
-	spiflash1drv.c					\
-	spiflash0drv.c					\
 	dmaspi.c					\
 	ramckmdl.c					\
-	rpcqspidrv.c					\
-	dgmodul4.c					\
 	armasm.c					\
-	rpchyperdrv.c					\
-	hyperflashdrv.c					\
 	cpudrv.c					\
 	b_boarddrv.c					\
 	boardid.c					\
@@ -162,7 +187,17 @@ SRC_FILE :=						\
 	boot_init_lbsc.c				\
 	boot_init_port_M3.c				\
 	boot_init_gpio.c				\
-	micro_wait.c					\
+	micro_wait.c
+
+ifeq ("$(SERIAL_FLASH)", "ENABLE")
+SRC_FILE +=						\
+	dgmodul4.c					\
+	rpchyperdrv.c					\
+	rpcqspidrv.c					\
+	hyperflashdrv.c					\
+	spiflash1drv.c					\
+	spiflash0drv.c
+endif
 
 ifeq ("$(BOOT)", "WRITER_WITH_CERT")
 	SRC_FILE += cert_param.c
@@ -214,13 +249,12 @@ $(OUTPUT_DIR):
 #------------------------------------------
 # Compile
 #------------------------------------------
-%.o:../$(BOOTDIR)/%.s
+$(OBJECT_DIR)/%.o:$(BOOTDIR)/%.s
 	$(AS)  -g $(CPU) $(AS_NEON) --MD $(patsubst %.o,%.d,$@) -I $(BOOTDIR) -I $(INCLUDE_DIR) $< -o $@ --defsym $(AArch32_64)=0 --defsym $(BOOT_DEF)=0 --defsym $(TOOL_DEF)=0 --defsym $(SCIF_DEF)=0
 
-#%.o:../%.c
 $(OBJECT_DIR)/%.o:%.c
 	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
-	$(CC) -g -Os $(ALIGN) $(CPU) $(CC_NEON) $(THUMB) -MMD -MP -c -I $(BOOTDIR) -I $(INCLUDE_DIR) $< -o $@ -D$(AArch32_64)=0 -D$(BOOT_DEF)=0 -D$(TOOL_DEF)=0 -D$(SCIF_DEF)=0 $(CFLAGS)
+	$(CC) -g -Os $(ALIGN) $(CPU) $(CC_NEON) $(THUMB) -MMD -MP -c -I $(BOOTDIR) -I $(INCLUDE_DIR) $< -o $@ -D$(AArch32_64)=0 -D$(BOOT_DEF)=0 -D$(TOOL_DEF)=0 -D$(SCIF_DEF)=0 $(CFLAGS) -D$(DDR_DEF)=0
 
 #------------------------------------------
 # Linker

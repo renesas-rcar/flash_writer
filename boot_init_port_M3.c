@@ -107,6 +107,7 @@ void InitPORT(void)
 		break;
 
 	case PRR_PRODUCT_M3:
+	case PRR_PRODUCT_M3N:
 		StartRtDma0_Descriptor();
 		InitMODSEL();
 		InitIPSR_M3();

@@ -35,7 +35,7 @@
 ***********************/
 
 const char *const StartMessMonitor[START_MESS_MON_LINE] = {
-				"Flash writer for R-Car H3/M3 Series V1.03 Jun.09,2017",
+				"Flash writer for R-Car H3/M3/M3N Series V1.04 Nov.30,2017",
 				MESSAGE_END,
 };
 
@@ -46,11 +46,13 @@ const char *const StartMessWorkMem[START_MESS_MEM_LINE] = {
 };
 
 const char *const AllHelpMess[ALL_HELP_MESS_LINE] = {
+#if SERIAL_FLASH == 1
 				"        HyperFlash/SPI Flash write command",
 				" XCS            erase program to HyperFlash/SPI Flash",
 				" XLS2           write program to HyperFlash/SPI Flash",
 				" XLS3           write program to HyperFlash/SPI Flash(Binary)",
 				"",
+#endif /* SERIAL_FLASH == 1 */
 				"        eMMC write command",
 				" EM_DCID        display register CID",
 				" EM_DCSD        display register CSD",

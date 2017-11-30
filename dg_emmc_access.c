@@ -46,7 +46,9 @@
 #include	"b_boarddrv.h"
 #include	"boardid.h"
 #include	"switch.h"
+#if USB_ENABLE == 1
 #include	"usb_lib.h"
+#endif /* USB_ENABLE == 1 */
 
 #define		SIZE2SECTOR(x)				( (x) >> 9 )	/* 512Byte		*/
 
@@ -101,8 +103,6 @@ typedef enum
 	EMMC_WRITE_MOT = 0,
 	EMMC_WRITE_BINARY,
 }EMMC_WRITE_COMMAND;
-
-extern uint32_t	gTerminal;
 
 static void dg_emmc_write_bin_serial(uint32_t* workStartAdd, uint32_t fileSize);
 static EMMC_ERROR_CODE dg_emmc_init(void);
@@ -306,13 +306,11 @@ void	dg_emmc_write(EMMC_WRITE_COMMAND wc)
 	{
 	case EMMC_PARTITION_USER_AREA:			//User Partition Area Program
 		PutStr("Work RAM(H'50000000-H'6FFFFFFF) Clear....",1);
-//		AsmWr(Load_workStartAdd, Load_workEndAdd, 0x00000000);
-		FillData8Bit((uint8_t *)Load_workStartAdd,(uint8_t *)Load_workEndAdd,0x00);
+		FillData32Bit((uint32_t *)Load_workStartAdd,(uint32_t *)Load_workEndAdd,0x00000000);
 		break;
 	default:
 		PutStr("Work RAM(H'50000000-H'50FFFFFF) Clear....",1);
-//		AsmWr(Load_workStartAdd, Load_workEndAdd, 0x00000000);
-		FillData8Bit((uint8_t *)Load_workStartAdd,(uint8_t *)Load_workEndAdd,0x00);
+		FillData32Bit((uint32_t *)Load_workStartAdd,(uint32_t *)Load_workEndAdd,0x00000000);
 		break;
 	}
 
@@ -330,16 +328,19 @@ void	dg_emmc_write(EMMC_WRITE_COMMAND wc)
 		}
 		PutStr("please send binary file!",1);
 
-		if (gTerminal == 1)
+#if USB_ENABLE == 1
+		if (gTerminal == USB_TERMINAL)
 		{
 			totalDownloadSize = ((fileSize + (DMA_TRANSFER_SIZE - 1)) & DMA_ROUNDUP_VALUE);
-
 			USB_ReadDataWithDMA((unsigned long)Load_workStartAdd, totalDownloadSize);
 		}
 		else
 		{
 			dg_emmc_write_bin_serial(Load_workStartAdd, fileSize);
 		}
+#else  /* USB_ENABLE == 1 */
+		dg_emmc_write_bin_serial(Load_workStartAdd, fileSize);
+#endif /* USB_ENABLE == 1 */
 
 		workAdd_Min = (uintptr_t)Load_workStartAdd;
 		workAdd_Max = workAdd_Min + fileSize - 1;

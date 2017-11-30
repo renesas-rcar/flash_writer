@@ -43,6 +43,7 @@
 const com_menu MonCom[COMMAND_UNIT] = {
 /*--------------------- Basic command ------------------------------*/
 	 "H"				, dgHelp						,  0	,
+#if SERIAL_FLASH == 1
 	 "XCS"				, dgClearSpiflash0				,  0	,
 	 "XLS"				, dgGen3LoadSpiflash0			,  0	,
 	 "XLS2"				, dgGen3LoadSpiflash0_2			,  0	,
@@ -51,6 +52,7 @@ const com_menu MonCom[COMMAND_UNIT] = {
 	 "XINFO_SA0_S"			, dgGen3InfoSetSpiflash0_SA0	,  0	,
 	 "XINFO"			, dgGen3InfoSpiflash0			,  0	,
 	 "XINFO_S"			, dgGen3InfoSetSpiflash0		,  0	,
+#endif /* SERIAL_FLASH == 1 */
 	 "EM_DCID"			, &dg_emmc_disp_cid				,  0	,
 	 "EM_DCSD"			, &dg_emmc_disp_csd				,  0	,
 	 "EM_DECSD"			, &dg_emmc_disp_ext_csd			,  0	,

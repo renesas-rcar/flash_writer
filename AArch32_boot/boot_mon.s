@@ -250,11 +250,41 @@ data_end:
 	BL InitDram
 .endif
 
+	cmp	r0, #0
+	beq	Jmp_MAIN_C	/* InitDram success */ 
+	mov	r4, r0
+
+	ldr	r0, =dram_err_msg
+	mov	r1, #0
+	bl	PutStr
+
+	mov	r0, r4	/* return value of InitDram */
+	ldr	r1, =str_buf
+	ldr	r2, =cnt
+	bl	Hex2Ascii
+	mov	r0, r1
+	mov	r1, #1
+	bl	PutStr
+1:
+	wfi		/* InitDram fail */
+	b	1b
 
 ;####################################################################################################
 ;####	go to main
 ;####################################################################################################
 Jmp_MAIN_C:
 	BL		Main
+
+
+	.section .rodata
+dram_err_msg:
+	.asciz "InitDram error=0x"
+
+	.section .bss
+	.align	4
+cnt:
+	.space	4
+str_buf:
+	.space	16
 
 	.END

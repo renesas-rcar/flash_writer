@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,4 +29,4 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-int32_t FillData8Bit( uint8_t *startAddr, uint8_t *endAddr, uint8_t writeData );
+int32_t FillData32Bit( uint32_t *startAddr, uint32_t *endAddr, uint32_t writeData );

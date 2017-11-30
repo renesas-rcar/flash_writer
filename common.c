@@ -32,10 +32,11 @@
 #include	"types.h"
 #include	"common.h"
 #include	"devdrv.h"
+#if USB_ENABLE == 1
 #include	"usb_lib.h"
+#endif /* USB_ENABLE == 1 */
 
 __attribute__((aligned(32))) uint8_t		gCOMMAND_Area[COMMAND_BUFFER_SIZE];
-extern uint32_t	gTerminal;
 
 /************************************************************************/
 /*NAME		: PutMes													*/
@@ -50,6 +51,18 @@ int32_t PutMess(const char *const mess[])
 	return(0);
 }
 
+#if USB_ENABLE == 1
+int32_t PutMessUSB(const char *const mess[])
+{
+	int32_t i=0;
+	while(mess[i]){
+		PutStrUSB(mess[i],ENB_RTN);
+		i++;
+	}
+	return(0);
+}
+#endif /* USB_ENABLE == 1 */
+
 /************************************************************************/
 /*NAME		: PutStr													*/
 /************************************************************************/
@@ -62,6 +75,21 @@ int32_t	PutStr(const char *str,char rtn)
 	if(rtn == 1){
 		PutChar(CR_CODE);
 		PutChar(LF_CODE);
+	}
+	return(0);
+
+}
+
+#if USB_ENABLE == 1
+int32_t	PutStrUSB(const char *str,char rtn)
+{
+	while(*str){
+		PutCharUSB(*str);
+		str++;
+	}
+	if(rtn == 1){
+		PutCharUSB(CR_CODE);
+		PutCharUSB(LF_CODE);
 	}
 	return(0);
 
@@ -98,6 +126,7 @@ int32_t GetCharUSB(char *inChar)
 	}
 	return(0);
 }
+#endif /* USB_ENABLE == 1 */
 
 
 /************************************************************************/

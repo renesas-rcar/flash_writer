@@ -165,8 +165,39 @@ data_end:
 
 .endif
 
+	cmp	x0, #0
+	beq	2f	/* InitDram success */
+	mov	x19, x0
 
+	ldr	x0, =dram_err_msg
+	mov	x1, #0
+	bl	PutStr
+
+	mov	x0, x19	/* return value of InitDram */
+	ldr	x1, =str_buf
+	ldr	x2, =cnt
+	bl	Hex2Ascii
+	mov	x0, x1
+	mov	x1, #1
+	bl	PutStr
+1:
+	wfi		/* InitDram fail */
+	b	1b
+
+2:
 	BL		Main
+
+
+	.section .rodata
+dram_err_msg:
+	.asciz "InitDram error=0x"
+
+	.section .bss
+	.align	4
+cnt:
+	.space	4
+str_buf:
+	.space	16
 
 	.END
 

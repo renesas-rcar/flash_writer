@@ -44,7 +44,9 @@
 #include	"dgmodul1.h"
 #include	"boardid.h"
 #include	"switch.h"
+#if USB_ENABLE == 1
 #include	"usb_lib.h"
+#endif /* USB_ENABLE == 1 */
 
 uint32_t	gSpiFlashSvArea;
 uint32_t	gUserPrgStartAdd;
@@ -184,7 +186,7 @@ void dgGen3LoadSpiflash0(void)
     else if(gSpiFlashSvArea==3) {
 		PutStr("Work RAM(H'50000000-H'53FFFFFF) Clear....",1);
     }
-	FillData8Bit((uint8_t *)Load_workStartAdd,(uint8_t *)Load_workEndAdd,0xFF);
+	FillData32Bit((uint32_t *)Load_workStartAdd,(uint32_t *)Load_workEndAdd,0xFFFFFFFF);
 
 	if(dgLS_Load_Offset2(&workAdd_Max ,&workAdd_Min))
 		return;															//
@@ -453,32 +455,6 @@ uint32_t CheckQspiFlashId(void)
 }
 
 
-
-void SwChgDefaultToExSPI_QSPI0(void)
-{
-	PutStr("SW1 SW2 All ON!  Setting OK? (Push Y key)",0);		WaitKeyIn_Y();	DelStr(41);
-	PutStr("SW3 OFF!  Setting OK? (Push Y key)",0);				WaitKeyIn_Y();	DelStr(34);
-	PutStr("SW31 OFF!  Setting OK? (Push Y key) [In the case of Kriek Board]",0);	WaitKeyIn_Y();	DelStr(64);
-	PutStr("SW13 3pin-Side! Setting OK? (Push Y key)",0);		WaitKeyIn_Y();	DelStr(40);
-	PutStr("CN3 : QSPI Flash Board Set OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(43);
-}
-
-void SwChgDefaultToOnBoard_QSPI0(void)
-{
-	PutStr("SW1 SW2 All ON!  Setting OK? (Push Y key)",0);		WaitKeyIn_Y();	DelStr(41);
-	PutStr("SW3 OFF!  Setting OK? (Push Y key)",0);				WaitKeyIn_Y();	DelStr(34);
-	PutStr("SW31 OFF!  Setting OK? (Push Y key) [In the case of Kriek Board]",0);	WaitKeyIn_Y();	DelStr(64);
-	PutStr("SW13 1pin-Side! Setting OK? (Push Y key)",0);		WaitKeyIn_Y();	DelStr(40);
-}
-
-void SwChgDefaultToHyperFlash(void)
-{
-	PutStr("SW1 SW2 All OFF!  Setting OK? (Push Y key)",0);		WaitKeyIn_Y();	DelStr(42);
-	PutStr("SW3 ON!  Setting OK? (Push Y key)",0);				WaitKeyIn_Y();	DelStr(33);
-	PutStr("SW31 ON!  Setting OK? (Push Y key) [In the case of Kriek Board]",0);	WaitKeyIn_Y();	DelStr(63);
-}
-
-
 int32_t CkQspiFlash0ClearSectorSize(uint32_t rdBufAdd,uint32_t spiFlashStatAdd,uint32_t checkSize,uint32_t accessSize)
 {
 //	unsigned char *bufPtr;
@@ -724,7 +700,7 @@ void XLoadSpiflash0_2(uint32_t mode)
 		SetAddInputKey(&gUserPrgStartAdd);
 	} else {
 		PutStr("===== Please Input Program size ============",1);
-		SetAddInputKey(&gUserPrgSize);
+		SetSizeInputKey(&gUserPrgSize);
 	}
 
 	PutStr(" ",1);
@@ -752,7 +728,7 @@ void XLoadSpiflash0_2(uint32_t mode)
 
 // WorkMemory CLEAR (Write H'FF)
 	PutStr("Work RAM(H'50000000-H'53FFFFFF) Clear....",1);		//
-	FillData8Bit((uint8_t *)Load_workStartAdd,(uint8_t *)Load_workEndAdd,0xFF);
+	FillData32Bit((uint32_t *)Load_workStartAdd,(uint32_t *)Load_workEndAdd,0xFFFFFFFF);
 
 	if (0U == mode) {
 		if (dgLS_Load_Offset2(&workAdd_Max, &workAdd_Min))
@@ -762,14 +738,10 @@ void XLoadSpiflash0_2(uint32_t mode)
 		uint32_t image_offset = 0U;
 		PutStr("please send ! (binary)",1);
 
-extern uint32_t	gTerminal;
+#if USB_ENABLE == 1
 		if (gTerminal == USB_TERMINAL) {
-#define		DMA_TRANSFER_SIZE       (0x20)                /* DMA Transfer size =  32 Bytes*/
-
 			image_offset = ((gUserPrgSize + (DMA_TRANSFER_SIZE-1)) & ~(DMA_TRANSFER_SIZE-1));
-
 			USB_ReadDataWithDMA((unsigned long)Load_workStartAdd, image_offset);
-
 		} else {
 			while (image_offset < gUserPrgSize) {
 				GetChar(&bin_data);
@@ -777,6 +749,13 @@ extern uint32_t	gTerminal;
 				image_offset++;
 			}
 		}
+#else  /* USB_ENABLE == 1 */
+		while (image_offset < gUserPrgSize) {
+			GetChar(&bin_data);
+			*(uint8_t *)(Load_workStartAdd + image_offset) = bin_data;
+			image_offset++;
+		}
+#endif /* USB_ENABLE == 1 */
 
 		workAdd_Min = Load_workStartAdd;
 		workAdd_Max = Load_workStartAdd + gUserPrgSize - 1;
@@ -974,7 +953,6 @@ void SetAddInputKey(uint32_t *Address)
 						PutStr("Memory Boundary Error",1);
 					}
 					else{
-//						gUserPrgStartAdd = wrData;
 						*Address = wrData;
 						loop =0;
 					}
@@ -986,9 +964,37 @@ void SetAddInputKey(uint32_t *Address)
 	}
 }
 
+void SetSizeInputKey(uint32_t *size)
+{
+	char		str[64];
+	char		buf[16],key[16],chCnt,chPtr;
+	uint32_t	loop;
+	uint32_t	wrData;
 
-
-
+	loop=1;
+	while(loop){
+		PutStr("  Please Input : H'",0);
+		GetStr(key,&chCnt);
+		chPtr=0;
+		if(!GetStrBlk(key,buf,&chPtr,0)){
+			if(chPtr==1){									/* Case Return */
+				}else if((buf[0]=='.')){					/* Case End */
+				loop =0;
+			}else if(chPtr > (char)((SIZE_32BIT<<1)+1) ){	/* Case Data Size Over */
+				PutStr("Syntax Error",1);
+			}else{
+				if(HexAscii2Data((unsigned char*)buf,&wrData)){
+					PutStr("Syntax Error",1);
+				}else{
+					*size = wrData;
+					loop =0;
+				}
+			}
+		}else{
+			PutStr("Syntax Error",1);
+		}
+	}
+}
 
 
 /****************************************************************
