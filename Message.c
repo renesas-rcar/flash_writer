@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,15 +35,18 @@
 ***********************/
 
 const char *const StartMessMonitor[START_MESS_MON_LINE] = {
-				"Flash writer for R-Car H3/M3/M3N Series V1.04 Nov.30,2017",
+#ifdef RCAR_GEN3_SALVATOR
+				"Flash writer for R-Car H3/M3/M3N Series V1.05 Mar.30,2018",
+#endif /* RCAR_GEN3_SALVATOR */
+#ifdef RCAR_GEN3_EBISU
+				"Flash writer for R-Car E3 Series V1.05 Mar.30,2018",
+#endif /* RCAR_GEN3_EBISU */
+#ifdef RCAR_GEN3_DRAAK
+				"Flash writer for R-Car D3 Series V1.05 Mar.30,2018",
+#endif /* RCAR_GEN3_DRAAK */
 				MESSAGE_END,
 };
 
-
-const char *const StartMessWorkMem[START_MESS_MEM_LINE] = {
-				" Work Memory SystemRAM (H'E6328000-H'E632FFFF) ",
-				MESSAGE_END,
-};
 
 const char *const AllHelpMess[ALL_HELP_MESS_LINE] = {
 #if SERIAL_FLASH == 1

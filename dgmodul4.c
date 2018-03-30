@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -203,7 +203,7 @@ void dgGen3LoadSpiflash0(void)
 
 	clearSize = (ClrSpiSecEndAdd-ClrSpiStartSecTopAdd)+1;
 
-	Read_workStartAdd    = 0x60000000;
+	Read_workStartAdd    = WORK_SPI_LOAD_AREA;
 
 	if(gSelectQspiFlash ==ONBOARD_QSPI){
 		if( CkQspiFlash1ClearSectorSize(Read_workStartAdd,ClrSpiStartSecTopAdd,clearSize,1) )
@@ -798,7 +798,7 @@ void XLoadSpiflash0_2(uint32_t mode)
 
 	clearSize = (ClrSpiSecEndAdd-ClrSpiStartSecTopAdd)+1;
 
-	Read_workStartAdd    = 0x60000000;
+	Read_workStartAdd    = WORK_SPI_LOAD_AREA;
 
 	if(gSelectQspiFlash ==ONBOARD_QSPI){
 		if( CkQspiFlash1ClearSectorSize(Read_workStartAdd,ClrSpiStartSecTopAdd,clearSize,1) )
@@ -1022,7 +1022,7 @@ void dgGen3InfoSpiflash0_SA0(void)
 //Setting  SPI_Add, workRAM_Add
 	spiFlashStatAdd = S25FL512_SA00_STARTAD;
 
-	workTopAdd      = 0x60000000;
+	workTopAdd      = WORK_SPI_LOAD_AREA;
 	rdBufstatAdd    = workTopAdd + spiFlashStatAdd;			//0x60000000 + 0x0000000 = 0x60000000
 
 	if(gSelectQspiFlash ==ONBOARD_QSPI){
@@ -1120,7 +1120,7 @@ void dgGen3InfoSetSpiflash0_SA0(void)
 //Setting  SPI_Add, workRAM_Add
 	spiFlashStatAdd = S25FL512_SA00_STARTAD;
 
-	workTopAdd      = 0x60000000;
+	workTopAdd      = WORK_SPI_LOAD_AREA;
 	rdBufstatAdd    = workTopAdd + spiFlashStatAdd;			//0x60000000 + 0x0000000 = 0x60000000
 	OnBoradSpiSysSize    = 0x2000;
 
@@ -1214,7 +1214,7 @@ void dgGen3InfoSpiflash0(void)
 //Setting  SPI_Add, workRAM_Add
 	spiFlashStatAdd = S25FL512_SA03_STARTAD;
 
-	workTopAdd      = 0x60000000;
+	workTopAdd      = WORK_SPI_LOAD_AREA;
 	rdBufstatAdd    = workTopAdd + spiFlashStatAdd;			//0x60000000 + 0x00C0000 = 0x600C0000
 
 	if(gSelectQspiFlash ==ONBOARD_QSPI){
@@ -1265,7 +1265,7 @@ void dgGen3InfoSetSpiflash0(void)
 
 //Setting  SPI_Add, workRAM_Add
 	spiFlashStatAdd = S25FL512_SA03_STARTAD;
-	workTopAdd      = 0x60000000;
+	workTopAdd      = WORK_SPI_LOAD_AREA;
 	rdBufstatAdd    = workTopAdd + spiFlashStatAdd;			//0x60000000 + 0x00C0000 = 0x600C0000
 
 	if(gSelectQspiFlash ==ONBOARD_QSPI){

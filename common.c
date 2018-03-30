@@ -174,55 +174,6 @@ int32_t	GetStr(char *str,char *chCnt)
 
 
 /************************************************************************/
-/*NAME		: GetStr_MemEd												*/
-/************************************************************************/
-int32_t	GetStr_MemEd(char *str,char *chCnt)
-{
-	char	*intstr;
-	int32_t	i;
-
-	intstr = str;
-	*chCnt=0;
-
-	while(1)
-	{
-		i=1;
-		while(i==1)
-		{
-			i=GetChar(str);
-		}
-		if(*str==CR_CODE) break;
-		switch(*str)
-		{
-			case BS_CODE: if(*chCnt==0) break;
-						  else
-						  {
-							 PutChar(BS_CODE);
-							 PutChar(SP_CODE);
-							 PutChar(BS_CODE);
-							 *chCnt = *chCnt - 1;
-							 str--;
-						  }
-						  break;
-			case LF_CODE: break;
-			default: PutChar(*str);
-				     str++;
-					 *chCnt = *chCnt+1;
-		}
-		if(*intstr =='.'){
-			break;
-		}
-		else if(*intstr =='^'){
-			break;
-		}
-	}
-	*str = 0;
-	PutChar(LF_CODE);
-	PutChar(CR_CODE);
-	return(0);
-}
-
-/************************************************************************/
 /*NAME		: Hex2Ascii													*/
 /************************************************************************/
 uint32_t Hex2Ascii(int32_t hexdata,char *str,int32_t *chcnt)
@@ -336,35 +287,6 @@ char HexAscii2Data(unsigned char *buf,uint32_t *data)
 	return(0);
 }
 
-char HexAscii2Data_64(unsigned char *buf,uintptr_t *data)
-{
-	char chCnt;
-	uintptr_t tmpData;
-	*data = 0;	chCnt = 0;
-
-	ChgLtl2Lrg(buf);
-
-	if(*buf=='@') return(3);
-	while(*buf){
-		if(('0'<= *buf)&&(*buf<='9')){
-			tmpData = (uintptr_t)(*buf - '0');
-			*data <<= 4;
-			*data |= tmpData;
-		}else if(('A'<= *buf)&&(*buf<='F')){
-			tmpData = (uintptr_t)(*buf - 55);
-			*data <<= 4;
-			*data |= tmpData;
-		}else{
-			return(1);
-		}
-		buf++; chCnt++;
-		if(chCnt>(CPU_BYTE_SIZE*2))	return(1);
-	}
-	return(0);
-}
-
-
-
 char Data2HexAscii(uint32_t data,char *buf,char size)
 {
 	char loopCnt,i;
@@ -392,41 +314,6 @@ char Data2HexAscii(uint32_t data,char *buf,char size)
 	*buf = 0;
 	return(0);
 }
-
-char Data2HexAscii_64(uintptr_t data,char *buf,char size)
-{
-	char loopCnt,i;
-	uintptr_t tmpData;
-	switch(size){
-	case SIZE_8BIT:
-		data <<= (CPU_BYTE_SIZE*8-8); loopCnt=2;
-		break;
-	case SIZE_16BIT:
-		data <<= (CPU_BYTE_SIZE*8-16); loopCnt=4;
-		break;
-	case SIZE_32BIT:
-		data <<= (CPU_BYTE_SIZE*8-32); loopCnt=8;
-		break;
-#ifdef AArch64
-	case SIZE_64BIT:
-		data <<= (CPU_BYTE_SIZE*8-64); loopCnt=16;
-		break;
-#endif
-	}
-	for(i=0;i<loopCnt;i++,buf++){
-		tmpData = (data >> (CPU_BYTE_SIZE*8-4));
-		if(tmpData < 0x0a){ /* case 1 to 9 */
-			*buf = (char)(tmpData + '0');
-		}else{	/* case A to F */
-			*buf = (char)(tmpData + 55);
-		}
-		data <<= 4;
-	}
-	*buf = 0;
-	return(0);
-}
-
-
 
 char GetStrBlk(char *inStr,char *outStr,
 			   char *chPtr,char method)

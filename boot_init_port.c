@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,14 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-//=========================================================
-//===== Setting for R-CarM3 ===============================
-//=========================================================
-
 
 #include "common.h"
 #include "reg_rcarh3.h"
-#include "boot_init_port_M3.h"
+#include "boot_init_port.h"
 
 
 #define PFC_WR(m,n)   *((volatile uint32_t*)PFC_PMMR)=~(n);*((volatile uint32_t*)(m))=(n);
@@ -79,7 +75,39 @@
 #define RDMDPBASE_SEL_EXT		(0x00000001U)	/* External memory use */
 
 
+#ifdef RCAR_GEN3_SALVATOR
+static void InitMODSEL(void);
+static void InitIPSR_H3(void);
+static void InitIPSR_M3(void);
+static void InitGPSR_H3(void);
+static void InitGPSR_M3(void);
+static void InitPOCCTRL(void);
+static void InitDRVCTRL(void);
+static void InitPUD(void);
+static void InitPUEN(void);
+#endif /* RCAR_GEN3_SALVATOR */
+
+#ifdef RCAR_GEN3_EBISU
+static void InitMODSEL_E3(void);
+static void InitIPSR_E3(void);
+static void InitGPSR_E3(void);
+static void InitIOCTRL_E3(void);
+static void InitPUD_E3(void);
+static void InitPUEN_E3(void);
+#endif /* RCAR_GEN3_EBISU */
+
+#ifdef RCAR_GEN3_DRAAK
+static void InitMODSEL_D3(void);
+static void InitIPSR_D3(void);
+static void InitGPSR_D3(void);
+static void InitIOCTRL_D3(void);
+static void InitPUD_D3(void);
+static void InitPUEN_D3(void);
+#endif /* RCAR_GEN3_DRAAK */
+
+#ifdef RCAR_GEN3_SALVATOR
 static void StartRtDma0_Descriptor(void);
+#endif /* RCAR_GEN3_SALVATOR */
 
 
 void InitPORT(void)
@@ -91,6 +119,7 @@ void InitPORT(void)
 	cut = *((volatile uint32_t*)PRR) & PRR_CUT_MASK;
 
 	switch (product) {
+#ifdef RCAR_GEN3_SALVATOR
 	case PRR_PRODUCT_H3:
 		InitMODSEL();
 	if (cut < PRR_CUT_20) {
@@ -107,8 +136,9 @@ void InitPORT(void)
 		break;
 
 	case PRR_PRODUCT_M3:
-	case PRR_PRODUCT_M3N:
 		StartRtDma0_Descriptor();
+		/* no break */
+	case PRR_PRODUCT_M3N:
 		InitMODSEL();
 		InitIPSR_M3();
 		InitGPSR_M3();
@@ -117,6 +147,29 @@ void InitPORT(void)
 		InitPUD();
 		InitPUEN();
 		break;
+#endif /* RCAR_GEN3_SALVATOR */
+
+#ifdef RCAR_GEN3_EBISU
+	case PRR_PRODUCT_E3:
+		InitMODSEL_E3();
+		InitIPSR_E3();
+		InitGPSR_E3();
+		InitIOCTRL_E3();
+		InitPUD_E3();
+		InitPUEN_E3();
+		break;
+#endif /* RCAR_GEN3_EBISU */
+
+#ifdef RCAR_GEN3_DRAAK
+	case PRR_PRODUCT_D3:
+		InitMODSEL_D3();
+		InitIPSR_D3();
+		InitGPSR_D3();
+		InitIOCTRL_D3();
+		InitPUD_D3();
+		InitPUEN_D3();
+		break;
+#endif /* RCAR_GEN3_DRAAK */
 
 	default:
 		break;
@@ -125,14 +178,15 @@ void InitPORT(void)
 }
 
 
-void InitMODSEL(void)
+#ifdef RCAR_GEN3_SALVATOR
+static void InitMODSEL(void)
 {
 	PFC_WR(PFC_MOD_SEL0,0x00000000);
 	PFC_WR(PFC_MOD_SEL1,0x00000000);
 	PFC_WR(PFC_MOD_SEL2,0x00000000);
 }
 
-void InitIPSR_H3(void)
+static void InitIPSR_H3(void)
 {
 	PFC_WR(PFC_IPSR0, 0x00000000);
 
@@ -144,7 +198,7 @@ void InitIPSR_H3(void)
 	PFC_WR(PFC_IPSR5, 0x00000000);
 	PFC_WR(PFC_IPSR6, 0x00000000);
 	PFC_WR(PFC_IPSR7, 0x00000000);
-#else			
+#else
 	PFC_WR(PFC_IPSR1, 0x60003333);
 	PFC_WR(PFC_IPSR2, 0x06666666);
 	PFC_WR(PFC_IPSR3, 0x66666000);
@@ -166,7 +220,7 @@ void InitIPSR_H3(void)
 	PFC_WR(PFC_IPSR17,0x00000000);
 }
 
-void InitIPSR_M3(void)
+static void InitIPSR_M3(void)
 {
 	PFC_WR(PFC_IPSR0, 0x00000000);
 
@@ -200,7 +254,7 @@ void InitIPSR_M3(void)
 	PFC_WR(PFC_IPSR17,0x00000010);
 }
 
-void InitGPSR_H3(void)
+static void InitGPSR_H3(void)
 {
 #ifdef Area0Boot
 	PFC_WR(PFC_GPSR0, 0x0000FFFF);
@@ -218,7 +272,7 @@ void InitGPSR_H3(void)
 	PFC_WR(PFC_GPSR7, 0x0000000F);
 }
 
-void InitGPSR_M3(void)
+static void InitGPSR_M3(void)
 {
 #ifdef Area0Boot
 	PFC_WR(PFC_GPSR0, 0x0000FFFF);
@@ -236,12 +290,12 @@ void InitGPSR_M3(void)
 	PFC_WR(PFC_GPSR7, 0x0000000F);
 }
 
-void InitPOCCTRL(void)
+static void InitPOCCTRL(void)
 {
 	PFC_WR(PFC_POCCTRL0, 0x3FF8003F);
 }
 
-void InitDRVCTRL(void)
+static void InitDRVCTRL(void)
 {
 	PFC_WR(PFC_DRVCTRL0, 0x33333333);
 	PFC_WR(PFC_DRVCTRL1, 0x33333337);
@@ -257,8 +311,8 @@ void InitDRVCTRL(void)
 	PFC_WR(PFC_DRVCTRL11,0x77777733);
 	PFC_WR(PFC_DRVCTRL12,0x33300030);
 	PFC_WR(PFC_DRVCTRL13,0x33777777);
-	PFC_WR(PFC_DRVCTRL14,0x77777777);
-	PFC_WR(PFC_DRVCTRL15,0x77777777);
+	PFC_WR(PFC_DRVCTRL14,0x77555555);
+	PFC_WR(PFC_DRVCTRL15,0x55555777);
 	PFC_WR(PFC_DRVCTRL16,0x77777777);
 	PFC_WR(PFC_DRVCTRL17,0x77777777);
 	PFC_WR(PFC_DRVCTRL18,0x77777777);
@@ -270,7 +324,7 @@ void InitDRVCTRL(void)
 	PFC_WR(PFC_DRVCTRL24,0x77777770);
 }
 
-void InitPUD(void)
+static void InitPUD(void)
 {
 	PFC_WR(PFC_PUD0,0x00005FBF);
 	PFC_WR(PFC_PUD1,0x00200FFE);
@@ -281,7 +335,7 @@ void InitPUD(void)
 	PFC_WR(PFC_PUD6,0x00000055);
 }
 
-void InitPUEN(void)
+static void InitPUEN(void)
 {
 	PFC_WR(PFC_PUEN0,0x00000FFF);
 
@@ -298,8 +352,139 @@ void InitPUEN(void)
 	PFC_WR(PFC_PUEN5,0x1F000805);
 	PFC_WR(PFC_PUEN6,0x00000006);
 }
+#endif /* RCAR_GEN3_SALVATOR */
 
+#ifdef RCAR_GEN3_EBISU
+static void InitMODSEL_E3(void)
+{
+	PFC_WR(PFC_MOD_SEL0,0x00000800);
+	PFC_WR(PFC_MOD_SEL1,0x10000000);
+}
 
+static void InitIPSR_E3(void)
+{
+	PFC_WR(PFC_IPSR0,0x00000000);
+	PFC_WR(PFC_IPSR1,0x00000000);
+	PFC_WR(PFC_IPSR2,0x15620000);
+	PFC_WR(PFC_IPSR3,0x50045551);
+	PFC_WR(PFC_IPSR4,0x55555555);
+	PFC_WR(PFC_IPSR5,0x55555555);
+	PFC_WR(PFC_IPSR6,0x55525505);
+	PFC_WR(PFC_IPSR7,0x00550115);
+	PFC_WR(PFC_IPSR8,0x00000000);
+	PFC_WR(PFC_IPSR9,0x00000000);
+	PFC_WR(PFC_IPSR10,0x00000000);
+	PFC_WR(PFC_IPSR11,0x08220000);
+	PFC_WR(PFC_IPSR12,0x00000020);
+	PFC_WR(PFC_IPSR13,0x00000011);
+	PFC_WR(PFC_IPSR14,0x30000000);
+	PFC_WR(PFC_IPSR15,0x00011003);
+}
+
+static void InitGPSR_E3(void)
+{
+	PFC_WR(PFC_GPSR0,0x0001BFEF);
+	PFC_WR(PFC_GPSR1,0x006FFF3F);
+	PFC_WR(PFC_GPSR2,0x0FBFFFFF);
+	PFC_WR(PFC_GPSR3,0x00007FFF);
+	PFC_WR(PFC_GPSR4,0x000007FF);
+	PFC_WR(PFC_GPSR5,0x0000C399);
+	PFC_WR(PFC_GPSR6,0x00039FEF);
+}
+
+static void InitIOCTRL_E3(void)
+{
+	PFC_WR(PFC_IOCTRL30,0x0007FFFF);
+	PFC_WR(PFC_IOCTRL32,0xFFFFFFFE);
+	PFC_WR(PFC_IOCTRL40,0x00000000);
+}
+
+static void InitPUD_E3(void)
+{
+	PFC_WR(PFC_PUD0,0x00080000);
+	PFC_WR(PFC_PUD1,0xCE398464);
+	PFC_WR(PFC_PUD2,0xA4C380F4);
+	PFC_WR(PFC_PUD3,0x0000079F);
+	PFC_WR(PFC_PUD4,0xFFF0FFFF);
+	PFC_WR(PFC_PUD5,0x40000000);
+}
+
+static void InitPUEN_E3(void)
+{
+	PFC_WR(PFC_PUEN0,0x00000000);
+	PFC_WR(PFC_PUEN1,0x00300000);
+	PFC_WR(PFC_PUEN2,0x00400074);
+	PFC_WR(PFC_PUEN3,0x00000000);
+	PFC_WR(PFC_PUEN4,0x07900600);
+	PFC_WR(PFC_PUEN5,0x00000000);
+}
+#endif /* RCAR_GEN3_EBISU */
+
+#ifdef RCAR_GEN3_DRAAK
+static void InitMODSEL_D3(void)
+{
+	PFC_WR(PFC_MOD_SEL0,0x40A02000);
+	PFC_WR(PFC_MOD_SEL1,0x00000000);
+}
+
+static void InitIPSR_D3(void)
+{
+	PFC_WR(PFC_IPSR0,0x00000001);
+	PFC_WR(PFC_IPSR1,0x00000000);
+	PFC_WR(PFC_IPSR2,0x00000000);
+	PFC_WR(PFC_IPSR3,0x00000000);
+	PFC_WR(PFC_IPSR4,0x00002000);
+	PFC_WR(PFC_IPSR5,0x00000000);
+	PFC_WR(PFC_IPSR6,0x00000000);
+	PFC_WR(PFC_IPSR7,0x00000000);
+	PFC_WR(PFC_IPSR8,0x11003301);
+	PFC_WR(PFC_IPSR9,0x11111111);
+	PFC_WR(PFC_IPSR10,0x00020000);
+	PFC_WR(PFC_IPSR11,0x40000000);
+	PFC_WR(PFC_IPSR12,0x00000000);
+	PFC_WR(PFC_IPSR13,0x00000000);
+}
+
+static void InitGPSR_D3(void)
+{
+	PFC_WR(PFC_GPSR0,0x000001DF);
+	PFC_WR(PFC_GPSR1,0x1FFFFFFF);
+	PFC_WR(PFC_GPSR2,0x7FFFFFFF);
+	PFC_WR(PFC_GPSR3,0x000003FF);
+	PFC_WR(PFC_GPSR4,0xFC400F7E);
+	PFC_WR(PFC_GPSR5,0x001BFFF8);
+	PFC_WR(PFC_GPSR6,0x00003FFF);
+}
+
+static void InitIOCTRL_D3(void)
+{
+	PFC_WR(PFC_IOCTRL30,0xC00FFFFF);
+	PFC_WR(PFC_IOCTRL32,0xFFFFFFFE);
+	PFC_WR(PFC_IOCTRL40,0x00000000);
+}
+
+static void InitPUD_D3(void)
+{
+	PFC_WR(PFC_PUD0,0x0043C000);
+	PFC_WR(PFC_PUD1,0x000003FF);
+	PFC_WR(PFC_PUD2,0xFFFFA000);
+	PFC_WR(PFC_PUD3,0x3A0FFD8E);
+	PFC_WR(PFC_PUD4,0x00000000);
+	PFC_WR(PFC_PUD5,0x00000000);
+}
+
+static void InitPUEN_D3(void)
+{
+	PFC_WR(PFC_PUEN0,0x0043C000);
+	PFC_WR(PFC_PUEN1,0x000003FF);
+	PFC_WR(PFC_PUEN2,0xFFFFA000);
+	PFC_WR(PFC_PUEN3,0x3A0FFD8E);
+	PFC_WR(PFC_PUEN4,0x00000000);
+	PFC_WR(PFC_PUEN5,0x00000000);
+}
+#endif /* RCAR_GEN3_DRAAK */
+
+#ifdef RCAR_GEN3_SALVATOR
 static void StartRtDma0_Descriptor(void)
 {
 	uint32_t reg;
@@ -343,3 +528,4 @@ static void StartRtDma0_Descriptor(void)
 														   | RDMCHCR_DE);
 	}
 }
+#endif /* RCAR_GEN3_SALVATOR */

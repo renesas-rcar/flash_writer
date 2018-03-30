@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,50 +41,67 @@
 /* ************************ HEADER (INCLUDE) SECTION *********************** */
 
 /* ***************** MACROS, CONSTANTS, COMPILATION FLAGS ****************** */
+/* MMC channel select */
+#define MMC_CH0		(0U)		/* SDHI2/MMC0 */
+#define MMC_CH1		(1U)		/* SDHI3/MMC1 */
+
+#ifdef RCAR_GEN3_EBISU
+#define USE_MMC_CH	(MMC_CH1)	/* R-Car E3 */
+#else  /* RCAR_GEN3_EBISU */
+#define USE_MMC_CH	(MMC_CH0)	/* R-Car H3/M3/M3N */
+#endif /* RCAR_GEN3_EBISU */
 
 
-/** @brief eMMC(SDHI1) registers
+/** @brief eMMC registers
  */
-#define	SDHI1_BASE					(0xEE140000)		//MMC0(SDHI2)
-#define SD_CMD						(SDHI1_BASE + 0x0000)
-#define SD_PORTSEL					(SDHI1_BASE + 0x0008)
-#define SD_ARG						(SDHI1_BASE + 0x0010)
-#define SD_ARG1						(SDHI1_BASE + 0x0018)
-#define SD_STOP						(SDHI1_BASE + 0x0020)
-#define SD_SECCNT					(SDHI1_BASE + 0x0028)
-#define SD_RSP10					(SDHI1_BASE + 0x0030)
-#define SD_RSP1						(SDHI1_BASE + 0x0038)
-#define SD_RSP32					(SDHI1_BASE + 0x0040)
-#define SD_RSP3						(SDHI1_BASE + 0x0048)
-#define SD_RSP54					(SDHI1_BASE + 0x0050)
-#define SD_RSP5						(SDHI1_BASE + 0x0058)
-#define SD_RSP76					(SDHI1_BASE + 0x0060)
-#define SD_RSP7						(SDHI1_BASE + 0x0068)
-#define SD_INFO1					(SDHI1_BASE + 0x0070)
-#define SD_INFO2					(SDHI1_BASE + 0x0078)
-#define SD_INFO1_MASK				(SDHI1_BASE + 0x0080)
-#define SD_INFO2_MASK				(SDHI1_BASE + 0x0088)
-#define SD_CLK_CTRL					(SDHI1_BASE + 0x0090)
-#define SD_SIZE						(SDHI1_BASE + 0x0098)
-#define SD_OPTION					(SDHI1_BASE + 0x00A0)
-#define SD_ERR_STS1					(SDHI1_BASE + 0x00B0)
-#define SD_ERR_STS2					(SDHI1_BASE + 0x00B8)
-#define SD_BUF0						(SDHI1_BASE + 0x00C0)
-#define SDIO_MODE					(SDHI1_BASE + 0x00D0)
-#define SDIO_INFO1					(SDHI1_BASE + 0x00D8)
-#define SDIO_INFO1_MASK				(SDHI1_BASE + 0x00E0)
-#define CC_EXT_MODE					(SDHI1_BASE + 0x0360)
-#define SOFT_RST					(SDHI1_BASE + 0x0380)
-#define VERSION						(SDHI1_BASE + 0x0388)
-#define HOST_MODE					(SDHI1_BASE + 0x0390)
-#define DM_CM_DTRAN_MODE			(SDHI1_BASE + 0x0820)
-#define DM_CM_DTRAN_CTRL			(SDHI1_BASE + 0x0828)
-#define DM_CM_RST					(SDHI1_BASE + 0x0830)
-#define DM_CM_INFO1					(SDHI1_BASE + 0x0840)
-#define DM_CM_INFO1_MASK			(SDHI1_BASE + 0x0848)
-#define DM_CM_INFO2					(SDHI1_BASE + 0x0850)
-#define DM_CM_INFO2_MASK			(SDHI1_BASE + 0x0858)
-#define DM_DTRAN_ADDR				(SDHI1_BASE + 0x0880)
+#define	MMC0_SD_BASE		(0xEE140000U)
+#define MMC1_SD_BASE		(0xEE160000U)
+
+#if USE_MMC_CH == MMC_CH0
+#define	MMC_SD_BASE		(MMC0_SD_BASE)
+#else  /* USE_MMC_CH == MMC_CH0 */
+#define	MMC_SD_BASE		(MMC1_SD_BASE)
+#endif /* USE_MMC_CH == MMC_CH0 */
+
+#define SD_CMD					(MMC_SD_BASE + 0x0000)
+#define SD_PORTSEL				(MMC_SD_BASE + 0x0008)
+#define SD_ARG					(MMC_SD_BASE + 0x0010)
+#define SD_ARG1					(MMC_SD_BASE + 0x0018)
+#define SD_STOP					(MMC_SD_BASE + 0x0020)
+#define SD_SECCNT				(MMC_SD_BASE + 0x0028)
+#define SD_RSP10				(MMC_SD_BASE + 0x0030)
+#define SD_RSP1					(MMC_SD_BASE + 0x0038)
+#define SD_RSP32				(MMC_SD_BASE + 0x0040)
+#define SD_RSP3					(MMC_SD_BASE + 0x0048)
+#define SD_RSP54				(MMC_SD_BASE + 0x0050)
+#define SD_RSP5					(MMC_SD_BASE + 0x0058)
+#define SD_RSP76				(MMC_SD_BASE + 0x0060)
+#define SD_RSP7					(MMC_SD_BASE + 0x0068)
+#define SD_INFO1				(MMC_SD_BASE + 0x0070)
+#define SD_INFO2				(MMC_SD_BASE + 0x0078)
+#define SD_INFO1_MASK				(MMC_SD_BASE + 0x0080)
+#define SD_INFO2_MASK				(MMC_SD_BASE + 0x0088)
+#define SD_CLK_CTRL				(MMC_SD_BASE + 0x0090)
+#define SD_SIZE					(MMC_SD_BASE + 0x0098)
+#define SD_OPTION				(MMC_SD_BASE + 0x00A0)
+#define SD_ERR_STS1				(MMC_SD_BASE + 0x00B0)
+#define SD_ERR_STS2				(MMC_SD_BASE + 0x00B8)
+#define SD_BUF0					(MMC_SD_BASE + 0x00C0)
+#define SDIO_MODE				(MMC_SD_BASE + 0x00D0)
+#define SDIO_INFO1				(MMC_SD_BASE + 0x00D8)
+#define SDIO_INFO1_MASK				(MMC_SD_BASE + 0x00E0)
+#define CC_EXT_MODE				(MMC_SD_BASE + 0x0360)
+#define SOFT_RST				(MMC_SD_BASE + 0x0380)
+#define VERSION					(MMC_SD_BASE + 0x0388)
+#define HOST_MODE				(MMC_SD_BASE + 0x0390)
+#define DM_CM_DTRAN_MODE			(MMC_SD_BASE + 0x0820)
+#define DM_CM_DTRAN_CTRL			(MMC_SD_BASE + 0x0828)
+#define DM_CM_RST				(MMC_SD_BASE + 0x0830)
+#define DM_CM_INFO1				(MMC_SD_BASE + 0x0840)
+#define DM_CM_INFO1_MASK			(MMC_SD_BASE + 0x0848)
+#define DM_CM_INFO2				(MMC_SD_BASE + 0x0850)
+#define DM_CM_INFO2_MASK			(MMC_SD_BASE + 0x0858)
+#define DM_DTRAN_ADDR				(MMC_SD_BASE + 0x0880)
 
 
 
@@ -125,13 +142,13 @@
 
 /** @brief SD_CLK_CTRL
  */
-#define SD_CLK_CTRL_SDCLKOFFEN		0x00000200UL
+#define SD_CLK_CTRL_SDCLKOFFEN			0x00000200UL
 #define SD_CLK_CTRL_SCLKEN			0x00000100UL
-#define SD_CLK_CTRL_CLKDIV_MASK     0x000000FFUL
-#define SD_CLOCK_ENABLE             0x00000100UL
-#define SD_CLOCK_DISABLE            0x00000000UL
-#define SD_CLK_WRITE_MASK           0x000003FFUL
-#define SD_CLK_CLKDIV_CLEAR_MASK    0xFFFFFF0FUL
+#define SD_CLK_CTRL_CLKDIV_MASK			0x000000FFUL
+#define SD_CLOCK_ENABLE				0x00000100UL
+#define SD_CLOCK_DISABLE			0x00000000UL
+#define SD_CLK_WRITE_MASK			0x000003FFUL
+#define SD_CLK_CLKDIV_CLEAR_MASK		0xFFFFFF0FUL
 
 /** @brief SD_OPTION
  */
@@ -179,7 +196,7 @@
 /** @brief CC_EXT_MODE
  */
 #define CC_EXT_MODE_DMASDRW_ENABLE	0x00000002UL		/* SD_BUF Read/Write DMA Transfer */
-#define CC_EXT_MODE_CLEAR			0x00001010UL		/* BIT 12 & 4 always 1. */
+#define CC_EXT_MODE_CLEAR		0x00001010UL		/* BIT 12 & 4 always 1. */
 
 /** @brief DM_CM_INFO_MASK
  */

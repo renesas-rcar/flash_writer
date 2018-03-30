@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,22 +32,21 @@
 #define		CHANGE_OFF		0
 #define		CHANGE_ON		1
 
-#define		ADDITION					0x00000000
-#define		SUBTRACTION					0x00000001
+#define		ADDITION			0x00000000
+#define		SUBTRACTION			0x00000001
 
-#define		SYSTEMRAM_SADD				0xE6300000
-#define		SYSTEMRAM_IPL_SADD			0xE6302000
-#define		PUBLICRAM_EADD				0xE635FFFF
+#define		SYSTEMRAM_SADD			0xE6300000
+#define		SYSTEMRAM_IPL_SADD		0xE6302000
+#define		PUBLICRAM_EADD			0xE635FFFF
 
-#define		LS_WORK_DRAM_SADD			0x50000000
+#define		LS_WORK_DRAM_SADD		0x50000000
 #define		LS_WORK_DRAM_EADD_192K		0x5002FFFF
 #define		LS_WORK_DRAM_EADD_16K		0x50003FFF
 #define		LS_WORK_DRAM_EADD_64M		0x53FFFFFF
 
+#define		WORK_SPI_LOAD_AREA		0x58000000
 
-
-
-#define		LS_WORK_SRAMBD_SADD			0x04000000
+#define		LS_WORK_SRAMBD_SADD		0x04000000
 #define		LS_WORK_SRAMBD_EADD_192K	0x0402FFFF
 #define		LS_WORK_SRAMBD_EADD_16M		0x04FFFFFF
 

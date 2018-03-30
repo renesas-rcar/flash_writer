@@ -87,19 +87,15 @@ int32_t PutCharUSB(char outChar);
 int32_t GetCharUSB(char *inChar);
 #endif /* USB_ENABLE == 1 */
 int32_t	GetStr(char *str,char *chCnt);
-int32_t	GetStr_MemEd(char *str,char *chCnt);
 uint32_t Hex2Ascii(int32_t hexdata,char *str,int32_t *chcnt);
 uint32_t Hex2DecAscii(int32_t hexdata,char *str,int32_t *chcnt);
 void DelStr(int32_t delCnt);
 void ChgLtl2Lrg(char *str);
 char HexAscii2Data(unsigned char *buf,uint32_t *data);
-char HexAscii2Data_64(unsigned char *buf,uintptr_t *data);
 char Data2HexAscii(uint32_t data,char *buf,char size);
-char Data2HexAscii_64(uintptr_t data,char *buf,char size);
 char GetStrBlk(char *inStr,char *outStr, char *chPtr,char method);
 void SoftDelay(uint32_t roop);
 void WaitKeyIn_Y(void);
 char WaitKeyIn_YorN(void);
-int32_t	GetStr_MemEd(char *str,char *chCnt);
 
 #endif

@@ -326,7 +326,7 @@ void WriteDataWithBufferHyperFlash(uint32_t addr, uint32_t source_addr)	//for Hy
 	//uint32_t i=0;
 	uintptr_t i=0;
 	
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
 	
 	*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030277;
@@ -379,7 +379,7 @@ void WriteDataWithBufferHyperFlash(uint32_t addr, uint32_t source_addr)	//for Hy
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
 }
 

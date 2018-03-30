@@ -1,0 +1,755 @@
+/*
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *   - Redistributions of source code must retain the above copyright notice,
+ *     this list of conditions and the following disclaimer.
+ *
+ *   - Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *
+ *   - Neither the name of Renesas nor the names of its contributors may be
+ *     used to endorse or promote products derived from this software without
+ *     specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*
+ * Revision history
+ *
+ * rev.0.01    2017/05/26    New
+ * rev.0.02    2017/08/01    Move the definition of RCAR_DDR_VERSION to file ddr_init_d3.h .
+ *                           Modify frequency of init_ddr_d31600 from 1600MHz to 1584MHz.
+ *                           Modify write values.
+ *                           (init_ddr_d31866)  DBTR19   from 0x012B004B to 0x0129004B
+ *                                              SCFCTST0 from 0x0D020D04 to 0x0C050B03
+ *                                              SCFCTST1 from 0x0306040C to 0x0305030C
+ *                           (init_ddr_d31600)  DBTR13   from 0x000000D0 to 0x000000CE
+ *                                              DBTR20   from 0x020000D8 to 0x020000D6
+ *                                              SCFCTST0 from 0x0D020C04 to 0x0D050B03
+ *                                              SCFCTST1 from 0x0305040C to 0x0306030C
+ *                                              PHY_004  from 0x08C05FF0 to 0x08A05EF6
+ *                                              PHY_024  from 0x2A88C400 to 0x2A88B400
+ *                                              DBRFCNF1 from 0x00080C30 to 0x00080C10
+ *                           Modify write values(These values are calculatated or determined according to REFRESH_RATE).
+ *                           (init_ddr_d31866)  PHY 004  from 0x0A206F89 to (uint32_t)(REFRESH_RATE*928/125)-400 + 0x0A200000
+ *                                              PHY 029  from 0x000000A0 to 0x00000020(REFRESH_RATE > 3900) or 0x000000A0(else)
+ *                                              DBCALCNF from 0x0100401B to (uint32_t)((64000000+(REFRESH_RATE-1))/REFRESH_RATE) + 0x01000000
+ *                                              DBRFCNF1 from 0x00080E23 to (uint32_t)(REFRESH_RATE*116/125) + 0x00080000
+ *                           (init_ddr_d31600)  PHY 004  from 0x08C05FF0 to (uint32_t)((REFRESH_RATE)*792/125)-400 + 0x08A00000
+ *                                              PHY 029  from 0x00000098 to 0x00000018(REFRESH_RATE > 3900) or 0x00000098(else)
+ *                                              DBCALCNF from 0x0100401B to (uint32_t)((64000000+(REFRESH_RATE-1))/REFRESH_RATE) + 0x01000000
+ *                                              DBRFCNF1 from 0x00080C30 to (uint32_t)(REFRESH_RATE*99/125) + 0x00080000
+ */
+
+
+#include <stdint.h>
+#include "boot_init_dram_regdef_d3.h"
+#include "ddr_init_d3.h"
+
+static void    WriteReg_32(uint32_t a, uint32_t v)
+{
+	(*(volatile uint32_t*)(uintptr_t)a) = v;
+}
+
+static uint32_t ReadReg_32(uint32_t a)
+{
+	uint32_t w = (*(volatile uint32_t*)(uintptr_t)a);
+	return w;
+}
+
+// MD19=1,DDR3L,1856Mbps
+uint32_t init_ddr_d31866(void)
+{
+
+	uint32_t RegVal_R2, RegVal_R3, RegVal_R5, RegVal_R6, RegVal_R7, RegVal_R12;
+
+   WriteReg_32(DBSC_D3_DBSYSCNT0,0x00001234);
+   WriteReg_32(DBSC_D3_DBKIND,0x00000007);
+   WriteReg_32(DBSC_D3_DBMEMCONF00,0x0f030a01);
+   WriteReg_32(DBSC_D3_DBPHYCONF0,0x00000001);
+   WriteReg_32(DBSC_D3_DBTR0,0x0000000D);
+   WriteReg_32(DBSC_D3_DBTR1,0x00000009);
+   WriteReg_32(DBSC_D3_DBTR2,0x00000000);
+   WriteReg_32(DBSC_D3_DBTR3,0x0000000D);
+   WriteReg_32(DBSC_D3_DBTR4,0x000D000D);
+   WriteReg_32(DBSC_D3_DBTR5,0x0000002D);
+   WriteReg_32(DBSC_D3_DBTR6,0x00000020);
+   WriteReg_32(DBSC_D3_DBTR7,0x00060006);
+   WriteReg_32(DBSC_D3_DBTR8,0x00000021);
+   WriteReg_32(DBSC_D3_DBTR9,0x00000007);
+   WriteReg_32(DBSC_D3_DBTR10,0x0000000E);
+   WriteReg_32(DBSC_D3_DBTR11,0x0000000C);
+   WriteReg_32(DBSC_D3_DBTR12,0x00140014);
+   WriteReg_32(DBSC_D3_DBTR13,0x000000F2);
+   WriteReg_32(DBSC_D3_DBTR14,0x00170006);
+   WriteReg_32(DBSC_D3_DBTR15,0x00060005);
+   WriteReg_32(DBSC_D3_DBTR16,0x09210507);
+   WriteReg_32(DBSC_D3_DBTR17,0x040E0000);
+   WriteReg_32(DBSC_D3_DBTR18,0x00000200);
+// WriteReg_32(DBSC_D3_DBTR19,0x012B004B);
+   WriteReg_32(DBSC_D3_DBTR19,0x0129004B);    // rev.0.02 0x012B004B=>0x0129004B
+   WriteReg_32(DBSC_D3_DBTR20,0x020000FB);
+   WriteReg_32(DBSC_D3_DBTR21,0x00040004);
+   WriteReg_32(DBSC_D3_DBBL,0x00000000);
+   WriteReg_32(DBSC_D3_DBODT0,0x00000001);
+   WriteReg_32(DBSC_D3_DBADJ0,0x00000001);
+   WriteReg_32(DBSC_D3_DBSYSCONF1,0x00000002);
+   WriteReg_32(DBSC_D3_DBDFICNT0,0x00000010);
+   WriteReg_32(DBSC_D3_DBBCAMDIS,0x00000001);
+   WriteReg_32(DBSC_D3_DBSCHRW1,0x00000046);
+// WriteReg_32(DBSC_D3_SCFCTST0,0x0D020D04);
+   WriteReg_32(DBSC_D3_SCFCTST0,0x0C050B03);    // rev.0.02 0x0D020D04=>0x0C050B03
+// WriteReg_32(DBSC_D3_SCFCTST1,0x0306040C);
+   WriteReg_32(DBSC_D3_SCFCTST1,0x0305030C);    // rev.0.02 0x0306040C=>0x0305030C
+
+   WriteReg_32(DBSC_D3_DBPDLK0,0x0000A55A);
+   WriteReg_32(DBSC_D3_DBCMD,0x01000001);
+   WriteReg_32(DBSC_D3_DBCMD,0x08000000);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x80010000);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000008);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x000B8000);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000090);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x04058A04);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000091);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0007BB6B);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000095);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0007BBAD);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000099);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0007BB6B);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000090);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x04058A00);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000021);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0024641E);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00010073);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000090);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0C058A00);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000090);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x04058A00);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000003);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0780C700);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000007);
+   while ( (BIT30 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000004);
+// WriteReg_32(DBSC_D3_DBPDRGD0,0x0A206F89);                                         // rev.0.01  tREFI=3.9us
+   WriteReg_32(DBSC_D3_DBPDRGD0,(uint32_t)(REFRESH_RATE*928/125)-400 + 0x0A300000);  // rev.0.02  tREFPRD = 8*REFRESH_RATE/(1000/(1856/2))-400
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000022);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x1000040B);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000023);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x35A00D77);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000024);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x2A8A2C28);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000025);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x30005E00);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000026);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0014CB49);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000027);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00000F14);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000028);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00000046);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000029);
+// WriteReg_32(DBSC_D3_DBPDRGD0,0x000000A0);      // rev.0.01  tREFI=3.9us
+   if (REFRESH_RATE > 3900) {                     // rev.0.02
+       WriteReg_32(DBSC_D3_DBPDRGD0,0x00000020);  //           [7]SRT=0
+   } else {
+       WriteReg_32(DBSC_D3_DBPDRGD0,0x000000A0);  //           [7]SRT=1
+   }
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x0000002C);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x81003047);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000020);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00181884);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x0000001A);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x33C03C10);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A7);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0D0D0D0D);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A8);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0D0D0D0D);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A9);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x000D0D0D);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C7);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0D0D0D0D);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C8);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0D0D0D0D);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C9);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x000D0D0D);
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x0000000E);
+   RegVal_R2 = ((ReadReg_32(DBSC_D3_DBPDRGD0) & 0x0000FF00) >> 0x8) >> 0x1;
+   RegVal_R3 = (RegVal_R2 << 16) + (RegVal_R2 << 8) + RegVal_R2;
+   RegVal_R6 = (RegVal_R2 << 24) + (RegVal_R2 << 16) + (RegVal_R2 << 8) + RegVal_R2;
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000011);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R3);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000012);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R3);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000016);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R6);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000017);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R6);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000018);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R6);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000019);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R6);
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00010181);
+   WriteReg_32(DBSC_D3_DBCMD,0x08000001);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00010601);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   for (uint32_t i = 0; i<2; i++)
+   {
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B1 + i*0x20);
+      RegVal_R5 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0x0000FF00) >> 0x8;
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B4 + i*0x20);
+      RegVal_R6 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0x000000FF);
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B3 + i*0x20);
+      RegVal_R7 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0x00000007);
+      if ( RegVal_R6 > 0 )
+      {
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFFF8);
+
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | ((RegVal_R7 + 0x1) & 0x00000007));
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFF00);
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | RegVal_R6);
+      } else 
+      {
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFFF8);
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | RegVal_R7);
+
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFF00);
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | ((RegVal_R6 + ((RegVal_R5) << 1)) & 0x000000FF));
+      }
+   }
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000005);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0xC1AA00C0);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C0002C5);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C0002C5);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00010801);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000005);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0xC1AA00D8);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0001F001);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000AF);
+   RegVal_R2 = ReadReg_32(DBSC_D3_DBPDRGD0);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000AF);  // add rev.0.02
+   WriteReg_32(DBSC_D3_DBPDRGD0,(((RegVal_R2 + 0x1) & 0x000000FF) | (RegVal_R2 & 0xFFFFFF00)));
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000CF);
+   RegVal_R2 = ReadReg_32(DBSC_D3_DBPDRGD0);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000CF);  // add rev.0.02
+   WriteReg_32(DBSC_D3_DBPDRGD0,(((RegVal_R2 + 0x1) & 0x000000FF) | (RegVal_R2 & 0xFFFFFF00)));
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C000285);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C000285);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x0000002C);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x81003087);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00010401);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   for (uint32_t i = 0; i < 2; i++)
+   {
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B1 + i*0x20);
+      RegVal_R5 = ((ReadReg_32(DBSC_D3_DBPDRGD0) & 0x0000FF00) >> 0x8);
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B4 + i*0x20);
+      RegVal_R6 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0x000000FF);
+
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B3 + i*0x20);
+      RegVal_R7 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0x00000007);
+      RegVal_R12 = (RegVal_R5 >> 0x2);
+      if ( RegVal_R12 < RegVal_R6 )
+      {
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFFF8);
+
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | ((RegVal_R7 + 0x1) & 0x00000007));
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFF00);
+
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | ((RegVal_R6 - (RegVal_R12)) & 0x000000FF));
+      }
+      else
+      {
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFFF8);
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | (RegVal_R7 & 0x00000007));
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFF00);
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | ((RegVal_R6 + (RegVal_R5) + ((RegVal_R5) >> 1) + (RegVal_R12)) & 0x000000FF));
+      }
+   }
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C0002C5);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C0002C5);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00015001);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000003);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0380C700);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000007);
+   while ( (BIT30 & ReadReg_32(DBSC_D3_DBPDRGD0)) != 0 );
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000021);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0024643E);
+
+   WriteReg_32(DBSC_D3_DBBUS0CNF1,0x00000010);
+// WriteReg_32(DBSC_D3_DBCALCNF,0x0100401B);      // rev.0.01  tREFI=3.9us
+// WriteReg_32(DBSC_D3_DBRFCNF1,0x00080E23);      // rev.0.01  tREFI=3.9us
+   WriteReg_32(DBSC_D3_DBCALCNF, (uint32_t)(64000000/REFRESH_RATE) + 0x01000000);  // rev.0.02  ZQCS=64ms  CALINT=int(ZQCS/tREFI)
+   WriteReg_32(DBSC_D3_DBRFCNF1, (uint32_t)(REFRESH_RATE*116/125) + 0x00080000);                      // rev.0.02  REFINT=tREFI/tCK, tCK=1000/(1856/2)
+   WriteReg_32(DBSC_D3_DBRFCNF2,0x00010000);
+   WriteReg_32(DBSC_D3_DBDFICUPDCNF,0x40100001);
+   WriteReg_32(DBSC_D3_DBRFEN,0x00000001);
+   WriteReg_32(DBSC_D3_DBACEN,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDLK0,0x00000000);
+   WriteReg_32(DBSC_D3_DBSYSCNT0,0x00000000);
+
+#ifdef ddr_qos_init_setting // only for non qos_init
+   WriteReg_32(DBSC_D3_DBSYSCNT0,0x00001234);
+   WriteReg_32(DBSC_D3_DBCAM0CNF1,0x00043218);
+   WriteReg_32(DBSC_D3_DBCAM0CNF2,0x000000F4);
+   WriteReg_32(DBSC_D3_DBSCHCNT0,0x000f0037);
+   WriteReg_32(DBSC_D3_DBSCHSZ0,0x00000001);
+   WriteReg_32(DBSC_D3_DBSCHRW0,0x22421111);
+   WriteReg_32(DBSC_D3_SCFCTST2,0x012F1123);
+   WriteReg_32(DBSC_D3_DBSCHQOS00,0x00000F00);
+   WriteReg_32(DBSC_D3_DBSCHQOS01,0x00000B00);
+   WriteReg_32(DBSC_D3_DBSCHQOS02,0x00000000);
+   WriteReg_32(DBSC_D3_DBSCHQOS03,0x00000000);
+   WriteReg_32(DBSC_D3_DBSCHQOS40,0x00000300);
+   WriteReg_32(DBSC_D3_DBSCHQOS41,0x000002F0);
+   WriteReg_32(DBSC_D3_DBSCHQOS42,0x00000200);
+   WriteReg_32(DBSC_D3_DBSCHQOS43,0x00000100);
+   WriteReg_32(DBSC_D3_DBSCHQOS90,0x00000300);
+   WriteReg_32(DBSC_D3_DBSCHQOS91,0x000002F0);
+   WriteReg_32(DBSC_D3_DBSCHQOS92,0x00000200);
+   WriteReg_32(DBSC_D3_DBSCHQOS93,0x00000100);
+   WriteReg_32(DBSC_D3_DBSCHQOS130,0x00000100);
+   WriteReg_32(DBSC_D3_DBSCHQOS131,0x000000F0);
+   WriteReg_32(DBSC_D3_DBSCHQOS132,0x000000A0);
+   WriteReg_32(DBSC_D3_DBSCHQOS133,0x00000040);
+   WriteReg_32(DBSC_D3_DBSCHQOS140,0x000000C0);
+   WriteReg_32(DBSC_D3_DBSCHQOS141,0x000000B0);
+   WriteReg_32(DBSC_D3_DBSCHQOS142,0x00000080);
+   WriteReg_32(DBSC_D3_DBSCHQOS143,0x00000040);
+   WriteReg_32(DBSC_D3_DBSCHQOS150,0x00000040);
+   WriteReg_32(DBSC_D3_DBSCHQOS151,0x00000030);
+   WriteReg_32(DBSC_D3_DBSCHQOS152,0x00000020);
+   WriteReg_32(DBSC_D3_DBSCHQOS153,0x00000010);
+   WriteReg_32(0xE67F0018,0x00000001);
+   WriteReg_32(DBSC_D3_DBSYSCNT0,0x00000000);
+#endif
+
+   return 1;
+}
+
+// MD19=0,DDR3L,1584Mbps
+uint32_t init_ddr_d31600(void)
+{
+
+	uint32_t RegVal_R2, RegVal_R3, RegVal_R5, RegVal_R6, RegVal_R7, RegVal_R12;
+
+/* CPG setting ===============================================*/
+WriteReg_32(CPG_CPGWPR,0x5A5AFFFF);
+WriteReg_32(CPG_CPGWPCR,0xA5A50000);
+
+WriteReg_32(CPG_SRCR4,0x20000000);
+
+WriteReg_32(0xE61500DC,0xe2200000);  // Change to 1584Mbps
+while ( (BIT11 & ReadReg_32(CPG_PLLECR)) == 0 );
+
+WriteReg_32(CPG_SRSTCLR4,0x20000000);
+
+WriteReg_32(CPG_CPGWPCR,0xA5A50001);
+
+/* CPG setting ===============================================*/
+
+   WriteReg_32(DBSC_D3_DBSYSCNT0,0x00001234);
+   WriteReg_32(DBSC_D3_DBKIND,0x00000007);
+   WriteReg_32(DBSC_D3_DBMEMCONF00,0x0f030a01);
+   WriteReg_32(DBSC_D3_DBPHYCONF0,0x00000001);
+   WriteReg_32(DBSC_D3_DBTR0,0x0000000B);
+   WriteReg_32(DBSC_D3_DBTR1,0x00000008);
+   WriteReg_32(DBSC_D3_DBTR2,0x00000000);
+   WriteReg_32(DBSC_D3_DBTR3,0x0000000B);
+   WriteReg_32(DBSC_D3_DBTR4,0x000B000B);
+   WriteReg_32(DBSC_D3_DBTR5,0x00000027);
+   WriteReg_32(DBSC_D3_DBTR6,0x0000001C);
+   WriteReg_32(DBSC_D3_DBTR7,0x00060006);
+   WriteReg_32(DBSC_D3_DBTR8,0x00000020);
+   WriteReg_32(DBSC_D3_DBTR9,0x00000006);
+   WriteReg_32(DBSC_D3_DBTR10,0x0000000C);
+   WriteReg_32(DBSC_D3_DBTR11,0x0000000A);
+   WriteReg_32(DBSC_D3_DBTR12,0x00120012);
+// WriteReg_32(DBSC_D3_DBTR13,0x000000D0);
+   WriteReg_32(DBSC_D3_DBTR13,0x000000CE);    // rev.0.02 0x000000D0=>0x000000CE
+   WriteReg_32(DBSC_D3_DBTR14,0x00140005);
+   WriteReg_32(DBSC_D3_DBTR15,0x00050004);
+   WriteReg_32(DBSC_D3_DBTR16,0x071F0305);
+   WriteReg_32(DBSC_D3_DBTR17,0x040C0000);
+   WriteReg_32(DBSC_D3_DBTR18,0x00000200);
+   WriteReg_32(DBSC_D3_DBTR19,0x01000040);
+// WriteReg_32(DBSC_D3_DBTR20,0x020000D8);
+   WriteReg_32(DBSC_D3_DBTR20,0x020000D6);    // rev.0.02 0x020000D8=>0x020000D6
+   WriteReg_32(DBSC_D3_DBTR21,0x00040004);
+   WriteReg_32(DBSC_D3_DBBL,0x00000000);
+   WriteReg_32(DBSC_D3_DBODT0,0x00000001);
+   WriteReg_32(DBSC_D3_DBADJ0,0x00000001);
+   WriteReg_32(DBSC_D3_DBSYSCONF1,0x00000002);
+   WriteReg_32(DBSC_D3_DBDFICNT0,0x00000010);
+   WriteReg_32(DBSC_D3_DBBCAMDIS,0x00000001);
+   WriteReg_32(DBSC_D3_DBSCHRW1,0x00000046);
+// WriteReg_32(DBSC_D3_SCFCTST0,0x0D020C04);
+   WriteReg_32(DBSC_D3_SCFCTST0,0x0D050B03);    // rev.0.02 0x0D020C04=>0x0D050B03
+// WriteReg_32(DBSC_D3_SCFCTST1,0x0305040C);
+   WriteReg_32(DBSC_D3_SCFCTST1,0x0306030C);    // rev.0.02 0x0305040C=>0x0306030C
+
+   WriteReg_32(DBSC_D3_DBPDLK0,0x0000A55A);
+   WriteReg_32(DBSC_D3_DBCMD,0x01000001);
+   WriteReg_32(DBSC_D3_DBCMD,0x08000000);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x80010000);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000008);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x000B8000);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000090);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x04058904);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000091);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0007BB6B);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000095);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0007BBAD);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000099);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0007BB6B);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000090);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x04058900);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000021);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0024641E);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00010073);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000090);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0C058900);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000090);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x04058900);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000003);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0780C700);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000007);
+   while ( (BIT30 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000004);
+// WriteReg_32(DBSC_D3_DBPDRGD0,0x08C05FF0);                                         // rev.0.01  tREFI=3.9us, 1600MHz
+   WriteReg_32(DBSC_D3_DBPDRGD0,(uint32_t)(REFRESH_RATE*792/125)-400 + 0x08B00000);  // rev.0.02  tREFPRD = 8*REFRESH_RATE/(1000/(1584/2))-400
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000022);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x1000040B);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000023);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x2D9C0B66);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000024);
+// WriteReg_32(DBSC_D3_DBPDRGD0,0x2A88C400);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x2A88B400);    // rev.0.02 0x2A88C400=>0x2A88B400
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000025);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x30005200);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000026);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0014A9C9);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000027);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00000D70);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000028);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00000046);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000029);
+// WriteReg_32(DBSC_D3_DBPDRGD0,0x00000098);      // rev.0.01  tREFI=3.9us
+   if (REFRESH_RATE > 3900) {                     // rev.0.02
+       WriteReg_32(DBSC_D3_DBPDRGD0,0x00000018);  //           [7]SRT=0
+   } else {
+       WriteReg_32(DBSC_D3_DBPDRGD0,0x00000098);  //           [7]SRT=1
+   }
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x0000002C);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x81003047);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000020);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00181884);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x0000001A);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x33C03C10);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A7);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0D0D0D0D);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A8);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0D0D0D0D);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A9);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x000D0D0D);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C7);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0D0D0D0D);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C8);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0D0D0D0D);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C9);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x000D0D0D);
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x0000000E);
+   RegVal_R2 = ((ReadReg_32(DBSC_D3_DBPDRGD0) & 0x0000FF00) >> 0x8) >> 0x1;
+   RegVal_R3 = (RegVal_R2 << 16) + (RegVal_R2 << 8) + RegVal_R2;
+   RegVal_R6 = (RegVal_R2 << 24) + (RegVal_R2 << 16) + (RegVal_R2 << 8) + RegVal_R2;
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000011);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R3);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000012);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R3);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000016);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R6);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000017);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R6);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000018);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R6);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000019);
+   WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R6);
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00010181);
+   WriteReg_32(DBSC_D3_DBCMD,0x08000001);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00010601);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   for (uint32_t i = 0; i<2; i++)
+   {
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B1 + i*0x20);
+      RegVal_R5 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0x0000FF00) >> 0x8;
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B4 + i*0x20);
+      RegVal_R6 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0x000000FF);
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B3 + i*0x20);
+      RegVal_R7 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0x00000007);
+      if ( RegVal_R6 > 0 )
+      {
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFFF8);
+
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | ((RegVal_R7 + 0x1) & 0x00000007));
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFF00);
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | RegVal_R6);
+      } else 
+      {
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFFF8);
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | RegVal_R7);
+
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFF00);
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | ((RegVal_R6 + ((RegVal_R5) << 1)) & 0x000000FF));
+      }
+   }
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000005);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0xC1AA00C0);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C0002C5);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C0002C5);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00010801);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000005);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0xC1AA00D8);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0001F001);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000AF);
+   RegVal_R2 = ReadReg_32(DBSC_D3_DBPDRGD0);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000AF);  // add rev.0.02
+   WriteReg_32(DBSC_D3_DBPDRGD0,(((RegVal_R2 + 0x1) & 0x000000FF) | (RegVal_R2 & 0xFFFFFF00)));
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000CF);
+   RegVal_R2 = ReadReg_32(DBSC_D3_DBPDRGD0);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000CF);  // add rev.0.02
+   WriteReg_32(DBSC_D3_DBPDRGD0,(((RegVal_R2 + 0x1) & 0x000000FF) | (RegVal_R2 & 0xFFFFFF00)));
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C000285);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C000285);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x0000002C);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x81003087);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00010401);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   for (uint32_t i = 0; i < 2; i++)
+   {
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B1 + i*0x20);
+      RegVal_R5 = ((ReadReg_32(DBSC_D3_DBPDRGD0) & 0x0000FF00) >> 0x8);
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B4 + i*0x20);
+      RegVal_R6 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0x000000FF);
+
+      WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B3 + i*0x20);
+      RegVal_R7 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0x00000007);
+      RegVal_R12 = (RegVal_R5 >> 0x2);
+      if ( RegVal_R12 < RegVal_R6 )
+      {
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFFF8);
+
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | ((RegVal_R7 + 0x1) & 0x00000007));
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFF00);
+
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | ((RegVal_R6 - (RegVal_R12)) & 0x000000FF));
+      }
+      else
+      {
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFFF8);
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B2 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | (RegVal_R7 & 0x00000007));
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         RegVal_R2 = (ReadReg_32(DBSC_D3_DBPDRGD0) & 0xFFFFFF00);
+         WriteReg_32(DBSC_D3_DBPDRGA0,0x000000B0 + i*0x20);
+         WriteReg_32(DBSC_D3_DBPDRGD0,RegVal_R2 | ((RegVal_R6 + (RegVal_R5) + ((RegVal_R5) >> 1) + (RegVal_R12)) & 0x000000FF));
+      }
+   }
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000A0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C0002C5);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x000000C0);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x7C0002C5);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x00015001);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000006);
+   while ( (BIT0 & ReadReg_32(DBSC_D3_DBPDRGD0)) == 0 );
+
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000003);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0380C700);
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000007);
+   while ( (BIT30 & ReadReg_32(DBSC_D3_DBPDRGD0)) != 0 );
+   WriteReg_32(DBSC_D3_DBPDRGA0,0x00000021);
+   WriteReg_32(DBSC_D3_DBPDRGD0,0x0024643E);
+
+   WriteReg_32(DBSC_D3_DBBUS0CNF1,0x00000010);
+// WriteReg_32(DBSC_D3_DBCALCNF,0x0100401B);      // rev.0.01  tREFI=3.9us
+// WriteReg_32(DBSC_D3_DBRFCNF1,0x00080C30);      // rev.0.01  tREFI=3.9us 1600MHz
+   WriteReg_32(DBSC_D3_DBCALCNF, (uint32_t)(64000000/REFRESH_RATE) + 0x01000000);  // rev.0.02  ZQCS=64ms  CALINT=int(ZQCS/tREFI)
+   WriteReg_32(DBSC_D3_DBRFCNF1, (uint32_t)(REFRESH_RATE*99/125) + 0x00080000);                       // rev.0.02  REFINT=tREFI/tCK, tCK=1000/(1584/2)
+   WriteReg_32(DBSC_D3_DBRFCNF2,0x00010000);
+   WriteReg_32(DBSC_D3_DBDFICUPDCNF,0x40100001);
+   WriteReg_32(DBSC_D3_DBRFEN,0x00000001);
+   WriteReg_32(DBSC_D3_DBACEN,0x00000001);
+   WriteReg_32(DBSC_D3_DBPDLK0,0x00000000);
+   WriteReg_32(DBSC_D3_DBSYSCNT0,0x00000000);
+
+#ifdef ddr_qos_init_setting // only for non qos_init
+   WriteReg_32(DBSC_D3_DBSYSCNT0,0x00001234);
+   WriteReg_32(DBSC_D3_DBCAM0CNF1,0x00043218);
+   WriteReg_32(DBSC_D3_DBCAM0CNF2,0x000000F4);
+   WriteReg_32(DBSC_D3_DBSCHCNT0,0x000f0037);
+   WriteReg_32(DBSC_D3_DBSCHSZ0,0x00000001);
+   WriteReg_32(DBSC_D3_DBSCHRW0,0x22421111);
+   WriteReg_32(DBSC_D3_SCFCTST2,0x012F1123);
+   WriteReg_32(DBSC_D3_DBSCHQOS00,0x00000F00);
+   WriteReg_32(DBSC_D3_DBSCHQOS01,0x00000B00);
+   WriteReg_32(DBSC_D3_DBSCHQOS02,0x00000000);
+   WriteReg_32(DBSC_D3_DBSCHQOS03,0x00000000);
+   WriteReg_32(DBSC_D3_DBSCHQOS40,0x00000300);
+   WriteReg_32(DBSC_D3_DBSCHQOS41,0x000002F0);
+   WriteReg_32(DBSC_D3_DBSCHQOS42,0x00000200);
+   WriteReg_32(DBSC_D3_DBSCHQOS43,0x00000100);
+   WriteReg_32(DBSC_D3_DBSCHQOS90,0x00000300);
+   WriteReg_32(DBSC_D3_DBSCHQOS91,0x000002F0);
+   WriteReg_32(DBSC_D3_DBSCHQOS92,0x00000200);
+   WriteReg_32(DBSC_D3_DBSCHQOS93,0x00000100);
+   WriteReg_32(DBSC_D3_DBSCHQOS130,0x00000100);
+   WriteReg_32(DBSC_D3_DBSCHQOS131,0x000000F0);
+   WriteReg_32(DBSC_D3_DBSCHQOS132,0x000000A0);
+   WriteReg_32(DBSC_D3_DBSCHQOS133,0x00000040);
+   WriteReg_32(DBSC_D3_DBSCHQOS140,0x000000C0);
+   WriteReg_32(DBSC_D3_DBSCHQOS141,0x000000B0);
+   WriteReg_32(DBSC_D3_DBSCHQOS142,0x00000080);
+   WriteReg_32(DBSC_D3_DBSCHQOS143,0x00000040);
+   WriteReg_32(DBSC_D3_DBSCHQOS150,0x00000040);
+   WriteReg_32(DBSC_D3_DBSCHQOS151,0x00000030);
+   WriteReg_32(DBSC_D3_DBSCHQOS152,0x00000020);
+   WriteReg_32(DBSC_D3_DBSCHQOS153,0x00000010);
+   WriteReg_32(0xE67F0018,0x00000001);
+   WriteReg_32(DBSC_D3_DBSYSCNT0,0x00000000);
+#endif
+
+   return 1;
+}

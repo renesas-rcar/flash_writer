@@ -1,11 +1,11 @@
 # 1. Overview
 -------------
 ## 1.1. Overview
-This document explains about R-Car H3/M3/M3N Flash writer sample software.<BR>
+This document explains about R-Car H3/M3/M3N/E3 Flash writer sample software.<BR>
 The Flash writer is downloaded from the Host PC via SCIF or USB by boot ROM.<BR>
 And the Flash writer downloads the some of the raw images from Host PC via SCIF or USB, and writes the raw images to the Serial NOR Flash and HyperFlash&trade;(hereafter referred to as &ldquo;Serial Flash&rdquo;), eMMC.<BR>
 The Flash wrriter Serial Flash writing support is HyperFlash&trade; in SiP packge, and on-board Serial NOR Flash(i.e. S25FS128S).<BR>
-The Flash writer eMMC writing support is High Speed SDR(i.e. 50MHz) and x8 bus width mode, and supports only MMC0 channel.<BR>
+The Flash writer eMMC writing support is High Speed SDR(i.e. 50MHz) and x8 bus width mode.<BR>
 
 [Chapter 2](#2-operating-environment) describes the operating environment.<BR>
 [Chapter 3](#3-software) describes the software.<BR>
@@ -34,10 +34,10 @@ There is no restriction in this revision.
 ## 2.1. Hardware Environment
 The following table lists the hardware needed to use this function.
 
-##### Hardware environment (R-Car H3/M3/M3N)
+##### Hardware environment (R-Car H3/M3/M3N/E3)
 | Name                          | Note                                      |
 |-------------------------------|-------------------------------------------|
-| R-Car H3-SiP System Evaluation Board Salvator-X<BR>R-Car M3-SiP System Evaluation Board Salvator-X<BR>R-Car H3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3N-SiP System Evaluation Board Salvator-XS | RTP0RC7795SIPB0010S / RTP0RC7795SIPB0011S<BR>RTP0RC7796SIPB0010S / RTP0RC7796SIPB0011S<BR>RTP0RC7795SIPB0012S<BR>RTP0RC7796SIPB0012S<BR>RTP0RC77965SIPB012S |
+| R-Car H3-SiP System Evaluation Board Salvator-X<BR>R-Car M3-SiP System Evaluation Board Salvator-X<BR>R-Car H3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3N-SiP System Evaluation Board Salvator-XS<BR>R-Car E3 System Evaluation Board Ebisu | RTP0RC7795SIPB0010S / RTP0RC7795SIPB0011S<BR>RTP0RC7796SIPB0010S / RTP0RC7796SIPB0011S<BR>RTP0RC7795SIPB0012S<BR>RTP0RC7796SIPB0012S<BR>RTP0RC77965SIPB012S<BR>RTP0RC77990SEB0010S |
 | Host PC                       | Ubuntu Desktop 14.04(64bit) or later          |
 | USB cable (type A to micro B) | Connect to CN25 when using UART connection. (SCIF2)<BR>Connect to CN9 when using USB connection. (HS-USB) |
 
@@ -47,26 +47,24 @@ The following table lists the hardware needed to use this function.
 The following table shows Serial Flash and eMMC support for each SoC.
 
 ##### Serial Flash / eMMC support status of each SoC
-| SoC               | Read/Write the Serial Flash | Boot from the Serial Flash | Read/Write the eMMC | Boot from the eMMC |
-|-------------------|-----------------------------|----------------------------|---------------------|--------------------|
-| R-Car M3N Ver.1.0 | Support                     | Support                    | Support             | Support            |
-| R-Car M3 Ver.1.1  | Support                     | Support                    | Support             | Support            |
-| R-Car M3 Ver.1.0  | Support                     | Support                    | Support             | Support            |
-| R-Car H3 Ver.2.0  | Support                     | Support                    | Support             | Support            |
-| R-Car H3 Ver.1.1  | Support                     | Support                    | Support             | Not support        |
-| R-Car H3 Ver.1.0  | Support                     | Support                    | Support             | Not support        |
+| SoC                                   | Read/Write the Serial Flash | Boot from the Serial Flash | Read/Write the eMMC | Boot from the eMMC | MMC interface |
+|---------------------------------------|-----------------------------|----------------------------|---------------------|--------------------|---------------|
+| R-Car E3 Ver.1.0                      | Support                     | Support                    | Support             | Support            | MMC1          |
+| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car M3 Ver.1.1  / R-Car M3 Ver.1.0  | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car H3 Ver.2.0                      | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car H3 Ver.1.1  / R-Car H3 Ver.1.0  | Support                     | Support                    | Support             | Not support        | MMC0          |
 
 The following table shows USB support for each SoC.
 
 ##### USB download support status of each SoC
-| SoC               | Image download by USB | Boot from the USB download mode |
-|-------------------|-----------------------|---------------------------------|
-| R-Car M3N Ver.1.0 | Support               | Support                         |
-| R-Car M3 Ver.1.1  | Support               | Not Support                     |
-| R-Car M3 Ver.1.0  | Support               | Not Support                     |
-| R-Car H3 Ver.2.0  | Support               | Support                         |
-| R-Car H3 Ver.1.1  | Support               | Not support                     |
-| R-Car H3 Ver.1.0  | Support               | Not support                     |
+| SoC                                   | Image download by USB | Boot from the USB download mode |
+|---------------------------------------|-----------------------|---------------------------------|
+| R-Car E3 Ver.1.0                      | Support               | Support                         |
+| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 | Support               | Support                         |
+| R-Car M3 Ver.1.1  / R-Car M3 Ver.1.0  | Support               | Not Support                     |
+| R-Car H3 Ver.2.0                      | Support               | Support                         |
+| R-Car H3 Ver.1.1  / R-Car H3 Ver.1.0  | Support               | Not support                     |
 
 USB 2.0 High-speed is supported. USB device class is CDC ACM compliant.<BR>
 Host PC's USB driver uses OS standard in-box driver.<BR>
@@ -76,9 +74,10 @@ The following table shows USB Vendor ID and Product ID.
 ##### List of USB Vendor ID and Product ID
 | SoC       | Vendor ID (Renesas) | Product ID |
 |-----------|---------------------|------------|
-| R-Car M3N | 0x45B               | 0x248      |
-| R-Car M3  | 0x45B               | 0x23D      |
-| R-Car H3  | 0x45B               | 0x23C      |
+| R-Car E3  | 0x045B              | 0x024D     |
+| R-Car M3N | 0x045B              | 0x0248     |
+| R-Car M3  | 0x045B              | 0x023D     |
+| R-Car H3  | 0x045B              | 0x023C     |
 
 #### Recommended Environment
 ![Recommended Environment](images/recommended_environment.png)
@@ -112,55 +111,58 @@ This package has the following functions.
 This module structure is shown below.
 #### Module structure
 ```text
-flash_writer                    : root directory of Flash writer
-|-- AArch32_boot                : boot code for AArch32
-|-- AArch64_boot                : boot code for AArch64
-|-- AArch32_obj                 : object file output directory for AArch32
-|-- AArch64_obj                 : object file output directory for AArch64
-|-- AArch32_output              : output directory for AArch32
-|-- AArch64_output              : output directory for AArch64
-|-- AArch32_lib                 : USB library directory for AArch32
-|-- AArch64_lib                 : USB library directory for AArch64
-|-- ddr                         : DRAM initialize code directory
-|-- include                     : header files directory
-|-- b_boarddrv.c                : identify the board type
-|-- boardid.c                   : identify the board type
-|-- boot_init_gpio.c            : GPIO initialize code
-|-- boot_init_lbsc.c            : Local bus state controller initialize code
-|-- boot_init_port_M3.c         : Pin function initialize code
-|-- cert_param.c                : image header for SCIF/USB download image
-|-- common.c                    : miscellaneous code
-|-- cpudrv.c                    : miscellaneous code
-|-- devdrv.c                    : log output code
-|-- dg_emmc_access.c            : eMMC writer code
-|-- dg_emmc_config.c            : eMMC device configuration code
-|-- dginit.c                    : initialize code
-|-- dgmodul1.c                  : miscellaneous code
-|-- dgmodul4.c                  : Serial NOR Flash/HyperFlash writer code
-|-- dgtable.c                   : command table
-|-- dmaspi.c                    : DMA driver code
-|-- emmc_cmd.c                  : eMMC driver code
-|-- emmc_erase.c                : eMMC driver code
-|-- emmc_init.c                 : eMMC driver code
-|-- emmc_interrupt.c            : eMMC driver code
-|-- emmc_mount.c                : eMMC driver code
-|-- emmc_utility.c              : eMMC driver code
-|-- emmc_write.c                : eMMC driver code
-|-- main.c                      : main program
-|-- Message.c                   : Help message
-|-- micro_wait.c                : miscellaneous code
-|-- ramckmdl.c                  : memory clear code(i.e. memset)
-|-- rpchyperdrv.c               : HyperFlash driver code
-|-- rpcqspidrv.c                : Serial NOR Flash driver code
-|-- scifdrv.c                   : SCIF driver
-|-- spiflash0drv.c              : Serial NOR Flash driver code
-|-- spiflash1drv.c              : Serial NOR Flash driver code
-|-- switch.c                    : Dip-switch setting messages
-|-- timer_api.c                 : timer API for eMMC driver
-|-- memory_area0.def            : Linker script
-|-- memory_writer.def           : Linker script
-|-- memory_writer_with_cert.def : Linker script
-`-- makefile                    : makefile
+flash_writer                            : root directory of Flash writer
+|-- AArch32_boot                        : boot code for AArch32
+|-- AArch64_boot                        : boot code for AArch64
+|-- AArch32_obj                         : object file output directory for AArch32
+|-- AArch64_obj                         : object file output directory for AArch64
+|-- AArch32_output                      : output directory for AArch32
+|-- AArch64_output                      : output directory for AArch64
+|-- AArch32_lib                         : USB library directory for AArch32
+|-- AArch64_lib                         : USB library directory for AArch64
+|-- ddr                                 : DRAM initialize code directory
+|-- include                             : header files directory
+|-- b_boarddrv.c                        : identify the board type
+|-- boardid.c                           : identify the board type
+|-- boot_init_gpio.c                    : GPIO initialize code
+|-- boot_init_lbsc.c                    : Local bus state controller initialize code
+|-- boot_init_port.c                    : Pin function initialize code
+|-- cert_param.c                        : image header for SCIF/USB download image
+|-- common.c                            : miscellaneous code
+|-- cpudrv.c                            : miscellaneous code
+|-- devdrv.c                            : log output code
+|-- dg_emmc_access.c                    : eMMC writer code
+|-- dg_emmc_config.c                    : eMMC device configuration code
+|-- dginit.c                            : initialize code
+|-- dgmodul1.c                          : miscellaneous code
+|-- dgmodul4.c                          : Serial NOR Flash/HyperFlash writer code
+|-- dgtable.c                           : command table
+|-- dmaspi.c                            : DMA driver code
+|-- emmc_cmd.c                          : eMMC driver code
+|-- emmc_erase.c                        : eMMC driver code
+|-- emmc_init.c                         : eMMC driver code
+|-- emmc_interrupt.c                    : eMMC driver code
+|-- emmc_mount.c                        : eMMC driver code
+|-- emmc_utility.c                      : eMMC driver code
+|-- emmc_write.c                        : eMMC driver code
+|-- init_scif.c                         : SCIF initialize code
+|-- main.c                              : main program
+|-- Message.c                           : Help message
+|-- micro_wait.c                        : miscellaneous code
+|-- ramckmdl.c                          : memory clear code(i.e. memset)
+|-- rpchyperdrv.c                       : HyperFlash driver code
+|-- rpcqspidrv.c                        : Serial NOR Flash driver code
+|-- scifdrv.c                           : SCIF driver
+|-- spiflash0drv.c                      : Serial NOR Flash driver code
+|-- spiflash1drv.c                      : Serial NOR Flash driver code
+|-- switch.c                            : Dip-switch setting messages
+|-- timer_api.c                         : timer API for eMMC driver
+|-- memory_area0.def                    : Linker script for Salvator-X/XS board.
+|-- memory_writer.def                   : Linker script for Salvator-X/XS board.
+|-- memory_writer_small.def             : Linker script for Ebisu board.
+|-- memory_writer_small_with_cert.def   : Linker script for Ebisu board.
+|-- memory_writer_with_cert.def         : Linker script for Salvator-X/XS board.
+`-- makefile                            : makefile
 ```
 
 ## 3.3. Option setting
@@ -172,14 +174,21 @@ This option must match the using compiler.<BR>
 
 ##### Association table for the AArch value and valid CPU architecture
 
-| AArch | CPU architecture setting                                                                                                                  |
-|-------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| 32    | Generate binary that works on AArch32.<BR>It works on both the AP-system Core(i.e. Cortex-A57) and the ARM Realtime Core(i.e. Cortex-R7). |
-| 64    | Generate binary that works on AArch64.<BR>It works on only the AP-System Core(i.e. Cortex-A57).                                 |
+| AArch | CPU architecture setting                                                                                                                      |
+|-------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| 32    | Generate binary that works on AArch32.<BR>It works on both the AP-system Core(i.e. Cortex-A57/A53) and the ARM Realtime Core(i.e. Cortex-R7). |
+| 64    | Generate binary that works on AArch64.<BR>It works on only the AP-System Core(i.e. Cortex-A57/A53).                                           |
 
+### 3.3.2. BOARD<BR>
+Select from the following table according to the board settings.<BR>
+If this option is not selected, the default value is SALVATOR.<BR>
 
+| BOARD    | BOARD setting                                                |
+|----------|--------------------------------------------------------------|
+| SALVATOR | Generate binary that works on Salvator-X/XS board. (default) |
+| EBISU    | Generate binary that works on Ebisu board.                   |
 
-### 3.3.2. BOOT<BR>
+### 3.3.3. BOOT<BR>
 Select from the following table according to the image header settings.<BR>
 If this option is not selected, the default value is WRITER_WITH_CERT.<BR>
 
@@ -195,8 +204,9 @@ Describe the details of the SCIF/USB download image as follows:
 ##### Detail of binary image
 ![Detail of binary image](images/detail_of_binary_image.png)
 
-### 3.3.3. SCIF_CLK<BR>
+### 3.3.4. SCIF_CLK<BR>
 Select from the following table according to the clock to be supplied to SCIF.<BR>
+This setting is valid when "SALVATOR" is selected with the BOARD option.<BR>
 If this option is not selected, the default value is EXTERNAL.<BR>
 
 ##### Association table for the SCIF_CLK value and valid SCIF clock source settings
@@ -207,7 +217,7 @@ If this option is not selected, the default value is EXTERNAL.<BR>
 
 *Note) On the Salvator-X/XS board, 14.7456MHz is supplied to the SCK2 pin.*
 
-### 3.3.4. USB
+### 3.3.5. USB
 Select from the following table according to the USB download function.<BR>
 If this option is not selected, the default value is ENABLE.<BR>
 
@@ -217,7 +227,7 @@ If this option is not selected, the default value is ENABLE.<BR>
 | ENABLE  | USB download function is available. (default) |
 | DISABLE | USB download function is not available.       |
 
-### 3.3.5. SERIAL_FLASH
+### 3.3.6. SERIAL_FLASH
 Select from the following table according to the Serial Flash writing function.<BR>
 If this option is not selected, the default value is ENABLE.<BR>
 
@@ -259,7 +269,8 @@ This command writes the S-record format image to Serial Flash.<BR>
 | tee-`<board_name>`.srec  | H'44100000          | H'200000           | OP-TEE                 |
 | u-boot-elf.srec          | H'50000000          | H'640000           | U-boot                 |
 
-The following shows the procedure of this command.
+The following shows the procedure of this command.<BR>
+*Note) The following procedure is an example on Salvator-X/XS board.<BR>*
 
 ```text
 >XLS2
@@ -424,7 +435,8 @@ Image writing has been completed.
 ### 3.4.2. Write to the raw binary images to the Serial Flash
 
 This command writes the raw binary image to Serial Flash.<BR>
-The following shows the procedure of this command.
+The following shows the procedure of this command.<BR>
+*Note) The following procedure is an example on Salvator-X/XS board.<BR>*
 ```text
 >XLS3
 ===== Qspi/HyperFlash writing of Gen3 Board Command =============
@@ -587,7 +599,8 @@ Image writing has been completed.
 
 ### 3.4.3. Erase the Serial NOR Flash and HyperFlash.
 This command erases all sectors of Serial Flash.<BR>
-The following shows the procedure of this command.
+The following shows the procedure of this command.<BR>
+*Note) The following procedure is an example on Salvator-X/XS board.<BR>*
 ```text
 >XCS
 ALL ERASE SpiFlash or HyperFlash memory
@@ -647,7 +660,7 @@ Please select,FlashMemory.
 >
 ```
 
-Selected serial flash has been erased.
+Selected Serial Flash has been erased.
 
 ### 3.4.4. Display the CID registers command
 This command displays the contents of the CID registers of the eMMC.<BR>
@@ -965,7 +978,8 @@ Baud rate is dependent on the SoC and the SCIF clock.<BR>
 ##### Baud rate settings after command execution
 | SoC                                                                                           | SCIF clock settings<BR>(Build option) | Baud rate at startup | Baud rate at After command execution |
 |-----------------------------------------------------------------------------------------------|---------------------------------------|---------------------:|-------------------------------------:|
-| R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 / R-Car H3 Ver.1.1 | External clock                        | 115200bps            |                            921600bps |
+| R-Car E3 Ver.1.0                                                                              | Don't care                            | 115200bps            |                            921600bps |
+| R-Car M3N Ver.1.1 /R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 / R-Car H3 Ver.1.1 | External clock                        | 115200bps            |                            921600bps |
 |                                                                                               | Internal clock                        | 115200bps            |                            230400bps |
 | R-Car H3 Ver.1.0                                                                              | External clock                        | 57600bps             |                            460800bps |
 |                                                                                               | Internal clock                        | 57600bps             |                            115200bps |
@@ -1039,7 +1053,7 @@ $ make AArch=32 clean
 $ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_arm-eabi/bin/arm-eabi- make AArch=32
 ```
 Output the following image.<BR>
-* ./AArch32_output/AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot
+* ./AArch32_output/AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.mot
 
 64 bit compiler:
 ```shell
@@ -1047,19 +1061,25 @@ $ make AArch=64 clean
 $ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64
 ```
 Output the following image.<BR>
-* ./AArch64_output/AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot
+* ./AArch64_output/AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.mot
 
 The target file name changes depending on the build options.<BR>
 The following table lists the relationship between build option and target files.
 
 ##### Description of build options and target files
-| Build options           || Target directory | Target filename                                                                                        |
-|-------|------------------|------------------|--------------------------------------------------------------------------------------------------------|
-| AArch | BOOT             |                  |                                                                                                        |
-| 32    | WRITER           | AArch32_output   | AArch32_Flash_writer_SCIF_E6304000.mot<BR>AArch32_Flash_writer_SCIF_E6304000.bin                       |
-|       | WRITER_WITH_CERT |                  | AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot<BR>AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400.bin |
-| 64    | WRITER           | AArch64_output   | AArch64_Flash_writer_SCIF_E6304000.mot<BR>AArch64_Flash_writer_SCIF_E6304000.bin                       |
-|       | WRITER_WITH_CERT |                  | AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot<BR>AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400.bin |
+| Build options                     ||| Target directory | Target filename                                                                                                              |
+|-------|----------|------------------|------------------|------------------------------------------------------------------------------------------------------------------------------|
+| AArch | BOARD    | BOOT             |                  |                                                                                                                              |
+| 32    | SALVATOR | WRITER           | AArch32_output   | AArch32_Flash_writer_SCIF_E6304000_salvator-x.mot<BR>AArch32_Flash_writer_SCIF_E6304000_salvator-x.bin                       |
+|       |          | WRITER_WITH_CERT |                  | AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.mot<BR>AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.bin |
+| 64    |          | WRITER           | AArch64_output   | AArch64_Flash_writer_SCIF_E6304000_salvator-x.mot<BR>AArch64_Flash_writer_SCIF_E6304000_salvator-x.bin                       |
+|       |          | WRITER_WITH_CERT |                  | AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.mot<BR>AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.bin |
+| 32    | EBISU    | WRITER           | AArch32_output   | AArch32_Flash_writer_SCIF_E6304000_ebisu.mot<BR>AArch32_Flash_writer_SCIF_E6304000_ebisu.bin                                 |
+|       |          | WRITER_WITH_CERT |                  | AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu.mot<BR>AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu.bin           |
+| 64    |          | WRITER           | AArch64_output   | AArch64_Flash_writer_SCIF_E6304000_ebisu.mot<BR>AArch64_Flash_writer_SCIF_E6304000_ebisu.bin                                 |
+|       |          | WRITER_WITH_CERT |                  | AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu.mot<BR>AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu.bin           |
+
+*Note) If BOARD=EBISU specified and build error occerd, add the "SERIAL_FLASH=DISABLE" or "USB=DISABLE" option to reduce binary size.*
 
 # 5. How to run Flash writer
 ---------------------------------
@@ -1067,10 +1087,10 @@ The following table lists the relationship between build option and target files
 Start the target in the SCIF download mode and run Flash writer sample code.<BR>
 The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 
-##### Dip switch configuration for SCIF download mode
+##### Dip switch configuration for SCIF download mode on Salvator-X/XS
 | SoC                                                        | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.0 / M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
+| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
 |                                                                      |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
 |                                                                      | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
 |                                                                      |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
@@ -1091,13 +1111,28 @@ The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
+#### Dip switch configuration for SCIF download mode on Ebisu
+| SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                              | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                              | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+
+\*1: Don't care this setting for Cortex-R7 boot mode.<BR>
+
 The following table shows the Dip-Switch Setting for USB download mode.
 
-##### Dip switch configuration for USB download mode
-| SoC                 | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+##### Dip switch configuration for USB download mode on Salvator-X/XS
+| SoC                    | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
 | R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 *2 | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
-| R-Car M3N Ver.1.0 / R-Car H3 Ver.2.0   | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
+| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / R-Car H3 Ver.2.0   | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
 |                                        |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
 |                                        | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
 |                                        |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
@@ -1109,25 +1144,58 @@ The following table shows the Dip-Switch Setting for USB download mode.
 \*2: M3 Ver.1.0 and M3 Ver.1.1 cannot be boot from the USB download mode.<BR>
 \*3: H3 Ver.1.0 and H3 Ver.1.1 cannot be boot from the USB download mode.<BR>
 
+##### Dip switch configuration for USB download mode on Ebisu
+| SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | ON  |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                              | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | ON  |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                              | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | OFF | ON  |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+
+\*1: Don't care this setting for Cortex-R7 boot mode.<BR>
+
 To write to Serial NOR Flash, the following additional settings are required in addition to the setting for SCIF/USB download mode.
 
-##### Additional dip switch configuration for write to the Serial NOR Flash (SCIF/USB download mode)
+##### Additional dip switch configuration for write to the Serial NOR Flash on Salvator-X/XS (SCIF/USB download mode)
 | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------|-------------|------|------|------|------|------|------|------|------|
 | SW1           | QSPI-A      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
 | SW2           | QSPI-B      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
 | SW3           | QSPI-C      | OFF  | -    | -    | -    | -    | -    | -    | -    |
-| SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    | -    | -    |
+
+##### Additional dip switch configuration for write to the Serial NOR Flash on Ebisu (SCIF/USB download mode)
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------|-------------|------|------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW2           | QSPI-B      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW3           | QSPI-C      | OFF  | -    | -    | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    | -    | -    |
+| SW31          | QSPI-D      | OFF  | -    | -    | -    | -    | -    | -    | -    |
 
 To write to HyperFlash&trade;, the following additional settings are required in addition to the setting for SCIF/USB download mode.
 
-##### Additional dip switch configuration for write to the HyperFlash&trade; (SCIF/USB download mode)
+##### Additional dip switch configuration for write to the HyperFlash&trade; on Salvator-X/XS (SCIF/USB download mode)
 | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------|-------------|------|------|------|------|------|------|------|------|
 | SW1           | QSPI-A      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
 | SW2           | QSPI-B      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
 | SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
+
+##### Additional dip switch configuration for write to the HyperFlash&trade; on Ebisu (SCIF/USB download mode)
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------|-------------|------|------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW2           | QSPI-B      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
+| SW31          | QSPI-D      | ON   | -    | -    | -    | -    | -    | -    | -    |
 
 To write to eMMC, additional Dip-switch setting is not necessary.
 
@@ -1137,8 +1205,10 @@ The following table shows the setting of terminal software.<BR>
 ##### Terminal software configuration
 | SoC                                                                                           | Baud rate  | Data bit length | Parity check | Stop bits | Flow control |
 |-----------------------------------------------------------------------------------------------|-----------:|-----------------|--------------|-----------|--------------|
-| R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 / R-Car H3 Ver.1.1 | 115200bps  | 8bits           | none         | 1bit      | none         |
+| R-Car E3 Ver.1.0 / R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 / R-Car H3 Ver.1.1 | 115200bps  | 8bits           | none         | 1bit      | none         |
 | R-Car H3 Ver.1.0                                                                              |  57600bps  | 8bits           | none         | 1bit      | none         |
+
+*Note) In the case of USB connection by CN9, this setting has no effect. Therefore it does not affect USB transfer speed.<BR>*
 
 Terminal software outputs the following log at power ON the target.
 ```text
@@ -1146,20 +1216,18 @@ SCIF Download mode (w/o verification)
 (C) Renesas Electronics Corp.
 
 -- Load Program to SystemRAM ---------------
-Work RAM(H'E6300000-H'E632E800) Clear....
 please send !
 ```
 Transfer S-record file after the log output.<BR>
-S-record file for Cortex-A57 AArch64:<BR>
-- AArch64_output/AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot
+S-record file for Cortex-A57/A53 AArch64:<BR>
+- AArch64_output/AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_`<board_name>`.mot
 
-S-record file for Cortex-A57 AArch32 or Cortex-R7:
-- AArch32_output/AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400.mot
+S-record file for Cortex-A57/A53 AArch32 or Cortex-R7:
+- AArch32_output/AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_`<board_name>`.mot
 
 When the transfer is successful, the following log is output.
 ```text
-Flash writer for R-Car H3/M3/M3N Series V1.04 Nov.30,2017
- Work Memory SystemRAM (H'E6328000-H'E632FFFF)
+Flash writer for R-Car H3/M3/M3N Series V1.05 Mar.30,2018
 >
 ```
 Please enter the any key from the console after starting Flash writer.<BR>
@@ -1173,10 +1241,10 @@ For details on how to write to the Serial Flash and eMMC, please refer to [Secti
 To boot from the eMMC, need to change the Dip-switch setting.<BR>
 The following table shows the Dip-Switch Setting.<BR>
 
-#### Dip switch configuration for boot from the eMMC (50MHz x8 bus width mode)
+#### Dip switch configuration for boot from the eMMC on Salvator-X/XS (50MHz x8 bus width mode)
 | SoC                                                           | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|----|----|-----|-----|----|-----|
-| R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
+| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
 |                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON | ON | ON  | ON  | ON | ON  |
 |                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
 |                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON | ON | ON  | ON  | ON | ON  |
@@ -1188,10 +1256,10 @@ The following table shows the Dip-Switch Setting.<BR>
 \*1: Don't care this setting for Coretex-R7 boot mode.<BR>
 \*2: H3 Ver.1.0 and H3 Ver.1.1 cannot be boot from the eMMC.<BR>
 
-#### Dip switch configuration for boot from the Serial NOR Flash (Single read 40MHz)
+#### Dip switch configuration for boot from the Serial NOR Flash on Salvator-X/XS (Single read 40MHz)
 | SoC                                                              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
+| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
 |                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
 |                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
 |                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
@@ -1212,7 +1280,7 @@ The following table shows the Dip-Switch Setting.<BR>
 
 \*1: Don't care this setting for Coretex-R7 boot mode.<BR>
 
-##### Additional dip switch configuration for boot from the Serial NOR Flash
+##### Additional dip switch configuration for boot from the Serial NOR Flash on Salvator-X/XS
 | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------|-------------|------|------|------|------|------|------|------|------|
 | SW1           | QSPI-A      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
@@ -1220,10 +1288,10 @@ The following table shows the Dip-Switch Setting.<BR>
 | SW3           | QSPI-C      | OFF  | -    | -    | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
 
-#### Dip switch configuration for boot from the HyperFlash&trade; (160MHz DDR)
+#### Dip switch configuration for boot from the HyperFlash&trade; on Salvator-X/XS (160MHz DDR)
 | SoC                                                              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
+| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
 |                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
 |                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
 |                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
@@ -1245,13 +1313,76 @@ The following table shows the Dip-Switch Setting.<BR>
 \*1: Don't care this setting for Coretex-R7 boot mode.<BR>
 \*2: Set to 80MHz DDR mode, because LSI specification.<BR>
 
-##### Additional dip switch configuration for boot from the HyperFlash&trade;
+##### Additional dip switch configuration for boot from the HyperFlash&trade; on Salvator-X/XS
 | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------|-------------|------|------|------|------|------|------|------|------|
 | SW1           | QSPI-A      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
 | SW2           | QSPI-B      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
 | SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
+
+#### Dip switch configuration for boot from the eMMC on Ebisu (50MHz x8 bus width mode)
+| SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | ON  | OFF |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                              | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | ON  | OFF |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                              | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | ON  | OFF |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+
+\*1: Don't care this setting for Cortex-R7 boot mode.<BR>
+
+#### Dip switch configuration for boot from the Serial NOR Flash on Ebisu (Single read 40MHz)
+| SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | OFF | ON  | ON  |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                              | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | OFF | ON  | ON  |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                              | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | ON  | OFF | ON  | ON  |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+
+\*1: Don't care this setting for Cortex-R7 boot mode.<BR>
+
+##### Additional dip switch configuration for boot from the Serial NOR Flash on Ebisu
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------|-------------|------|------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW2           | QSPI-B      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW3           | QSPI-C      | OFF  | -    | -    | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    | -    | -    |
+| SW31          | QSPI-D      | OFF  | -    | -    | -    | -    | -    | -    | -    |
+
+#### Dip switch configuration for boot from the HyperFlash&trade; on Ebisu (150MHz DDR)
+| SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | ON  | OFF | ON  |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                              | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | ON  | OFF | ON  |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                              | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | ON  | ON  | OFF | ON  |
+|                              |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
+|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+
+\*1: Don't care this setting for Cortex-R7 boot mode.<BR>
+
+##### Additional dip switch configuration for boot from the HyperFlash&trade; on Ebisu
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------|-------------|------|------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW2           | QSPI-B      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
+| SW31          | QSPI-D      | ON   | -    | -    | -    | -    | -    | -    | -    |
 
 # 6. USB download API
 
@@ -1583,6 +1714,32 @@ Please uninstall the ModemManager to solve it.
 $ sudo apt-get purge modemmanager
 ```
 
+## 7.4. If "BOARD = EBISU" is set in the build option, a build error occured
+The reason for the error is that the binary size of Flash writer exceeds the downloadable size (i.e. 80kBytes) with R-Car E3.<BR>
+To solve the build error, reduce the binary size by disable  the USB download function or the Serial Flash writing function with the build option.<BR>
+The following shows the exsample of build procedure to reduce the binary size, please select according to use.<BR>
+
+
+##### In case of disable the USB download function
+```shell
+$ make AArch=32 clean
+$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU USB=DISABLE
+```
+```shell
+$ make AArch=64 clean
+$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU USB=DISABLE
+```
+
+##### In case of disable the Serial Flash writing function
+```shell
+$ make AArch=32 clean
+$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU SERIAL_FLASH=DISABLE
+```
+```shell
+$ make AArch=64 clean
+$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU SERIAL_FLASH=DISABLE
+```
+
 # 8. Revision history
 Describe the revision history of Flash writer.
 
@@ -1625,4 +1782,15 @@ Describe the revision history of Flash writer.
 - Optimized memory map.<BR>
 - Optimized zero clear function.<BR>
 - Update DDR setting for M3N Ver.1.0.<BR>
+- Update application note.<BR>
+
+## 8.6. V1.0.5
+- Add R-Car M3N Ver.1.1 support.<BR>
+- Add R-Car E3 Ver.1.0 support.<BR>
+- Add Cortex-A53 CPU support.<BR>
+- Add Ebisu board support.<BR>
+- Add DDR setting for E3 Ver.1.0.<BR>
+- Add build option to select the board to use.<BR>
+- Change target file name according to board name.<BR>
+- Update USB libraries for E3.<BR>
 - Update application note.<BR>

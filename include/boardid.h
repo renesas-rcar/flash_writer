@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,9 +33,10 @@ extern uint32_t gBoardFlag;
 
 
 //BOARD_CODE (gBoardFlag)
-#define BD_SALVATOR				0x00000000	// R-Car H3_SIP/M3_SIP
-#define BD_KRIEK				0x00000001	// R-Car M3
-#define BD_STARTERKIT			0x00000002	// R-Car H3_SIP/M3_SIP
-
+#define BD_SALVATOR		0x00000000	/* R-Car H3_SIP/M3_SIP */
+#define BD_KRIEK		0x00000001	/* R-Car M3/M3N */
+#define BD_STARTERKIT		0x00000002	/* R-Car H3_SIP/M3_SIP */
+#define BD_EBISU		0x00000003	/* R-Car E3 */
+#define BD_DRAAK		0x00000004	/* R-Car D3 */
 
 void CheckBoard(void);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,10 +37,11 @@
 
 
 //===========================================================================
-//BOARD_CODE (gBoardFlag)
-//#define BD_SALVATOR			0x00000000	// R-Car H3_SIP/M3_SIP
-//#define BD_KRIEK				0x00000001	// R-Car M3
-//#define BD_STARTERKIT			0x00000002	// R-Car H3_SIP/M3_SIP
+//#define BD_SALVATOR		0x00000000	/* R-Car H3_SIP/M3_SIP */
+//#define BD_KRIEK		0x00000001	/* R-Car M3/M3N */
+//#define BD_STARTERKIT		0x00000002	/* R-Car H3_SIP/M3_SIP */
+//#define BD_EBISU		0x00000003	/* R-Car E3 */
+//#define BD_DRAAK		0x00000004	/* R-Car D3 */
 //===========================================================================
 
 //== SPI / HYPER Interface Message ==========================================
@@ -49,7 +50,9 @@ const prg_tbl SwChgOnBoard_QSPI0[BOARD_COUNT] = {
 	(void (*)())SwChgOnBoard_QSPI0_SALVATOR,
 	(void (*)())SwChgOnBoard_QSPI0_KRIEK,
 	(void (*)())SwChgOnBoard_QSPI0_SKIT,
-	(void (*)())SwChgOnBoard_QSPI0_other
+	(void (*)())SwChgOnBoard_QSPI0_KRIEK,
+	(void (*)())SwChgOnBoard_QSPI0_KRIEK,
+	(void (*)())SwChgOnBoard_QSPI0_other,
 };
 void SwChgOnBoard_QSPI0_other(void){
 	PutStr("Please set the switch to OnBoard-SPI0(128Mbit) side. Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(77);
@@ -60,7 +63,9 @@ const prg_tbl SwChgExSPI_QSPI0[BOARD_COUNT] = {
 	(void (*)())SwChgExSPI_QSPI0_SALVATOR,
 	(void (*)())SwChgExSPI_QSPI0_KRIEK,
 	(void (*)())SwChgExSPI_QSPI0_SKIT,
-	(void (*)())SwChgExSPI_QSPI0_other
+	(void (*)())SwChgExSPI_QSPI0_KRIEK,
+	(void (*)())SwChgExSPI_QSPI0_KRIEK,
+	(void (*)())SwChgExSPI_QSPI0_other,
 };
 void SwChgExSPI_QSPI0_other(void){
 	PutStr("Please set the switch to QspiBoard-SPI0 side. Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(70);
@@ -71,7 +76,9 @@ const prg_tbl SwChgHyperFlash[BOARD_COUNT] = {
 	(void (*)())SwChgHyperFlash_SALVATOR,
 	(void (*)())SwChgHyperFlash_KRIEK,
 	(void (*)())SwChgHyperFlash_SKIT,
-	(void (*)())SwChgHyperFlash_other
+	(void (*)())SwChgHyperFlash_KRIEK,
+	(void (*)())SwChgHyperFlash_KRIEK,
+	(void (*)())SwChgHyperFlash_other,
 };
 void SwChgHyperFlash_other(void){
 	PutStr("Please set the switch to HyperFlash side. Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(66);
@@ -83,7 +90,9 @@ const prg_tbl SwChgeMMC[BOARD_COUNT] = {
 	(void (*)())SwChgeMMC_other,
 	(void (*)())SwChgeMMC_KRIEK,
 	(void (*)())SwChgeMMC_other,
-	(void (*)())SwChgeMMC_other
+	(void (*)())SwChgeMMC_other,
+	(void (*)())SwChgeMMC_other,
+	(void (*)())SwChgeMMC_other,
 };
 void SwChgeMMC_other(void){
 	;
@@ -92,19 +101,25 @@ void SwChgeMMC_other(void){
 
 //-- SALBATOR ---------------------------------------------------------------
 void SwChgOnBoard_QSPI0_SALVATOR(void){
+#if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 0)
 	PutStr("SW1 SW2 All ON!    Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(43);
 	PutStr("SW3 OFF!           Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(43);
 	PutStr("SW13 1pin-Side!    Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(43);
+#endif /* if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 0) */
 }
 void SwChgExSPI_QSPI0_SALVATOR(void){
+#if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 0)
 	PutStr("SW1 SW2 All ON!    Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(43);
 	PutStr("SW3 OFF!           Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(43);
 	PutStr("SW13 3pin-Side!    Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(43);
 	PutStr("CN3 : QSPI Flash Board Set OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(43);
+#endif /* if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 0) */
 }
 void SwChgHyperFlash_SALVATOR(void){
+#if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 0)
 	PutStr("SW1 SW2 All OFF!   Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(43);
 	PutStr("SW3 ON!            Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(43);
+#endif /* if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 0) */
 }
 
 //-- KRIEK ------------------------------------------------------------------
@@ -127,25 +142,33 @@ void SwChgHyperFlash_KRIEK(void){
 	PutStr("SW31 ON!           Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(43);
 }
 void SwChgeMMC_KRIEK(void){
+#if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 0)
 	PutStr("SW32 All OFF! Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(39);
 	PutStr("SW33 All ON!  Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(39);
 	PutStr("SW35 SW36 SW37 OFF! Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(45);
 	PutStr("SW39 SW40 SW41 ON!  Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(45);
+#endif /* if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 0) */
 }
 //-- STARTER KIT ------------------------------------------------------------
 void SwChgOnBoard_QSPI0_SKIT(void){
+#if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 1)
 	PutStr("SW1    OFF!               Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(50);
 	PutStr("SW6[3] OFF!               Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(50);
 	PutStr("JP1 1pin-2pin Connection! Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(50);
+#endif /* if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 1) */
 }
 void SwChgExSPI_QSPI0_SKIT(void){
+#if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 1)
 	PutStr("SW1    OFF!               Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(50);
 	PutStr("SW6[3] OFF!               Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(50);
 	PutStr("JP1 3pin-2pin Connection! Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(50);
+#endif /* if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 1) */
 }
 void SwChgHyperFlash_SKIT(void){
+#if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 1)
 	PutStr("SW1    ON!                Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(50);
 	PutStr("SW6[3] ON!                Setting OK? (Push Y key)",0);	WaitKeyIn_Y();	DelStr(50);
+#endif /* if defined (RCAR_GEN3_SALVATOR) && (RCAR_GEN3_ULCB == 1) */
 }
 //===========================================================================
 

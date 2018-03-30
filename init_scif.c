@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,20 +29,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// SoC Chip Version
-#define SoC_REV_RCARH3_ES10		0x00004F00
-#define SoC_REV_RCARH3_ES11		0x00004F01
+
+#include "reg_rcarh3.h"
+#include "common.h"
+#include "scifdrv.h"
+#include "init_scif.h"
 
 
-void StartTMU0(uint32_t tenmSec);
-void StartTMU0usec(uint32_t tenuSec);
-void PowerOnTmu0(void);
-void InitStopWatchTmu0(void);
-void StartCountStopWatchTmu0( void );
-void StopCountStopWatchTmu0( void );
-uint32_t GetTimeStopWatchTmu0( void );
+void InitScif(void)
+{
+	uint32_t product;
 
-void InitIPSR_Area0(void);
-void SetgPrrData(void);
-void PutgPrrData(void);
-uint32_t GetGpioInputLevel( uint32_t gp, uint32_t bit );
+	product = *((volatile uint32_t*)PRR) & PRR_PRODUCT_MASK;
+	switch (product) {
+#ifdef RCAR_GEN3_SALVATOR
+	case PRR_PRODUCT_H3:	/* H3 and M3 setting values are same */
+	case PRR_PRODUCT_M3:
+	case PRR_PRODUCT_M3N:
+		InitScif2_SCIFCLK();
+		break;
+#endif /* RCAR_GEN3_SALVATOR */
+#ifdef RCAR_GEN3_EBISU
+	case PRR_PRODUCT_E3:
+		InitScif2_SCIFCLK_E3();
+		break;
+#endif /* RCAR_GEN3_EBISU */
+#ifdef RCAR_GEN3_DRAAK
+	case PRR_PRODUCT_D3:
+		InitScif2_SCIFCLK_D3();
+		break;
+#endif /* RCAR_GEN3_DRAAK */
+	default:
+		break;
+	}
+}

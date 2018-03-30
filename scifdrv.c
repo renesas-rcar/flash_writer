@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -90,6 +90,7 @@ void WaitPutScif2SendEnd(void)
 	}
 }
 
+#ifdef RCAR_GEN3_SALVATOR
 void InitScif2_SCIFCLK(void)
 {
 	uint16_t dataW;
@@ -154,12 +155,90 @@ void InitScif2_SCIFCLK(void)
 
 	SoftDelay(100);
 }
+#endif /* RCAR_GEN3_SALVATOR */
+
+#ifdef RCAR_GEN3_EBISU
+void InitScif2_SCIFCLK_E3(void)
+{
+	uint16_t dataW;
+	uint32_t md;
+	uint32_t sscg;
+
+	PowerOnScif2();
+
+	md = *((volatile uint32_t*)RST_MODEMR);
+	sscg = (md & 0x00001000) >> 12;
+
+	dataW = *((volatile uint16_t*)SCIF2_SCLSR);	/* dummy read     		*/
+	*((volatile uint16_t*)SCIF2_SCLSR) = 0x0000;	/* clear ORER bit 		*/
+	*((volatile uint16_t*)SCIF2_SCFSR) = 0x0000;	/* clear all error bit	*/
+
+	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0000;	/* clear SCR.TE & SCR.RE*/
+	*((volatile uint16_t*)SCIF2_SCFCR) = 0x0006;	/* reset tx-fifo, reset rx-fifo. */
+	*((volatile uint16_t*)SCIF2_SCFSR) = 0x0000;	/* clear ER, TEND, TDFE, BRK, RDF, DR */
+
+	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0002;	/* external clock, SC_CLK pin used for input pin */
+	*((volatile uint16_t*)SCIF2_SCSMR) = 0x0000;	/* 8bit data, no-parity, 1 stop, Po/1 */
+	SoftDelay(100);
+
+	if(sscg == 0x0){					//MD12=0 (SSCG off) ： S3D1CΦ=266.6MHz
+		*((volatile uint16_t*)SCIF2_DL) = 0x0091;	/* 266.66MHz/ (115200*16) =  144.67 */
+	}
+	else if(sscg == 0x1){					//MD12=1 (SSCG on)  ： S3D1CΦ=250MHz
+		*((volatile uint16_t*)SCIF2_DL) = 0x0082;	/* 240.00MHz/ (115200*16) =  130.21 */
+	}
+	*((volatile uint16_t*)SCIF2_CKS)   = 0x4000;	/* select S3D1-Clock */
+	SoftDelay(100);
+	*((volatile uint16_t*)SCIF2_SCFCR) = 0x0000;	/* reset-off tx-fifo, rx-fifo. */
+	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0032;	/* enable TE, RE; SC_CLK=input */
+
+	SoftDelay(100);
+}
+#endif /* RCAR_GEN3_EBISU */
+
+#ifdef RCAR_GEN3_DRAAK
+void InitScif2_SCIFCLK_D3(void)
+{
+	uint16_t dataW;
+	uint32_t md;
+	uint32_t sscg;
+
+	PowerOnScif2();
+
+	md = *((volatile uint32_t*)RST_MODEMR);
+	sscg = (md & 0x00001000) >> 12;
+
+	dataW = *((volatile uint16_t*)SCIF2_SCLSR);	/* dummy read     		*/
+	*((volatile uint16_t*)SCIF2_SCLSR) = 0x0000;	/* clear ORER bit 		*/
+	*((volatile uint16_t*)SCIF2_SCFSR) = 0x0000;	/* clear all error bit	*/
+
+	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0000;	/* clear SCR.TE & SCR.RE*/
+	*((volatile uint16_t*)SCIF2_SCFCR) = 0x0006;	/* reset tx-fifo, reset rx-fifo. */
+	*((volatile uint16_t*)SCIF2_SCFSR) = 0x0000;	/* clear ER, TEND, TDFE, BRK, RDF, DR */
+
+	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0002;	/* external clock, SC_CLK pin used for input pin */
+	*((volatile uint16_t*)SCIF2_SCSMR) = 0x0000;	/* 8bit data, no-parity, 1 stop, Po/1 */
+	SoftDelay(100);
+
+	if(sscg == 0x0){					//MD12=0 (SSCG off) ： S3D1CΦ=266.6MHz
+		*((volatile uint16_t*)SCIF2_DL) = 0x0091;	/* 266.66MHz/ (115200*16) =  144.67 */
+	}
+	else if(sscg == 0x1){					//MD12=1 (SSCG on)  ： S3D1CΦ=250MHz
+		*((volatile uint16_t*)SCIF2_DL) = 0x0088;	/* 250.00MHz/ (115200*16) =  135.67 */
+	}
+	*((volatile uint16_t*)SCIF2_CKS)   = 0x4000;	/* select S3D1-Clock */
+	SoftDelay(100);
+	*((volatile uint16_t*)SCIF2_SCFCR) = 0x0000;	/* reset-off tx-fifo, rx-fifo. */
+	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0032;	/* enable TE, RE; SC_CLK=input */
+
+	SoftDelay(100);
+}
+#endif /* RCAR_GEN3_DRAAK */
 
 void InitScif2PinFunction(void)
 {
 	uint32_t dataL;
 
-//SCIF2
 	dataL = *((volatile uint32_t*)PFC_MOD_SEL1);
 	dataL &= ~BIT12;
 	*((volatile uint32_t*)PFC_PMMR) = ~dataL;
@@ -171,7 +250,6 @@ void InitScif2PinFunction(void)
 	*((volatile uint32_t*)PFC_IPSR12) = dataL;
 	
 	dataL = *((volatile uint32_t*)PFC_GPSR5);
-//	dataL &= 0xFFFFF3FF;	//GP5[11],GP5[10]
 	dataL |= 0x00000C00;	//GP5[11],GP5[10]
 	*((volatile uint32_t*)PFC_PMMR) = ~dataL;
 	*((volatile uint32_t*)PFC_GPSR5) = dataL;

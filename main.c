@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,6 @@
 
 
 extern const char *const StartMessMonitor[START_MESS_MON_LINE];
-extern const char *const StartMessWorkMem[START_MESS_MEM_LINE];
 extern const com_menu MonCom[COMMAND_UNIT];
 extern uint8_t	gCOMMAND_Area[COMMAND_BUFFER_SIZE];
 
@@ -81,7 +80,6 @@ void StartMess( void )
 {
 	PutStr("  ",1);
 	PutMess(StartMessMonitor);
-	PutMess(StartMessWorkMem);
 	PutStr(">", 0);
 }
 
@@ -125,7 +123,6 @@ void DecCom(void)
 
 					PutStrUSB("  ",1);
 					PutMessUSB(StartMessMonitor);
-					PutMessUSB(StartMessWorkMem);
 					PutStrUSB(">", 0);
 				}
 			}
@@ -141,7 +138,6 @@ void DecCom(void)
 
 				PutStrUSB("  ",1);
 				PutMessUSB(StartMessMonitor);
-				PutMessUSB(StartMessWorkMem);
 				PutStrUSB(">", 0);
 			}
 		}

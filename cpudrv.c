@@ -180,28 +180,9 @@ uint32_t GetTimeStopWatchTmu0( void )
 }
 
 
-
-void InitIPSR_SPI(void)
-{
-	PFC_WR(PFC_IPSR1, 0x60003333);
-	PFC_WR(PFC_IPSR2, 0x06666666);
-	PFC_WR(PFC_IPSR3, 0x66666000);
-	PFC_WR(PFC_IPSR4, 0x00000666);
-	PFC_WR(PFC_IPSR5, 0x00000600);
-	PFC_WR(PFC_IPSR6, 0x66666000);
-	PFC_WR(PFC_IPSR7, 0x00000666);
-}
-void InitGPSR_SPI(void)
-{
-	PFC_WR(PFC_GPSR0, 0x0000FF00);
-	PFC_WR(PFC_GPSR1, 0x080FF0FF);
-	PFC_WR(PFC_GPSR2, 0x00007BBF);
-}
-
 void SetgPrrData(void)
-{	
+{
 	gPrrData = GetProductIdAndCutNum();
-//	PutSocChipVersion();
 }
 
 void PutgPrrData(void)
@@ -212,22 +193,6 @@ void PutgPrrData(void)
 	PutStr(" PRR : H'",0);
 	PutStr(str,1);
 }
-
-void PutSocChipVersion(void)
-{	
-	switch(gPrrData){
-		case SoC_REV_RCARH3_ES10:
-			PutStr(" Salvator_H3-ES1.0",1);
-			break;
-		case SoC_REV_RCARH3_ES11:
-			PutStr(" Salvator_H3-ES1.1",1);
-			break;
-		default:
-//			PutStr(" ----- ",1);
-			break;
-	}
-}
-
 
 const void* const GPIO_INDT[8]={
 	(void*)GPIO_INDT0,

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2017, Renesas Electronics Corporation. All rights reserved.
+# Copyright (c) 2015-2018, Renesas Electronics Corporation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -27,6 +27,11 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 #
+
+#/* Select BOARD("SALVATOR"or"ULCB"or"EBISU"or"DRAAK" )*************************
+ifeq ("$(BOARD)", "")
+BOARD = SALVATOR
+endif
 
 #/* Select BOOT("AREA0"or"WRITER"or"WRITER_WITH_CERT" )*************************
 ifeq ("$(BOOT)", "")
@@ -89,30 +94,54 @@ ifeq ("$(AArch)", "64")
 	CROSS_COMPILE ?= aarch64-elf-
 endif
 
-ifeq ("$(BOARD)", "ULCB")
+ifeq ("$(BOARD)", "EBISU")
+	BOARD_NAME   =  Ebisu
+	FILENAME_ADD = _ebisu
+	CFLAGS += -DRCAR_GEN3_EBISU=1
+else ifeq ("$(BOARD)", "DRAAK")
+	BOARD_NAME   =  Draak
+	FILENAME_ADD = _draak
+	CFLAGS += -DRCAR_GEN3_DRAAK=1
+else ifeq ("$(BOARD)", "ULCB")
+	BOARD_NAME   =  ULCB
 	FILENAME_ADD = _ULCB
 	CFLAGS += -DRCAR_GEN3_ULCB=1
+	CFLAGS += -DRCAR_GEN3_SALVATOR=1
 else
-	FILENAME_ADD = 
+	BOARD_NAME   =  SALVATOR
+	FILENAME_ADD = _salvator-x
 	CFLAGS += -DRCAR_GEN3_ULCB=0
+	CFLAGS += -DRCAR_GEN3_SALVATOR=1
 endif
 
 ifeq ("$(BOOT)", "AREA0")
 	BOOT_DEF    = Area0Boot
-	MEMORY_DEF = memory_area0.def
 	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_Flash_writer_Area0$(FILENAME_ADD)
+	MEMORY_DEF = memory_area0.def
 endif
 
 ifeq ("$(BOOT)", "WRITER")
 	BOOT_DEF    = Writer
-	MEMORY_DEF = memory_writer.def
 	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_Flash_writer_SCIF_E6304000$(FILENAME_ADD)
+ifeq ("$(BOARD)", "EBISU")
+	MEMORY_DEF = memory_writer_small.def
+else ifeq ("$(BOARD)", "DRAAK")
+	MEMORY_DEF = memory_writer_small.def
+else
+	MEMORY_DEF = memory_writer.def
+endif
 endif
 
 ifeq ("$(BOOT)", "WRITER_WITH_CERT")
 	BOOT_DEF    = Writer
-	MEMORY_DEF  = memory_writer_with_cert.def
 	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_Flash_writer_SCIF_DUMMY_CERT_E6300400$(FILENAME_ADD)
+ifeq ("$(BOARD)", "EBISU")
+	MEMORY_DEF  = memory_writer_small_with_cert.def
+else ifeq ("$(BOARD)", "DRAAK")
+	MEMORY_DEF  = memory_writer_small_with_cert.def
+else
+	MEMORY_DEF  = memory_writer_with_cert.def
+endif
 endif
 
 ifeq ("$(SCIF_CLK)", "EXTERNAL")
@@ -160,6 +189,7 @@ OBJ_FILE_BOOT =						\
 
 SRC_FILE :=						\
 	main.c						\
+	init_scif.c					\
 	scifdrv.c					\
 	devdrv.c					\
 	common.c					\
@@ -185,7 +215,7 @@ SRC_FILE :=						\
 	emmc_erase.c					\
 	emmc_utility.c					\
 	boot_init_lbsc.c				\
-	boot_init_port_M3.c				\
+	boot_init_port.c				\
 	boot_init_gpio.c				\
 	micro_wait.c
 
@@ -203,7 +233,13 @@ ifeq ("$(BOOT)", "WRITER_WITH_CERT")
 	SRC_FILE += cert_param.c
 endif
 
-include ddr/ddr.mk
+ifeq ("$(BOARD)", "EBISU")
+include ddr/ddr3l/ddr.mk
+else ifeq ("$(BOARD)", "DRAAK")
+include ddr/ddr3l/ddr.mk
+else
+include ddr/lpddr4/ddr.mk
+endif
 
 OBJ_FILE := $(addprefix $(OBJECT_DIR)/,$(patsubst %.c,%.o,$(SRC_FILE)))
 

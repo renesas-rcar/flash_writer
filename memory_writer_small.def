@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,20 +29,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// SoC Chip Version
-#define SoC_REV_RCARH3_ES10		0x00004F00
-#define SoC_REV_RCARH3_ES11		0x00004F01
+MEMORY {
+	RAM  (rwxa): ORIGIN = 0xE6304000, LENGTH = 0x00014000
+	RAM2 (rwxa): ORIGIN = 0xE6318000, LENGTH = 0x00008000
+}
 
+SECTIONS
+{
+	.text : {
+		*(.text*)
+		*(.rodata*)
+		. = NEXT(64);
+		__RO_END__ = .;
+	} > RAM
 
-void StartTMU0(uint32_t tenmSec);
-void StartTMU0usec(uint32_t tenuSec);
-void PowerOnTmu0(void);
-void InitStopWatchTmu0(void);
-void StartCountStopWatchTmu0( void );
-void StopCountStopWatchTmu0( void );
-uint32_t GetTimeStopWatchTmu0( void );
+	.data : {
+		__DATA_START__ = .;
+		 *(.data)
+		. = NEXT(64);
+		__DATA_END__ = .;
+	} > RAM
 
-void InitIPSR_Area0(void);
-void SetgPrrData(void);
-void PutgPrrData(void);
-uint32_t GetGpioInputLevel( uint32_t gp, uint32_t bit );
+	__DATA_SIZE__ = SIZEOF(.data);
+
+	.bss : {
+		__BSS_START__ = .;
+		 *(.bss)
+		 *(COMMON)
+		 . = NEXT(64);
+		__BSS_END__ = .;
+	} > RAM2
+
+	stacks (NOLOAD) : ALIGN(64) {
+		__STACKS_START__ = .;
+		KEEP(*(writer_stack))
+		__STACKS_END__ = .;
+	} > RAM2
+
+	__BSS_SIZE__ = SIZEOF(.bss);
+}

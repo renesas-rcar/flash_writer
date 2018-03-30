@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,3 @@
  */
 
 void InitGPIO(void);
-void InitPOSNEG(void);
-void InitIOINTSEL(void);
-void InitOUTDT(void);
-void InitINOUTSEL(void);

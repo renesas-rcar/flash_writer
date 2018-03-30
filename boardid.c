@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,14 @@ uint32_t gBoardFlag;
 
 void CheckBoard(void)
 {
-#if (RCAR_GEN3_ULCB==0)
+#if defined (RCAR_GEN3_EBISU)
+	gBoardFlag = BD_EBISU;
+#elif defined (RCAR_GEN3_DRAAK)
+	gBoardFlag = BD_DRAAK;
+#elif defined (RCAR_GEN3_SALVATOR)
+#if RCAR_GEN3_ULCB == 1
+	gBoardFlag = BD_STARTERKIT;
+#else  /* (RCAR_GEN3_ULCB == 1) */
 	if( !SSI_WS6_OpenCheck() ){
 		// Connect=Salvator
 		gBoardFlag = BD_SALVATOR;
@@ -49,7 +56,6 @@ void CheckBoard(void)
 		// Connect=Kriek
 		gBoardFlag = BD_KRIEK;
 	}
-#else  /* (RCAR_GEN3_ULCB==0) */
-	gBoardFlag = BD_STARTERKIT;
-#endif /* (RCAR_GEN3_ULCB==0) */
+#endif /* (RCAR_GEN3_ULCB == 1) */
+#endif
 }

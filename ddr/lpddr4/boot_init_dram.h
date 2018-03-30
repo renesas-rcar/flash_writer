@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2017, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,13 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-void InitPORT(void);
-void InitMODSEL(void);
-void InitIPSR_H3(void);
-void InitIPSR_M3(void);
-void InitGPSR_H3(void);
-void InitGPSR_M3(void);
-void InitPOCCTRL(void);
-void InitDRVCTRL(void);
-void InitPUD(void);
-void InitPUEN(void);
+#ifndef	__BOOT_INIT_DRAM_
+#define	__BOOT_INIT_DRAM_
+
+extern int32_t InitDram(void);
+#define INITDRAM_OK (0)
+#define INITDRAM_NG (0xffffffff)
+#define INITDRAM_ERR_I (0xffffffff)
+#define INITDRAM_ERR_O (0xfffffffe)
+#define INITDRAM_ERR_T (0xfffffff0)
+
+#endif /* __BOOT_INIT_DRAM_*/

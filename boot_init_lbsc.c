@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,22 +51,10 @@ void InitCSCTRL(void)
 
 void InitCSWCR(void)
 {
-	uint32_t product;
-
-	product = *((volatile uint32_t*)PRR) & PRR_PRODUCT_MASK;
-	switch (product) {
-	case PRR_PRODUCT_H3:
-		*((volatile uint32_t*)LBSC_CSWCR0)=0xFF70FF70;			//Initial value
-		*((volatile uint32_t*)LBSC_CSWCR1)=0xFF70FF70;			//Initial value
-		break;
-	case PRR_PRODUCT_M3:
-	case PRR_PRODUCT_M3N:
-		*((volatile uint32_t*)LBSC_CSWCR0)=0x2A103320;
-		*((volatile uint32_t*)LBSC_CSWCR1)=0x2A103320;
-		break;
-	default:
-		break;
-	}
+#ifdef RCAR_GEN3_SALVATOR
+	*((volatile uint32_t*)LBSC_CSWCR0)=0x2A103320;
+	*((volatile uint32_t*)LBSC_CSWCR1)=0x2A103320;
+#endif /* RCAR_GEN3_SALVATOR */
 }
 
 void InitCSPWCR(void)

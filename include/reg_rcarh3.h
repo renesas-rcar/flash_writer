@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -481,6 +481,11 @@
 #define	PFC_MOD_SEL0					0xE6060500	// R/W	32	Module select register 0
 #define	PFC_MOD_SEL1					0xE6060504	// R/W	32	Module select register 1
 #define	PFC_MOD_SEL2					0xE6060508	// R/W	32	Module select register 2
+
+#define	PFC_IOCTRL30					0xE6060380	// R/W	32	MPOC control register 0
+#define	PFC_IOCTRL31					0xE6060384	// R/W	32	MPOC control register 0
+#define	PFC_IOCTRL32					0xE6060388	// R/W	32	MPOC control register 0
+#define	PFC_IOCTRL40					0xE60603C0	// R/W	32	MPOC control register 0
 
 
 //RPC
@@ -1398,12 +1403,14 @@
 
 
 // Appendix A.
-#define	PRR								0xFFF00044	// R	32	Product Register
+#define	PRR			(0xFFF00044U)		// R	32	Product Register
 #define PRR_PRODUCT_MASK	(0x00007F00U)
 #define PRR_CUT_MASK		(0x000000FFU)
 #define PRR_PRODUCT_H3		(0x00004F00U)           /* R-Car H3 */
 #define PRR_PRODUCT_M3		(0x00005200U)           /* R-Car M3 */
 #define PRR_PRODUCT_M3N		(0x00005500U)           /* R-Car M3N */
+#define PRR_PRODUCT_E3		(0x00005700U)           /* R-Car E3  */
+#define PRR_PRODUCT_D3		(0x00005800U)           /* R-Car D3  */
 #define PRR_CUT_10		(0x00U)
 #define PRR_CUT_11		(0x01U)
 #define PRR_CUT_20		(0x10U)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,15 @@ int32_t PutCharSCIF2(char outChar);
 int32_t GetCharSCIF2(char *inChar);
 void PowerOnScif2(void);
 void WaitPutScif2SendEnd(void);
+#ifdef RCAR_GEN3_SALVATOR
 void InitScif2_SCIFCLK(void);
+#endif /* RCAR_GEN3_SALVATOR */
+#ifdef RCAR_GEN3_EBISU
+void InitScif2_SCIFCLK_E3(void);
+#endif /* RCAR_GEN3_EBISU */
+#ifdef RCAR_GEN3_DRAAK
+void InitScif2_SCIFCLK_D3(void);
+#endif /* RCAR_GEN3_DRAAK */
 void SetScif2_DL(uint16_t setData);
 void SetScif2_BRR(uint8_t setData);
 void InitScif2PinFunction(void);

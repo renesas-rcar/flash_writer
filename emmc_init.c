@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -257,7 +257,7 @@ static void emmc_drv_init(void)
  */
 static EMMC_ERROR_CODE emmc_dev_init(void)
 {
-	uint32_t mmc_ch = 0x0;
+	uint32_t mmc_ch = USE_MMC_CH;
 	uint32_t dataL;
 	uint32_t tmp_val;
 	volatile uint32_t* adr_cpg_sdxckcr;
@@ -324,7 +324,7 @@ static EMMC_ERROR_CODE emmc_dev_init(void)
 static EMMC_ERROR_CODE emmc_dev_finalize(void)
 {
     EMMC_ERROR_CODE result;
-	uint32_t mmc_ch = 0x0;
+	uint32_t mmc_ch = USE_MMC_CH;
 	uint32_t dataL;
 	uint32_t tmp_val;
 

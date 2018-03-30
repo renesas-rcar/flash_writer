@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2017, Renesas Electronics Corporation
+# Copyright (c) 2015-2018, Renesas Electronics Corporation
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -30,5 +30,5 @@
 #
 
 
-SRC_FILE += ddr/boot_init_dram.c
-SRC_FILE += ddr/dram_sub_func.c
+SRC_FILE += ddr/lpddr4/boot_init_dram.c
+SRC_FILE += ddr/lpddr4/dram_sub_func.c

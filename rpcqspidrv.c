@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -193,7 +193,7 @@ void WriteRegisterQspiFlash(uint32_t statusReg, uint32_t configReg)
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear	
 	
 }
@@ -261,7 +261,7 @@ void WriteRegisterQspiFlash_Byte2(uint32_t statusReg, uint32_t configReg)
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear	
 }
 
@@ -353,7 +353,7 @@ void WriteData4ppWithBufferQspiFlash(uint32_t addr, uint32_t source_addr)
 	//uint32_t i=0;
 	uintptr_t i=0;
 	
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
 	
 	*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030274;
@@ -400,7 +400,7 @@ void WriteData4ppWithBufferQspiFlash(uint32_t addr, uint32_t source_addr)
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
 }
 
@@ -412,7 +412,7 @@ void WriteDataPpWithBufferQspiFlash(uint32_t addr, uint32_t source_addr)
 	//uint32_t i=0;
 	uintptr_t i=0;
 	
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
 	
 	*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030274;
@@ -460,7 +460,7 @@ void WriteDataPpWithBufferQspiFlash(uint32_t addr, uint32_t source_addr)
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
 }
 
@@ -472,7 +472,7 @@ void WriteData4qppWithBufferQspiFlash(uint32_t addr, uint32_t source_addr)
 	//uint32_t i=0;
 	uintptr_t i=0;
 	
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
 	
 	*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030274;
@@ -520,7 +520,7 @@ void WriteData4qppWithBufferQspiFlash(uint32_t addr, uint32_t source_addr)
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
 }
 
@@ -562,7 +562,7 @@ void WriteData4ppQspiFlash(uint32_t addr, uint32_t writeData)
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear	
 	
 }
@@ -638,7 +638,7 @@ void WriteData4ppQspiFlash_CsCont(uint32_t addr, uint32_t *writeData,uint32_t cn
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear	
 }
 
@@ -680,7 +680,7 @@ void WriteData4qppQspiFlash(uint32_t addr, uint32_t writeData)
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear	
 	
 }
@@ -892,7 +892,7 @@ void WriteAnyRegisterQspiFlash(uint32_t addr, unsigned char writeData)			// Add2
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear	
 	
 }
@@ -998,33 +998,38 @@ void SetRPC_ClockMode(uint32_t mode)
 {
 	uint32_t dataL=0;
 
-	if(mode == RPC_CLK_40M)
-	{
-		dataL = 0x00000017;	//RPC clock 40MHz
+#ifdef RCAR_GEN3_SALVATOR
+	if(mode == RPC_CLK_160M){
+		dataL = 0x00000011;	/* RPC clock 160MHz */
+	}else if(mode == RPC_CLK_80M){
+		dataL = 0x00000013;	/* RPC clock 80MHz */
+	}else{
+		dataL = 0x00000017;	/* RPC clock 40MHz */
 	}
-	else if(mode == RPC_CLK_80M)
-	{
-		dataL = 0x00000013;	//RPC clock 80MHz
+#endif /* RCAR_GEN3_SALVATOR */
+#ifdef RCAR_GEN3_EBISU
+	if(mode == RPC_CLK_160M){
+		dataL = 0x00000011;	/* RPC clock 160MHz */
+	}else if(mode == RPC_CLK_80M){
+		dataL = 0x00000001;	/* RPC clock 80MHz */
+	}else{
+		dataL = 0x00000003;	/* RPC clock 40MHz */
 	}
-	else if(mode == RPC_CLK_160M)
-	{
-		dataL = 0x00000011;	//RPC clock 160MHz
-		
+#endif /* RCAR_GEN3_EBISU */
+#ifdef RCAR_GEN3_DRAAK
+	if(mode == RPC_CLK_160M){
+		dataL = 0x00000011;	/* RPC clock 160MHz */
+	}else if(mode == RPC_CLK_80M){
+		dataL = 0x00000001;	/* RPC clock 80MHz */
+	}else{
+		dataL = 0x00000003;	/* RPC clock 40MHz */
 	}
-	//bit[9]=1'b0: RPCD2 clock supply
-	//bit[8]=1'b0: RPC clock supply
-	//bit[4:0]=1'b10001: RPC clock=320MHz,  RPCD2 clock=160MHz (for Hyper Flash 160MHz)
-	//bit[4:0]=1'b10011: RPC clock=160MHz,  RPCD2 clock= 80MHz (for Hyper/QSPI Flash  80MHz)
-	//bit[4:0]=1'b10111: RPC clock= 80MHz,  RPCD2 clock= 40MHz (for Hyper/QSPI Flash  40MHz)
-//	dataL = 0x00000017;	//QSPI 40MHz			//Change
-//	dataL = 0x00000013;	//QSPI 80MHz
-//	dataL = 0x00000011;	//Hyper Flash 160MHz
+#endif /* RCAR_GEN3_DRAAK */
+
 	*((volatile uint32_t*)CPG_CPGWPR)   = ~dataL;
 	*((volatile uint32_t*)CPG_RPCCKCR)  =  dataL;
 
-//Add 2015.07.28
 	SoftDelay(50000);
-
 }
 
 
@@ -1217,7 +1222,7 @@ void WriteDataWithBufferQspiFlash(uint32_t addr, uint32_t source_addr)	//for QSP
 	//uint32_t i=0;
 	uintptr_t i=0;
 	
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
 	
 	*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030274;
@@ -1265,7 +1270,7 @@ void WriteDataWithBufferQspiFlash(uint32_t addr, uint32_t source_addr)	//for QSP
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	*((volatile uint32_t*)RPC_DRCR)       = 0x01FF0301;
+	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
 }
 

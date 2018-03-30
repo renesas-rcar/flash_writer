@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,20 +29,48 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// SoC Chip Version
-#define SoC_REV_RCARH3_ES10		0x00004F00
-#define SoC_REV_RCARH3_ES11		0x00004F01
+#include <stdint.h>
+#include "reg_rcarh3.h"
+#include "boot_init_dram.h"
+#ifdef RCAR_GEN3_EBISU
+#include "ddr_init_e3.h"
+#endif /* RCAR_GEN3_EBISU */
+#ifdef RCAR_GEN3_DRAAK
+#include "ddr_init_d3.h"
+#endif /* RCAR_GEN3_DRAAK */
+
+#define MD19	(0x00080000)	/* bit19 */
 
 
-void StartTMU0(uint32_t tenmSec);
-void StartTMU0usec(uint32_t tenuSec);
-void PowerOnTmu0(void);
-void InitStopWatchTmu0(void);
-void StartCountStopWatchTmu0( void );
-void StopCountStopWatchTmu0( void );
-uint32_t GetTimeStopWatchTmu0( void );
+int32_t InitDram(void)
+{
+	uint32_t product;
+	uint32_t modemr;
 
-void InitIPSR_Area0(void);
-void SetgPrrData(void);
-void PutgPrrData(void);
-uint32_t GetGpioInputLevel( uint32_t gp, uint32_t bit );
+	modemr  = *(volatile uint32_t*)RST_MODEMR;
+	product = *((volatile uint32_t*)PRR) & PRR_PRODUCT_MASK;
+	switch (product) {
+#ifdef RCAR_GEN3_EBISU
+	case PRR_PRODUCT_E3:
+		if ((modemr & MD19) == 0U) {
+			(void)init_ddr_e31600();
+		} else {
+			(void)init_ddr_e31866();
+		}
+		break;
+#endif /* RCAR_GEN3_EBISU */
+#ifdef RCAR_GEN3_DRAAK
+	case PRR_PRODUCT_D3:
+		if ((modemr & MD19) == 0U) {
+			(void)init_ddr_d31600();
+		} else {
+			(void)init_ddr_d31866();
+		}
+		break;
+#endif /* RCAR_GEN3_DRAAK */
+	default:
+		break;
+	}
+
+	return INITDRAM_OK;
+}
