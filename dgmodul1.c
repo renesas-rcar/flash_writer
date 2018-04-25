@@ -46,8 +46,6 @@ extern const char *const AllHelpMess[ALL_HELP_MESS_LINE];
 extern const com_menu MonCom[COMMAND_UNIT];
 extern int32_t  gComNo;
 extern char gKeyBuf[64];
-extern uint32_t gUreg[17];
-extern uint32_t gPrrData;
 
 
 uint32_t gFLASH_CS1_ID;
@@ -97,15 +95,19 @@ int32_t	GetStr_ByteCount(char *str,uint32_t getByteCount)
 void	dgScifSpeedUp(void)
 {
 #ifdef RCAR_GEN3_SALVATOR
+	uint32_t product;
+
+	product = *((volatile uint32_t*)PRR) & (PRR_PRODUCT_MASK | PRR_CUT_MASK);
+
 #ifdef SCIF_CLK_EXTERNAL
-	if (gPrrData == SoC_REV_RCARH3_ES10) {	/* R-CarH3_Ver.1.0 */
+	if (product == (PRR_PRODUCT_H3 | PRR_CUT_10)) {	/* R-CarH3_Ver.1.0 */
 		dgScifSpeedUp_460800();
 	} else {
 		dgScifSpeedUp_921600();
 	}
 #endif /* SCIF_CLK_EXTERNAL */
 #ifdef SCIF_CLK_INTERNAL
-	if (gPrrData == SoC_REV_RCARH3_ES10) {	/* R-CarH3_Ver.1.0 */
+	if (product == (PRR_PRODUCT_H3 | PRR_CUT_10)) {	/* R-CarH3_Ver.1.0 */
 		dgScifSpeedUp_115200();
 	} else {
 		dgScifSpeedUp_230400();

@@ -234,21 +234,11 @@ data_end:
 .endif
 
 
-.ifdef Area0Boot
 	BL InitPORT
 	BL InitGPIO
 	BL InitLBSC
 	BL InitScif
 	BL InitDram
-.endif
-
-.ifdef Writer
-	BL InitPORT
-	BL InitGPIO
-	BL InitLBSC
-	BL InitScif
-	BL InitDram
-.endif
 
 	cmp	r0, #0
 	beq	Jmp_MAIN_C	/* InitDram success */ 

@@ -58,6 +58,11 @@ ifeq ("$(SERIAL_FLASH)", "")
 SERIAL_FLASH = ENABLE
 endif
 
+#/* Select EMMC("ENABLE"or"DISABLE" )*******************************************
+ifeq ("$(EMMC)", "")
+EMMC = ENABLE
+endif
+
 #CPU
 ifeq ("$(AArch)", "64")
 CPU = -march=armv8-a
@@ -107,11 +112,13 @@ else ifeq ("$(BOARD)", "ULCB")
 	FILENAME_ADD = _ULCB
 	CFLAGS += -DRCAR_GEN3_ULCB=1
 	CFLAGS += -DRCAR_GEN3_SALVATOR=1
+	CFLAGS += -DRCAR_DRAM_LPDDR4_MEMCONF=0
 else
 	BOARD_NAME   =  SALVATOR
 	FILENAME_ADD = _salvator-x
 	CFLAGS += -DRCAR_GEN3_ULCB=0
 	CFLAGS += -DRCAR_GEN3_SALVATOR=1
+	CFLAGS += -DRCAR_DRAM_LPDDR4_MEMCONF=0
 endif
 
 ifeq ("$(BOOT)", "AREA0")
@@ -169,6 +176,14 @@ ifeq ("$(SERIAL_FLASH)", "DISABLE")
 	CFLAGS += -DSERIAL_FLASH=0
 endif
 
+ifeq ("$(EMMC)", "ENABLE")
+	CFLAGS += -DEMMC=1
+endif
+
+ifeq ("$(EMMC)", "DISABLE")
+	CFLAGS += -DEMMC=0
+endif
+
 DDR_DEF = ddr_qos_init_setting
 
 LIBS        = -L$(subst libc.a, ,$(shell $(CC) -print-file-name=libc.a 2> /dev/null)) -lc
@@ -193,27 +208,15 @@ SRC_FILE :=						\
 	scifdrv.c					\
 	devdrv.c					\
 	common.c					\
-	dginit.c					\
 	dgtable.c					\
 	dgmodul1.c					\
 	Message.c					\
 	dmaspi.c					\
 	ramckmdl.c					\
-	armasm.c					\
 	cpudrv.c					\
 	b_boarddrv.c					\
 	boardid.c					\
 	switch.c					\
-	dg_emmc_config.c				\
-	dg_emmc_access.c				\
-	timer_api.c					\
-	emmc_cmd.c					\
-	emmc_init.c					\
-	emmc_interrupt.c				\
-	emmc_mount.c					\
-	emmc_write.c					\
-	emmc_erase.c					\
-	emmc_utility.c					\
 	boot_init_lbsc.c				\
 	boot_init_port.c				\
 	boot_init_gpio.c				\
@@ -227,6 +230,19 @@ SRC_FILE +=						\
 	hyperflashdrv.c					\
 	spiflash1drv.c					\
 	spiflash0drv.c
+endif
+
+ifeq ("$(EMMC)", "ENABLE")
+SRC_FILE +=						\
+	dg_emmc_config.c				\
+	dg_emmc_access.c				\
+	emmc_cmd.c					\
+	emmc_init.c					\
+	emmc_interrupt.c				\
+	emmc_mount.c					\
+	emmc_write.c					\
+	emmc_erase.c					\
+	emmc_utility.c
 endif
 
 ifeq ("$(BOOT)", "WRITER_WITH_CERT")

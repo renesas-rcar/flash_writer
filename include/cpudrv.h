@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,12 +37,5 @@
 void StartTMU0(uint32_t tenmSec);
 void StartTMU0usec(uint32_t tenuSec);
 void PowerOnTmu0(void);
-void InitStopWatchTmu0(void);
-void StartCountStopWatchTmu0( void );
-void StopCountStopWatchTmu0( void );
-uint32_t GetTimeStopWatchTmu0( void );
 
-void InitIPSR_Area0(void);
-void SetgPrrData(void);
-void PutgPrrData(void);
 uint32_t GetGpioInputLevel( uint32_t gp, uint32_t bit );

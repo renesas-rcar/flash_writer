@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include	<stddef.h>
 #include	"types.h"
 #include	"common.h"
 #include	"devdrv.h"
@@ -385,6 +386,17 @@ void *memset(void *dst, int val, unsigned long count)
 
 	while (count--)
 		*ptr++ = val;
+
+	return dst;
+}
+
+void *memcpy(void *dst, const void *src, size_t len)
+{
+	const char *s = src;
+	char *d = dst;
+
+	while (len--)
+		*d++ = *s++;
 
 	return dst;
 }

@@ -34,14 +34,14 @@
 #include	"dgtable.h"
 #include	"bit.h"
 #include	"cpudrv.h"
+#if EMMC == 1
 #include	"dgemmc.h"
-#include	"dginit.h"
+#endif /* EMMC == 1 */
 #include	"scifdrv.h"
 #include	"devdrv.h"
 #include	"boardid.h"
 #if USB_ENABLE == 1
 #include	"usb_lib.h"
-#include	"timer_api.h"
 #endif /* USB_ENABLE == 1 */
 
 
@@ -68,9 +68,9 @@ void Main(void)
 
 void InitMain(void)
 {
-	InitSysMon();
+#if EMMC == 1
 	dg_init_emmc();
-	SetgPrrData();
+#endif /* EMMC == 1 */
 #if USB_ENABLE == 1
 	USB_Init();
 #endif /* USB_ENABLE == 1 */
@@ -113,9 +113,7 @@ void DecCom(void)
 			}
 		} else if (usb_state == CONFIGURED) {
 			if (USB_banner == 1) {
-				PowerOnTmu2();
-				StartTMU2(1);	/* 10msec delay */
-				PowerOffTmu2();
+				StartTMU0(1);	/* 10msec delay */
 				cnt++;
 		/* Wait for specified time after USB connection is detected */
 				if(cnt >= USB_BANNER_DELAY_TIME) {

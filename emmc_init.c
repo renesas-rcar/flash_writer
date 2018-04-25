@@ -41,11 +41,9 @@
 #include "emmc_std.h"
 #include "emmc_registers.h"
 #include "emmc_def.h"
-//#include "reg_rcare2x.h"
 #include "reg_rcarh3.h"
 #include "common.h"
 #include "bit.h"
-#include "timer_api.h"
 
 /* ***************** MACROS, CONSTANTS, COMPILATION FLAGS ****************** */
 
@@ -85,9 +83,6 @@ static void InitMmcPinFunction(void);
 EMMC_ERROR_CODE emmc_init(uint8_t low_clock_mode_enable)
 {
 	EMMC_ERROR_CODE retult;
-
-	/* TMU2 TIMER ON */
-	PowerOnTmu2();
 
 	/* initialize H/W */
     retult = emmc_reset_controller();
@@ -129,9 +124,6 @@ EMMC_ERROR_CODE emmc_terminate (void)
 
     /* driver finalize */
     emmc_memset((uint8_t *)(&mmc_drv_obj), 0, sizeof(st_mmc_base));  /* clear global variable */
-
-	/* TMU2 TIMER OFF */
-	PowerOffTmu2();
 
     return result;
 }

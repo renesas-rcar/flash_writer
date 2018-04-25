@@ -44,7 +44,7 @@
 #include "common.h"
 #include "types.h"
 #include "bit.h"
-#include "timer_api.h"
+#include "cpudrv.h"
 
 /* ***************** MACROS, CONSTANTS, COMPILATION FLAGS ****************** */
 
@@ -173,7 +173,7 @@ static EMMC_ERROR_CODE emmc_card_init (void)
     }
 
 #ifdef REWRITE_TOOL
-	StartTMU2usec(100);			/* wait 1ms */
+	StartTMU0usec(100);			/* wait 1ms */
 
 	/* CMD0, arg=0x00000000 */
     result = emmc_send_idle_cmd (0x00000000);
@@ -184,7 +184,7 @@ static EMMC_ERROR_CODE emmc_card_init (void)
     }
 #endif /* REWRITE_TOOL */
 
-	StartTMU2usec(20);			/* wait 74clock 390kHz(189.74us)*/
+	StartTMU0usec(20);			/* wait 74clock 390kHz(189.74us)*/
 
    /* CMD1 */
     emmc_make_nontrans_cmd(CMD1_SEND_OP_COND, EMMC_HOST_OCR_VALUE);
@@ -201,7 +201,7 @@ static EMMC_ERROR_CODE emmc_card_init (void)
         {
             break;          /* card is ready. exit loop */
         }
-		StartTMU2usec(100);			/* wait 1ms */
+		StartTMU0usec(100);			/* wait 1ms */
     }
 
     if (retry == 0)

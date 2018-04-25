@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,7 @@
 #include "emmc_std.h"
 #include "emmc_registers.h"
 #include "emmc_def.h"
-#include "timer_api.h"
+#include "cpudrv.h"
 #include "common.h"
 /* ***************** MACROS, CONSTANTS, COMPILATION FLAGS ****************** */
 #ifdef EMMC_DEBUG
@@ -486,7 +486,7 @@ static void emmc_softreset(void)
             loop--;
             if ((loop == 0) && (retry > 0) )
             {
-				StartTMU2usec(100);			/* wait 1ms */
+				StartTMU0usec(100);			/* wait 1ms */
                 loop = 10000;
                 retry--;
             }
@@ -729,7 +729,7 @@ static void emmc_WaitCmd2Cmd_8Cycle(void)
 		case 0x40: wait = 2U;  break;  // 1/256  20 us wait  (256/200MHz)*8= 10.24 us(min)
 		case 0x80: wait = 3U;  break;  // 1/512  30 us wait  (512/200MHz)*8= 20.48 us(min)
 	}
-	StartTMU2usec(wait);
+	StartTMU0usec(wait);
 
 }
 

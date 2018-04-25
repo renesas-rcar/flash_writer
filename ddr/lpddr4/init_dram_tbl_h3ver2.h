@@ -1,32 +1,7 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
- * All rights reserved.
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *   - Redistributions of source code must retain the above copyright notice,
- *     this list of conditions and the following disclaimer.
- *
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *
- *   - Neither the name of Renesas nor the names of its contributors may be
- *     used to endorse or promote products derived from this software without
- *     specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #define DDR_PHY_SLICE_REGSET_OFS_H3VER2  0x0400
@@ -242,7 +217,7 @@ static const uint32_t DDR_PHY_ADR_G_REGSET_H3VER2[DDR_PHY_ADR_G_REGSET_NUM_H3VER
 /*068b*/	0x00000050,
 /*068c*/	0x00000000,
 /*068d*/	0x01010100,
-/*068e*/	0x00000200,
+/*068e*/	0x01000200,
 /*068f*/	0x00000000,
 /*0690*/	0x00010100,
 /*0691*/	0x00000000,
@@ -288,7 +263,7 @@ static const uint32_t DDR_PHY_ADR_G_REGSET_H3VER2[DDR_PHY_ADR_G_REGSET_NUM_H3VER
 /*06b9*/	0x00000000,
 /*06ba*/	0x00000065,
 /*06bb*/	0x00000000,
-/*06bc*/	0x00020101,
+/*06bc*/	0x00020201,
 /*06bd*/	0x00000000,
 /*06be*/	0x03000000,
 /*06bf*/	0x00000008,
@@ -556,4 +531,3 @@ static const uint32_t DDR_PI_REGSET_H3VER2[DDR_PI_REGSET_NUM_H3VER2] = {
 /*02f3*/	0x00000000,
 /*02f4*/	0x00000000
 };
-

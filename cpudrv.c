@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,16 +35,9 @@
 #include "cpudrv.h"
 
 
-#define PFC_WR(m,n)   *((volatile uint32_t*)PFC_PMMR)=~(n);*((volatile uint32_t*)(m))=(n);
-
-uint32_t gPrrData;
-
-extern uint32_t GetProductIdAndCutNum(void);
-
-
-// TMU ch0-2   : CP-Clock
-// TMU ch3-11  : S3D2_PERE-Clock
-// TMU ch12-14 : S3D2_RT-Clock
+/* TMU ch0-2   : CP-Clock        */
+/* TMU ch3-11  : S3D2_PERE-Clock */
+/* TMU ch12-14 : S3D2_RT-Clock   */
 void StartTMU0(uint32_t tenmSec)
 {
 	uint16_t dataW;
@@ -52,23 +45,33 @@ void StartTMU0(uint32_t tenmSec)
 
 	PowerOnTmu0();
 
-	*((volatile uint16_t*)TMU_TCR0)  = 0x0000;	// TCNT_count_clock=(Input-Clock)/4
-
-	*((volatile uint32_t*)TMU_TCNT0) = 20833;	// [Gen3](8.3333MHz/4)*20833=9.999880ms (-0.000012s/100s)
-	*((volatile uint32_t*)TMU_TCOR0) = 20833;	// Input-Clock=CP-Clock=16.6666/2=8.3333MHz
+	*((volatile uint16_t*)TMU_TCR0)  = 0x0000U;	/* TCNT_count_clock=(Input-Clock)/4 */
 
 
-	*((volatile uint8_t*)TMU_TSTR0) |= BIT0;	// TMU0 Start
+#ifdef RCAR_GEN3_SALVATOR
+	*((volatile uint32_t*)TMU_TCNT0) = 20833U;	/* [H3/M3/M3N](8.3333MHz/4)*20833=9.999880ms (-0.000012s/100s) */
+	*((volatile uint32_t*)TMU_TCOR0) = 20833U;	/* Input-Clock=CP-Clock=16.6666/2=8.3333MHz */
+#endif /* RCAR_GEN3_SALVATOR */
+#ifdef RCAR_GEN3_EBISU
+	*((volatile uint32_t*)TMU_TCNT0) = 60000U;	/* [E3](24.0000MHz/4)*60000=10.00ms */
+	*((volatile uint32_t*)TMU_TCOR0) = 60000U;	/* Input-Clock=CP-Clock=48.0000/2=24.0000MHz */
+#endif /* RCAR_GEN3_EBISU */
+#ifdef RCAR_GEN3_DRAAK
+	*((volatile uint32_t*)TMU_TCNT0) = 60000U;	/* [D3](24.0000MHz/4)*60000=10.00ms */
+	*((volatile uint32_t*)TMU_TCOR0) = 60000U;	/* Input-Clock=CP-Clock=48.0000/2=24.0000MHz */
+#endif /* RCAR_GEN3_DRAAK */
+
+	*((volatile uint8_t*)TMU_TSTR0) |= BIT0;	/* TMU0 Start */
 	for(cnt=0;cnt<tenmSec;cnt++){
 		while(1){
 			dataW = *((volatile uint16_t*)TMU_TCR0);
-			if(dataW & BIT8){	// UNF(under-flow-flag) clear
+			if(dataW & BIT8){		/* UNF(under-flow-flag) clear */
 				*((volatile uint16_t*)TMU_TCR0) &= ~BIT8;
 				break;
 			}
 		}
 	}
-	*((volatile uint8_t*)TMU_TSTR0) &= ~BIT0;		// TMU0 Stop
+	*((volatile uint8_t*)TMU_TSTR0) &= ~BIT0;	/* TMU0 Stop */
 }
 
 void StartTMU0usec(uint32_t tenuSec)
@@ -78,22 +81,32 @@ void StartTMU0usec(uint32_t tenuSec)
 
 	PowerOnTmu0();
 
-	*((volatile uint16_t*)TMU_TCR0)  = 0x0000;	// TCNT_count_clock=(Input-Clock)/4
+	*((volatile uint16_t*)TMU_TCR0)  = 0x0000U;	/* TCNT_count_clock=(Input-Clock)/4 */
 
-	*((volatile uint32_t*)TMU_TCNT0) = 21;	// [Gen3](8.3333MHz/4)*21=10.08004us (+0.8004s/100s)
-	*((volatile uint32_t*)TMU_TCOR0) = 21;	// Input-Clock=CP-Clock=16.6666/2=8.3333MHz
+#ifdef RCAR_GEN3_SALVATOR
+	*((volatile uint32_t*)TMU_TCNT0) = 21U;		/* [H3/M3/M3N](8.3333MHz/4)*21=10.08004us (+0.8004s/100s) */
+	*((volatile uint32_t*)TMU_TCOR0) = 21U;		/* Input-Clock=CP-Clock=16.6666/2=8.3333MHz */
+#endif /* RCAR_GEN3_SALVATOR */
+#ifdef RCAR_GEN3_EBISU
+	*((volatile uint32_t*)TMU_TCNT0) = 60U;		/* [E3](24.0000MHz/4)*60=10.00us */
+	*((volatile uint32_t*)TMU_TCOR0) = 60U;		/* Input-Clock=CP-Clock=48.0000/2=24.0000MHz */
+#endif /* RCAR_GEN3_EBISU */
+#ifdef RCAR_GEN3_DRAAK
+	*((volatile uint32_t*)TMU_TCNT0) = 60U;		/* [D3](24.0000MHz/4)*60=10.00us */
+	*((volatile uint32_t*)TMU_TCOR0) = 60U;		/* Input-Clock=CP-Clock=48.0000/2=24.0000MHz */
+#endif /* RCAR_GEN3_DRAAK */
 
-	*((volatile uint8_t*)TMU_TSTR0) |= BIT0;	// TMU0 Start
+	*((volatile uint8_t*)TMU_TSTR0) |= BIT0;	/* TMU0 Start */
 	for(cnt=0;cnt<tenuSec;cnt++){
 		while(1){
 			dataW = *((volatile uint16_t*)TMU_TCR0);
-			if(dataW & BIT8){	// UNF(under-flow-flag) clear
+			if(dataW & BIT8){		/* UNF(under-flow-flag) clear */
 				*((volatile uint16_t*)TMU_TCR0) &= ~BIT8;
 				break;
 			}
 		}
 	}
-	*((volatile uint8_t*)TMU_TSTR0) &= ~BIT0;		// TMU0 Stop
+	*((volatile uint8_t*)TMU_TSTR0) &= ~BIT0;	/* TMU0 Stop */
 }
 
 
@@ -106,93 +119,10 @@ void PowerOnTmu0(void)
 		dataL &= ~BIT25;
 		*((volatile uint32_t*)CPG_CPGWPR)   = ~dataL;
 		*((volatile uint32_t*)CPG_SMSTPCR1) =  dataL;
-		while( (BIT25) & *((volatile uint32_t*)CPG_MSTPSR1) );  // wait bit=0
+		while( (BIT25) & *((volatile uint32_t*)CPG_MSTPSR1) );  /* wait bit=0 */
 	}
 }
 
-void InitStopWatchTmu0(void)
-{
-	uint32_t dataL;
-
-	PowerOnTmu0();
-
-//Case @16.66MHz
-	*((volatile uint16_t*)TMU_TCR0)  = 0x0000;	// TCNT_count_clock=(Input-Clock)/4
-	*((volatile uint32_t*)TMU_TCNT0) = 0xFFFFFFFF;	// MAX     ( Ex 41667 = [Gen3](16.66665MHz/4)*41667=10.00009ms (+0.0009s/100s))
-	*((volatile uint32_t*)TMU_TCOR0) = 0xFFFFFFFF;	//         (   Input-Clock=CP-Clock=33.3333/2=16.66665MHz)
-
-//	*((volatile uint8_t*)TMU_TSTR0) |= BIT0;	// TMU0 Start
-
-	//  16.66665MHz/4=4.16666MHz
-	//  1/4.16666MHz = 240ns
-	
-	//  1/4.16666MHz = 41667=10.00009ms
-	//  1/4.16666MHz = 4167 =1.00008ms
-}
-
-void StartCountStopWatchTmu0( void )
-{
-	*((volatile uint8_t*)TMU_TSTR0) |= BIT0;	// TMU0 Start
-}
-
-void StopCountStopWatchTmu0( void )
-{
-	*((volatile uint8_t*)TMU_TSTR0) &= ~BIT0;	// TMU0 Stop
-}
-
-
-uint32_t GetTimeStopWatchTmu0( void )
-{
-	unsigned long dataL, usec;
-	char str[64];
-
-	if( *((volatile uint16_t*)(TMU_TCR0)) & BIT8 ) return 0;
-
-	dataL = 0xFFFFFFFF - *((volatile uint32_t *)(TMU_TCNT0));
-
-
-	Data2HexAscii(dataL,str,4);
-//	PutStr(" TMU Count (1Count=240ns) = 0x",0);
-	PutStr(" TMU Count = 0x",0);
-	PutStr(str,1);
-
-//	dataL /= 1625;		// 0.1ms = 100us
-//	usec   = dataL * 100;
-
-//	dataL /= 41667;		// 10ms = 10000us
-//	usec   = dataL * 10000;
-
-
-//Case @16.66MHz
-//	dataL /= 4167;		// 1ms = 1000us
-//	usec   = dataL * 1000;
-
-//Case @16.00MHz (Board No.0007) &BUG CPG 1/2 -> 8MHz/4=2MHz
-//	dataL /= 2000;		// 1ms = 1000us
-//	usec   = dataL * 1000;
-
-//Case @16.6666MHz (Board No.0243) &BUG CPG 1/2 -> 8.3333MHz/4=2.0833MHz
-	dataL /= 2083;		// 1ms = 1000us
-
-//	usec   = dataL * 1000;
-//	return usec;
-	return dataL;		//msec
-}
-
-
-void SetgPrrData(void)
-{
-	gPrrData = GetProductIdAndCutNum();
-}
-
-void PutgPrrData(void)
-{	
-	char str[64];
-
-	Data2HexAscii(gPrrData,str,4);
-	PutStr(" PRR : H'",0);
-	PutStr(str,1);
-}
 
 const void* const GPIO_INDT[8]={
 	(void*)GPIO_INDT0,
@@ -211,8 +141,5 @@ uint32_t GetGpioInputLevel( uint32_t gp, uint32_t bit )
 	uint32_t dataL;
 	dataL = *((volatile uint32_t*)GPIO_INDT[gp]);
 	if(dataL & (1<<bit))	return 1;
-	else					return 0;
+	else			return 0;
 }
-
-
-	

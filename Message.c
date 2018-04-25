@@ -36,13 +36,13 @@
 
 const char *const StartMessMonitor[START_MESS_MON_LINE] = {
 #ifdef RCAR_GEN3_SALVATOR
-				"Flash writer for R-Car H3/M3/M3N Series V1.05 Mar.30,2018",
+				"Flash writer for R-Car H3/M3/M3N Series V1.06 Apr.25,2018",
 #endif /* RCAR_GEN3_SALVATOR */
 #ifdef RCAR_GEN3_EBISU
-				"Flash writer for R-Car E3 Series V1.05 Mar.30,2018",
+				"Flash writer for R-Car E3 Series V1.06 Apr.25,2018",
 #endif /* RCAR_GEN3_EBISU */
 #ifdef RCAR_GEN3_DRAAK
-				"Flash writer for R-Car D3 Series V1.05 Mar.30,2018",
+				"Flash writer for R-Car D3 Series V1.06 Apr.25,2018",
 #endif /* RCAR_GEN3_DRAAK */
 				MESSAGE_END,
 };
@@ -56,6 +56,7 @@ const char *const AllHelpMess[ALL_HELP_MESS_LINE] = {
 				" XLS3           write program to HyperFlash/SPI Flash(Binary)",
 				"",
 #endif /* SERIAL_FLASH == 1 */
+#if EMMC == 1
 				"        eMMC write command",
 				" EM_DCID        display register CID",
 				" EM_DCSD        display register CSD",
@@ -64,6 +65,7 @@ const char *const AllHelpMess[ALL_HELP_MESS_LINE] = {
 				" EM_W           write program to eMMC",
 				" EM_WB          write program to eMMC (Binary)",
 				" EM_E           erase program to eMMC",
+#endif /* EMMC == 1 */
 				" SUP            Scif speed UP (Change to speed up baud rate setting)",
 				" H              help",
 				MESSAGE_END,

@@ -1,32 +1,7 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
- * All rights reserved.
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *   - Redistributions of source code must retain the above copyright notice,
- *     this list of conditions and the following disclaimer.
- *
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *
- *   - Neither the name of Renesas nor the names of its contributors may be
- *     used to endorse or promote products derived from this software without
- *     specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #define DDR_PHY_SLICE_REGSET_OFS_M3N  0x0800
@@ -142,7 +117,7 @@ static const uint32_t DDR_PHY_SLICE_REGSET_M3N[DDR_PHY_SLICE_REGSET_NUM_M3N] = {
 /*085b*/	0x4041a141,
 /*085c*/	0x0141c0a0,
 /*085d*/	0x0000c0c0,
-/*085e*/	0x130c000e,
+/*085e*/	0x0e0c000e,
 /*085f*/	0x10001000,
 /*0860*/	0x0c073e42,
 /*0861*/	0x000f0c28,
@@ -246,7 +221,7 @@ static const uint32_t DDR_PHY_ADR_G_REGSET_M3N[DDR_PHY_ADR_G_REGSET_NUM_M3N] = {
 /*0b8b*/	0x00000050,
 /*0b8c*/	0x00000000,
 /*0b8d*/	0x01010100,
-/*0b8e*/	0x00000000,
+/*0b8e*/	0x00010000,
 /*0b8f*/	0x00000000,
 /*0b90*/	0x00000101,
 /*0b91*/	0x00000000,
@@ -294,13 +269,13 @@ static const uint32_t DDR_PHY_ADR_G_REGSET_M3N[DDR_PHY_ADR_G_REGSET_NUM_M3N] = {
 /*0bbb*/	0x00000000,
 /*0bbc*/	0x00000065,
 /*0bbd*/	0x00000000,
-/*0bbe*/	0x00020101,
+/*0bbe*/	0x00040401,
 /*0bbf*/	0x00000000,
 /*0bc0*/	0x03000000,
 /*0bc1*/	0x00000020,
 /*0bc2*/	0x00000000,
 /*0bc3*/	0x00000000,
-/*0bc4*/	0x04102035,
+/*0bc4*/	0x04102006,
 /*0bc5*/	0x00041020,
 /*0bc6*/	0x01c98c98,
 /*0bc7*/	0x00400000,
@@ -464,8 +439,8 @@ static const uint32_t DDR_PI_REGSET_M3N[DDR_PI_REGSET_NUM_M3N] = {
 /*028b*/	0x04041000,
 /*028c*/	0x18020100,
 /*028d*/	0x01010018,
-/*028e*/	0x002b002b,
-/*028f*/	0x005f002b,
+/*028e*/	0x005f005f,
+/*028f*/	0x005f005f,
 /*0290*/	0x050f0000,
 /*0291*/	0x051e051e,
 /*0292*/	0x0c01021e,
@@ -609,4 +584,3 @@ static const uint32_t DDR_PI_REGSET_M3N[DDR_PI_REGSET_NUM_M3N] = {
 /*031c*/	0x00000000,
 /*031d*/	0x20080101
 };
-

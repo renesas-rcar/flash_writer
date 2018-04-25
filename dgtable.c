@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,40 +31,39 @@
 
 #include	"common.h"
 #include	"dgtable.h"
-#include	"dginit.h"
 #include	"dgmodul1.h"
+#if SERIAL_FLASH == 1
 #include	"dgmodul4.h"
-#include	"boot_init_lbsc.h"
+#endif /* SERIAL_FLASH == 1 */
+#if EMMC == 1
 #include	"dgemmc.h"
+#endif /* EMMC == 1 */
 
 /********************************************************/
 /*        ROM TABLE                                     */
 /********************************************************/
 const com_menu MonCom[COMMAND_UNIT] = {
 /*--------------------- Basic command ------------------------------*/
-	 "H"				, dgHelp						,  0	,
+	 "H"			, dgHelp			,  0	,
 #if SERIAL_FLASH == 1
-	 "XCS"				, dgClearSpiflash0				,  0	,
-	 "XLS"				, dgGen3LoadSpiflash0			,  0	,
-	 "XLS2"				, dgGen3LoadSpiflash0_2			,  0	,
-	 "XLS3"				, dgGen3LoadSpiflash0_3			,  0	,
-	 "XINFO_SA0"			, dgGen3InfoSpiflash0_SA0		,  0	,
-	 "XINFO_SA0_S"			, dgGen3InfoSetSpiflash0_SA0	,  0	,
-	 "XINFO"			, dgGen3InfoSpiflash0			,  0	,
-	 "XINFO_S"			, dgGen3InfoSetSpiflash0		,  0	,
+	 "XCS"			, dgClearSpiflash0		,  0	,
+	 "XLS"			, dgGen3LoadSpiflash0		,  0	,
+	 "XLS2"			, dgGen3LoadSpiflash0_2		,  0	,
+	 "XLS3"			, dgGen3LoadSpiflash0_3		,  0	,
+	 "XINFO_SA0"		, dgGen3InfoSpiflash0_SA0	,  0	,
+	 "XINFO_SA0_S"		, dgGen3InfoSetSpiflash0_SA0	,  0	,
+	 "XINFO"		, dgGen3InfoSpiflash0		,  0	,
+	 "XINFO_S"		, dgGen3InfoSetSpiflash0	,  0	,
 #endif /* SERIAL_FLASH == 1 */
-	 "EM_DCID"			, &dg_emmc_disp_cid				,  0	,
-	 "EM_DCSD"			, &dg_emmc_disp_csd				,  0	,
-	 "EM_DECSD"			, &dg_emmc_disp_ext_csd			,  0	,
-	 "EM_SECSD"			, &dg_emmc_set_ext_csd			,  0	,
-	 "EM_W"				, &dg_emmc_write_mot				,  0	,
-	 "EM_WB"			, &dg_emmc_write_bin				,  0	,
-	 "EM_E"				, &dg_emmc_erase				,  0	,
-	 "SUP"				, dgScifSpeedUp					,  0	,
-	TBL_END				, 0								,  0
+#if EMMC == 1
+	 "EM_DCID"		, &dg_emmc_disp_cid		,  0	,
+	 "EM_DCSD"		, &dg_emmc_disp_csd		,  0	,
+	 "EM_DECSD"		, &dg_emmc_disp_ext_csd		,  0	,
+	 "EM_SECSD"		, &dg_emmc_set_ext_csd		,  0	,
+	 "EM_W"			, &dg_emmc_write_mot		,  0	,
+	 "EM_WB"		, &dg_emmc_write_bin		,  0	,
+	 "EM_E"			, &dg_emmc_erase		,  0	,
+#endif /* EMMC == 1 */
+	 "SUP"			, dgScifSpeedUp			,  0	,
+	TBL_END			, 0				,  0
 };
-
-/********************************************************/
-/*        RAM TABLE                                     */
-/********************************************************/
-uint32_t gUreg[17];

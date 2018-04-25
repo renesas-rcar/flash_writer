@@ -2,7 +2,7 @@ About the Flash writer
 =====================
 <Div Align="right">
 Renesas Electronics Corporation<BR>
-Mar-30-2018
+Apr-25-2018
 </Div><BR>
 
 The eMMC writer renamed to Flash writer.  

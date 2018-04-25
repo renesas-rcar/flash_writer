@@ -145,25 +145,11 @@ data_loop:
 
 data_end:
 
-.ifdef Area0Boot
-
 	BL InitPORT
 	BL InitGPIO
 	BL InitLBSC
 	BL InitScif
 	BL InitDram
-
-.endif
-
-.ifdef Writer
-
-	BL InitPORT
-	BL InitGPIO
-	BL InitLBSC
-	BL InitScif
-	BL InitDram
-
-.endif
 
 	cmp	x0, #0
 	beq	2f	/* InitDram success */
