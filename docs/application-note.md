@@ -47,24 +47,24 @@ The following table lists the hardware needed to use this function.
 The following table shows Serial Flash and eMMC support for each SoC.
 
 ##### Serial Flash / eMMC support status of each SoC
-| SoC                                   | Read/Write the Serial Flash | Boot from the Serial Flash | Read/Write the eMMC | Boot from the eMMC | MMC interface |
-|---------------------------------------|-----------------------------|----------------------------|---------------------|--------------------|---------------|
-| R-Car E3 Ver.1.0                      | Support                     | Support                    | Support             | Support            | MMC1          |
-| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 | Support                     | Support                    | Support             | Support            | MMC0          |
-| R-Car M3 Ver.1.1  / R-Car M3 Ver.1.0  | Support                     | Support                    | Support             | Support            | MMC0          |
-| R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0   | Support                     | Support                    | Support             | Support            | MMC0          |
-| R-Car H3 Ver.1.1  / R-Car H3 Ver.1.0  | Support                     | Support                    | Support             | Not support        | MMC0          |
+| SoC                                                     | Read/Write the Serial Flash | Boot from the Serial Flash | Read/Write the eMMC | Boot from the eMMC | MMC interface |
+|---------------------------------------------------------|-----------------------------|----------------------------|---------------------|--------------------|---------------|
+| R-Car E3 Ver.1.0                                        | Support                     | Support                    | Support             | Support            | MMC1          |
+| R-Car M3N Ver.1.1                                       | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car M3 Ver.1.2  / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car H3 Ver.3.0  / R-Car H3 Ver.2.0                    | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car H3 Ver.1.1  / R-Car H3 Ver.1.0                    | Support                     | Support                    | Support             | Not support        | MMC0          |
 
 The following table shows USB support for each SoC.
 
 ##### USB download support status of each SoC
-| SoC                                   | Image download by USB | Boot from the USB download mode |
-|---------------------------------------|-----------------------|---------------------------------|
-| R-Car E3 Ver.1.0                      | Support               | Support                         |
-| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 | Support               | Support                         |
-| R-Car M3 Ver.1.1  / R-Car M3 Ver.1.0  | Support               | Not Support                     |
-| R-Car H3 Ver.3.0 /  R-Car H3 Ver.2.0  | Support               | Support                         |
-| R-Car H3 Ver.1.1  / R-Car H3 Ver.1.0  | Support               | Not support                     |
+| SoC                                                      | Image download by USB | Boot from the USB download mode |
+|----------------------------------------------------------|-----------------------|---------------------------------|
+| R-Car E3 Ver.1.0                                         | Support               | Support                         |
+| R-Car M3N Ver.1.1                                        | Support               | Support                         |
+| R-Car M3 Ver.1.2  / R-Car M3 Ver.1.1  / R-Car M3 Ver.1.0 | Support               | Not Support                     |
+| R-Car H3 Ver.3.0  / R-Car H3 Ver.2.0                     | Support               | Support                         |
+| R-Car H3 Ver.1.1  / R-Car H3 Ver.1.0                     | Support               | Not support                     |
 
 USB 2.0 High-speed is supported. USB device class is CDC ACM compliant.<BR>
 Host PC's USB driver uses OS standard in-box driver.<BR>
@@ -988,7 +988,7 @@ Baud rate is dependent on the SoC and the SCIF clock.<BR>
 | SoC                                                                                           | SCIF clock settings<BR>(Build option) | Baud rate at startup | Baud rate at After command execution |
 |-----------------------------------------------------------------------------------------------|---------------------------------------|---------------------:|-------------------------------------:|
 | R-Car E3 Ver.1.0                                                                              | Don't care                            | 115200bps            |                            921600bps |
-| R-Car M3N Ver.1.1 /R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 /R-Car H3 Ver.2.0 / R-Car H3 Ver.1.1 | External clock                        | 115200bps            |                            921600bps |
+| R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 /R-Car H3 Ver.2.0 / R-Car H3 Ver.1.1 | External clock                        | 115200bps            |                            921600bps |
 |                                                                                               | Internal clock                        | 115200bps            |                            230400bps |
 | R-Car H3 Ver.1.0                                                                              | External clock                        | 57600bps             |                            460800bps |
 |                                                                                               | Internal clock                        | 57600bps             |                            115200bps |
@@ -1099,7 +1099,7 @@ The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 ##### Dip switch configuration for SCIF download mode on Salvator-X/XS
 | SoC                                                        | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
+| R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
 |                                                                      |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
 |                                                                      | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
 |                                                                      |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
@@ -1140,8 +1140,8 @@ The following table shows the Dip-Switch Setting for USB download mode.
 ##### Dip switch configuration for USB download mode on Salvator-X/XS
 | SoC                    | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 *2 | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
-| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0   | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
+| R-Car M3 Ver.1.2  / R-Car M3 Ver.1.1  / R-Car M3 Ver.1.0 *2 | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
+| R-Car M3N Ver.1.1 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0   | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
 |                                        |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
 |                                        | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
 |                                        |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
@@ -1150,7 +1150,7 @@ The following table shows the Dip-Switch Setting for USB download mode.
 | R-Car H3 Ver.1.1 / R-Car H3 Ver.1.0 *3 | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
-\*2: M3 Ver.1.0 and M3 Ver.1.1 cannot be boot from the USB download mode.<BR>
+\*2: M3 cannot be boot from the USB download mode.<BR>
 \*3: H3 Ver.1.0 and H3 Ver.1.1 cannot be boot from the USB download mode.<BR>
 
 ##### Dip switch configuration for USB download mode on Ebisu
@@ -1214,7 +1214,7 @@ The following table shows the setting of terminal software.<BR>
 ##### Terminal software configuration
 | SoC                                                                                           | Baud rate  | Data bit length | Parity check | Stop bits | Flow control |
 |-----------------------------------------------------------------------------------------------|-----------:|-----------------|--------------|-----------|--------------|
-| R-Car E3 Ver.1.0 / R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 / R-Car H3 Ver.1.1 | 115200bps  | 8bits           | none         | 1bit      | none         |
+| R-Car E3 Ver.1.0 / R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 / R-Car H3 Ver.1.1 | 115200bps  | 8bits           | none         | 1bit      | none         |
 | R-Car H3 Ver.1.0                                                                              |  57600bps  | 8bits           | none         | 1bit      | none         |
 
 *Note) In the case of USB connection by CN9, this setting has no effect. Therefore it does not affect USB transfer speed.<BR>*
@@ -1236,7 +1236,7 @@ S-record file for Cortex-A57/A53 AArch32 or Cortex-R7:
 
 When the transfer is successful, the following log is output.
 ```text
-Flash writer for R-Car H3/M3/M3N Series V1.05 Mar.30,2018
+Flash writer for R-Car H3/M3/M3N Series V1.06 Apr.25,2018
 >
 ```
 Please enter the any key from the console after starting Flash writer.<BR>
@@ -1253,7 +1253,7 @@ The following table shows the Dip-Switch Setting.<BR>
 #### Dip switch configuration for boot from the eMMC on Salvator-X/XS (50MHz x8 bus width mode)
 | SoC                                                           | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|----|----|-----|-----|----|-----|
-| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
+| R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
 |                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON | ON | ON  | ON  | ON | ON  |
 |                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
 |                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON | ON | ON  | ON  | ON | ON  |
@@ -1268,7 +1268,7 @@ The following table shows the Dip-Switch Setting.<BR>
 #### Dip switch configuration for boot from the Serial NOR Flash on Salvator-X/XS (Single read 40MHz)
 | SoC                                                              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
+| R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
 |                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
 |                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
 |                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
@@ -1300,7 +1300,7 @@ The following table shows the Dip-Switch Setting.<BR>
 #### Dip switch configuration for boot from the HyperFlash&trade; on Salvator-X/XS (160MHz DDR)
 | SoC                                                              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1 / R-Car M3N Ver.1.0 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
+| R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
 |                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
 |                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
 |                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
@@ -1790,16 +1790,18 @@ int32_t usb_dma_transfer_sample(void)
 ```
 
 # 7. Error case to handle
+
+## 7.1. EXT_CSD incorrect setting case
 If error of eMMC command is occurred, please check the following description and restart.<BR>
  - Please Check the correct setting of EXT_CSD. If the wrong setting is present, to set the correct setting using EM_SECSD command.
  - Program start address error of S-record file.
 
-## 7.1. EXT_CSD incorrect setting case
-The following shows the setting of 50MHz x8 bus width mode, Boot partition 1 enable.
+The following shows the setting of High speed SDR(50MHz) x8 bus width mode, Boot partition 1 enable.
 
 | Address      | Register Name       | Filed name             | Bit filed | Settings |
 |--------------|---------------------|------------------------|-----------|----------|
-| EXT_CSD[179] | PARTITION_CONFIG    | BOOT_PARTITION_ENABLE  | [5:3]     | 0x1      |
+| EXT_CSD[179] | PARTITION_CONFIG    | BOOT_ACK               | [6]       | 0x0      |
+|              |                     | BOOT_PARTITION_ENABLE  | [5:3]     | 0x1      |
 | EXT_CSD[177] | BOOT_BUS_CONDITIONS | BOOT_MODE              | [4:3]     | 0x1      |
 |              |                     | BOOT_BUS_WIDTH         | [1:0]     | 0x2      |
 
@@ -1914,3 +1916,7 @@ Describe the revision history of Flash writer.
 - Add build option to use eMMC.<BR>
 - Update DDR setting for H3 Ver.3.0.<BR>
 - Update application note.<BR>
+
+## 8.8. V1.0.7
+- Add R-Car M3 Ver.1.2 support.<BR>
+- Add R-Car M3N Ver.1.1 support.<BR>
