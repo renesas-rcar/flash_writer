@@ -28,7 +28,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-#/* Select BOARD("SALVATOR"or"ULCB"or"EBISU"or"DRAAK" )*************************
+#/* Select BOARD("SALVATOR"or"ULCB"or"EBISU"or"EBISU4D"or"DRAAK" )**************
 ifeq ("$(BOARD)", "")
 BOARD = SALVATOR
 endif
@@ -103,6 +103,10 @@ ifeq ("$(BOARD)", "EBISU")
 	BOARD_NAME   =  Ebisu
 	FILENAME_ADD = _ebisu
 	CFLAGS += -DRCAR_GEN3_EBISU=1
+else ifeq ("$(BOARD)", "EBISU4D")
+	BOARD_NAME   =  Ebisu4d
+	FILENAME_ADD = _ebisu4d
+	CFLAGS += -DRCAR_GEN3_EBISU=1
 else ifeq ("$(BOARD)", "DRAAK")
 	BOARD_NAME   =  Draak
 	FILENAME_ADD = _draak
@@ -132,6 +136,8 @@ ifeq ("$(BOOT)", "WRITER")
 	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_Flash_writer_SCIF_E6304000$(FILENAME_ADD)
 ifeq ("$(BOARD)", "EBISU")
 	MEMORY_DEF = memory_writer_small.def
+else ifeq ("$(BOARD)", "EBISU4D")
+	MEMORY_DEF = memory_writer_small.def
 else ifeq ("$(BOARD)", "DRAAK")
 	MEMORY_DEF = memory_writer_small.def
 else
@@ -143,6 +149,8 @@ ifeq ("$(BOOT)", "WRITER_WITH_CERT")
 	BOOT_DEF    = Writer
 	FILE_NAME   = $(OUTPUT_DIR)/AArch$(AArch)_Flash_writer_SCIF_DUMMY_CERT_E6300400$(FILENAME_ADD)
 ifeq ("$(BOARD)", "EBISU")
+	MEMORY_DEF  = memory_writer_small_with_cert.def
+else ifeq ("$(BOARD)", "EBISU4D")
 	MEMORY_DEF  = memory_writer_small_with_cert.def
 else ifeq ("$(BOARD)", "DRAAK")
 	MEMORY_DEF  = memory_writer_small_with_cert.def
@@ -193,6 +201,7 @@ LIBS        += -L./$(AArch32_64)_lib/ -lusb
 endif
 
 INCLUDE_DIR = include
+DDR_DIR = ddr
 TOOL_DEF = "REWRITE_TOOL"
 
 OUTPUT_FILE = $(FILE_NAME).axf
@@ -251,6 +260,8 @@ endif
 
 ifeq ("$(BOARD)", "EBISU")
 include ddr/ddr3l/ddr.mk
+else ifeq ("$(BOARD)", "EBISU4D")
+include ddr/ddr3l/ddr.mk
 else ifeq ("$(BOARD)", "DRAAK")
 include ddr/ddr3l/ddr.mk
 else
@@ -302,11 +313,11 @@ $(OUTPUT_DIR):
 # Compile
 #------------------------------------------
 $(OBJECT_DIR)/%.o:$(BOOTDIR)/%.s
-	$(AS)  -g $(CPU) $(AS_NEON) --MD $(patsubst %.o,%.d,$@) -I $(BOOTDIR) -I $(INCLUDE_DIR) $< -o $@ --defsym $(AArch32_64)=0 --defsym $(BOOT_DEF)=0 --defsym $(TOOL_DEF)=0 --defsym $(SCIF_DEF)=0
+	$(AS)  -g $(CPU) $(AS_NEON) --MD $(patsubst %.o,%.d,$@) -I $(BOOTDIR) -I $(INCLUDE_DIR) -I $(DDR_DIR) $< -o $@ --defsym $(AArch32_64)=0 --defsym $(BOOT_DEF)=0 --defsym $(TOOL_DEF)=0 --defsym $(SCIF_DEF)=0
 
 $(OBJECT_DIR)/%.o:%.c
 	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
-	$(CC) -g -Os $(ALIGN) $(CPU) $(CC_NEON) $(THUMB) -MMD -MP -c -I $(BOOTDIR) -I $(INCLUDE_DIR) $< -o $@ -D$(AArch32_64)=0 -D$(BOOT_DEF)=0 -D$(TOOL_DEF)=0 -D$(SCIF_DEF)=0 $(CFLAGS) -D$(DDR_DEF)=0
+	$(CC) -g -Os $(ALIGN) $(CPU) $(CC_NEON) $(THUMB) -MMD -MP -c -I $(BOOTDIR) -I $(INCLUDE_DIR) -I $(DDR_DIR) $< -o $@ -D$(AArch32_64)=0 -D$(BOOT_DEF)=0 -D$(TOOL_DEF)=0 -D$(SCIF_DEF)=0 $(CFLAGS) -D$(DDR_DEF)=0
 
 #------------------------------------------
 # Linker

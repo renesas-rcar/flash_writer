@@ -36,13 +36,13 @@
 
 const char *const StartMessMonitor[START_MESS_MON_LINE] = {
 #ifdef RCAR_GEN3_SALVATOR
-				"Flash writer for R-Car H3/M3/M3N Series V1.06 Apr.25,2018",
+				"Flash writer for R-Car H3/M3/M3N Series V1.08 Oct.31,2018",
 #endif /* RCAR_GEN3_SALVATOR */
 #ifdef RCAR_GEN3_EBISU
-				"Flash writer for R-Car E3 Series V1.06 Apr.25,2018",
+				"Flash writer for R-Car E3 Series V1.08 Oct.31,2018",
 #endif /* RCAR_GEN3_EBISU */
 #ifdef RCAR_GEN3_DRAAK
-				"Flash writer for R-Car D3 Series V1.06 Apr.25,2018",
+				"Flash writer for R-Car D3 Series V1.08 Oct.31,2018",
 #endif /* RCAR_GEN3_DRAAK */
 				MESSAGE_END,
 };

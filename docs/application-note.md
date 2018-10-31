@@ -37,7 +37,7 @@ The following table lists the hardware needed to use this function.
 ##### Hardware environment (R-Car H3/M3/M3N/E3)
 | Name                          | Note                                      |
 |-------------------------------|-------------------------------------------|
-| R-Car H3-SiP System Evaluation Board Salvator-X<BR>R-Car M3-SiP System Evaluation Board Salvator-X<BR>R-Car H3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3N-SiP System Evaluation Board Salvator-XS<BR>R-Car E3 System Evaluation Board Ebisu | RTP0RC7795SIPB0010S / RTP0RC7795SIPB0011S<BR>RTP0RC7796SIPB0010S / RTP0RC7796SIPB0011S<BR>RTP0RC7795SIPB0012S<BR>RTP0RC7796SIPB0012S<BR>RTP0RC77965SIPB012S<BR>RTP0RC77990SEB0010S |
+| R-Car H3-SiP System Evaluation Board Salvator-X<BR>R-Car M3-SiP System Evaluation Board Salvator-X<BR>R-Car H3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3N-SiP System Evaluation Board Salvator-XS<BR>R-Car E3 System Evaluation Board Ebisu<BR>R-Car E3 System Evaluation Board Ebisu-4D | RTP0RC7795SIPB0010S / RTP0RC7795SIPB0011S<BR>RTP0RC7796SIPB0010S / RTP0RC7796SIPB0011S<BR>RTP0RC7795SIPB0012S<BR>RTP0RC7796SIPB0012S<BR>RTP0RC77965SIPB012S<BR>RTP0RC77990SEB0010S<BR>RTP0RC77990SEB0020SA00 |
 | Host PC                       | Ubuntu Desktop 14.04(64bit) or later          |
 | USB cable (type A to micro B) | Connect to CN25 when using UART connection. (SCIF2)<BR>Connect to CN9 when using USB connection. (HS-USB) |
 
@@ -86,10 +86,10 @@ The following table shows USB Vendor ID and Product ID.
 The following table lists the software needed to use this function.
 
 ##### Software environment
-| Name             | Note                                                                      |
-|------------------|---------------------------------------------------------------------------|
-| Linaro Toolchain | Linaro Stable Binary Toolchain Release GCC 5.2-2015.11-2 for aarch64-elf. |
-|                  | Linaro Stable Binary Toolchain Release GCC 5.2-2015.11-2 for arm-eabi.    |
+| Name             | Note                                                             |
+|------------------|------------------------------------------------------------------|
+| Linaro Toolchain | Linaro Binary Toolchain Release GCC 7.2-2017.11 for aarch64-elf. |
+|                  | Linaro Binary Toolchain Release GCC 7.2-2017.11 for arm-eabi.    |
 
 
 # 3. Software
@@ -158,8 +158,8 @@ flash_writer                            : root directory of Flash writer
 |-- switch.c                            : Dip-switch setting messages
 |-- memory_area0.def                    : Linker script for Salvator-X/XS board.
 |-- memory_writer.def                   : Linker script for Salvator-X/XS board.
-|-- memory_writer_small.def             : Linker script for Ebisu board.
-|-- memory_writer_small_with_cert.def   : Linker script for Ebisu board.
+|-- memory_writer_small.def             : Linker script for Ebisu/Ebisu-4D board.
+|-- memory_writer_small_with_cert.def   : Linker script for Ebisu/Ebisu-4D board.
 |-- memory_writer_with_cert.def         : Linker script for Salvator-X/XS board.
 `-- makefile                            : makefile
 ```
@@ -186,6 +186,7 @@ If this option is not selected, the default value is SALVATOR.<BR>
 |----------|--------------------------------------------------------------|
 | SALVATOR | Generate binary that works on Salvator-X/XS board. (default) |
 | EBISU    | Generate binary that works on Ebisu board.                   |
+| EBISU4D  | Generate binary that works on Ebisu-4D board.                |
 
 ### 3.3.3. BOOT<BR>
 Select from the following table according to the image header settings.<BR>
@@ -269,14 +270,14 @@ The following table shows the command list.
 This command writes the S-record format image to Serial Flash.<BR>
 
 ##### Example of writing data for the Serial Flash boot
-| Filename                 | Program Top Address | Flash Save Address | Description            |
-|--------------------------|---------------------|--------------------|------------------------|
-| bootparam_sa0.srec       | H'E6320000          | H'000000           | Loader(Boot parameter) |
-| bl2-`<board_name>`.srec  | H'E6304000          | H'040000           | Loader                 |
-| cert_header_sa6.srec     | H'E6320000          | H'180000           | Loader(Certification)  |
-| bl31-`<board_name>`.srec | H'44000000          | H'1C0000           | ARM Trusted Firmware   |
-| tee-`<board_name>`.srec  | H'44100000          | H'200000           | OP-TEE                 |
-| u-boot-elf.srec          | H'50000000          | H'640000           | U-boot                 |
+| Filename                       | Program Top Address | Flash Save Address | Description            |
+|--------------------------------|---------------------|--------------------|------------------------|
+| bootparam_sa0.srec             | H'E6320000          | H'000000           | Loader(Boot parameter) |
+| bl2-`<board_name>`.srec        | H'E6304000          | H'040000           | Loader                 |
+| cert_header_sa6.srec           | H'E6320000          | H'180000           | Loader(Certification)  |
+| bl31-`<board_name>`.srec       | H'44000000          | H'1C0000           | ARM Trusted Firmware   |
+| tee-`<board_name>`.srec        | H'44100000          | H'200000           | OP-TEE                 |
+| u-boot-elf-`<board_name>`.srec | H'50000000          | H'640000           | U-boot                 |
 
 The following shows the procedure of this command.<BR>
 *Note) The following procedure is an example on Salvator-X/XS board.<BR>*
@@ -745,14 +746,14 @@ The EXT_CSD register has been modified.
 This command writes the S-record format image to any partition of the eMMC.<BR>
 
 ##### Example of writing data for the eMMC boot
-| Filename                 | Program Top Address | eMMC Save Partition | eMMC Save Sectors | Description            |
-|--------------------------|---------------------|---------------------|-------------------|------------------------|
-| bootparam_sa0.srec       | H'E6320000          | boot partition1     | H'000000          | Loader(Boot parameter) |
-| bl2-`<board_name>`.srec  | H'E6304000          | boot partition1     | H'00001E          | Loader                 |
-| cert_header_sa6.srec     | H'E6320000          | boot partition1     | H'000180          | Loader(Certification)  |
-| bl31-`<board_name>`.srec | H'44000000          | boot partition1     | H'000200          | ARM Trusted Firmware   |
-| tee-`<board_name>`.srec  | H'44100000          | boot partition1     | H'001000          | OP-TEE                 |
-| u-boot-elf.srec          | H'50000000          | boot partition2     | H'000000          | U-boot                 |
+| Filename                       | Program Top Address | eMMC Save Partition | eMMC Save Sectors | Description            |
+|--------------------------------|---------------------|---------------------|-------------------|------------------------|
+| bootparam_sa0.srec             | H'E6320000          | boot partition1     | H'000000          | Loader(Boot parameter) |
+| bl2-`<board_name>`.srec        | H'E6304000          | boot partition1     | H'00001E          | Loader                 |
+| cert_header_sa6.srec           | H'E6320000          | boot partition1     | H'000180          | Loader(Certification)  |
+| bl31-`<board_name>`.srec       | H'44000000          | boot partition1     | H'000200          | ARM Trusted Firmware   |
+| tee-`<board_name>`.srec        | H'44100000          | boot partition1     | H'001000          | OP-TEE                 |
+| u-boot-elf-`<board_name>`.srec | H'50000000          | boot partition2     | H'000000          | U-boot                 |
 
 The following shows the procedure of this command.<BR>
 ```text
@@ -1034,15 +1035,15 @@ Gets cross compiler. To decompress it. Command is the following.<BR>
 32 bit compiler:
 ```shell
 $ cd ~/
-$ wget https://releases.linaro.org/components/toolchain/binaries/5.2-2015.11-2/arm-eabi/gcc-linaro-5.2-2015.11-2-x86_64_arm-eabi.tar.xz
-$ tar xvf gcc-linaro-5.2-2015.11-2-x86_64_arm-eabi.tar.xz
+$ wget https://releases.linaro.org/components/toolchain/binaries/7.2-2017.11/arm-eabi/gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi.tar.xz
+$ tar xvf gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi.tar.xz
 ```
 
 64 bit compiler:
 ```shell
 $ cd ~/
-$ wget https://releases.linaro.org/components/toolchain/binaries/5.2-2015.11-2/aarch64-elf/gcc-linaro-5.2-2015.11-2-x86_64_aarch64-elf.tar.xz
-$ tar xvf gcc-linaro-5.2-2015.11-2-x86_64_aarch64-elf.tar.xz
+$ wget https://releases.linaro.org/components/toolchain/binaries/7.2-2017.11/aarch64-elf/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf.tar.xz
+$ tar xvf gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf.tar.xz
 ```
 
 ## 4.2. Prepare the source code
@@ -1059,7 +1060,7 @@ S-record file is built by the following command.<BR>
 32 bit compiler:
 ```shell
 $ make AArch=32 clean
-$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_arm-eabi/bin/arm-eabi- make AArch=32
+$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi/bin/arm-eabi- make AArch=32
 ```
 Output the following image.<BR>
 * ./AArch32_output/AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.mot
@@ -1067,7 +1068,7 @@ Output the following image.<BR>
 64 bit compiler:
 ```shell
 $ make AArch=64 clean
-$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64
+$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64
 ```
 Output the following image.<BR>
 * ./AArch64_output/AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.mot
@@ -1087,8 +1088,12 @@ The following table lists the relationship between build option and target files
 |       |          | WRITER_WITH_CERT |                  | AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu.mot<BR>AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu.bin           |
 | 64    |          | WRITER           | AArch64_output   | AArch64_Flash_writer_SCIF_E6304000_ebisu.mot<BR>AArch64_Flash_writer_SCIF_E6304000_ebisu.bin                                 |
 |       |          | WRITER_WITH_CERT |                  | AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu.mot<BR>AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu.bin           |
+| 32    | EBISU4D  | WRITER           | AArch32_output   | AArch32_Flash_writer_SCIF_E6304000_ebisu4d.mot<BR>AArch32_Flash_writer_SCIF_E6304000_ebisu4d.bin                             |
+|       |          | WRITER_WITH_CERT |                  | AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu4d.mot<BR>AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu4d.bin       |
+| 64    |          | WRITER           | AArch64_output   | AArch64_Flash_writer_SCIF_E6304000_ebisu4d.mot<BR>AArch64_Flash_writer_SCIF_E6304000_ebisu4d.bin                             |
+|       |          | WRITER_WITH_CERT |                  | AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu4d.mot<BR>AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu4d.bin       |
 
-*Note) If BOARD=EBISU specified and build error occerd, add the "USB=DISABLE", "SERIAL_FLASH=DISABLE" or "EMMC=DISABLE" option to reduce binary size.*
+*Note) If "BOARD=EBISU" or "BOARD=EBISU4D" specified and build error occerd, add the "USB=DISABLE", "SERIAL_FLASH=DISABLE" or "EMMC=DISABLE" option to reduce binary size.*
 
 # 5. How to run Flash writer
 ---------------------------------
@@ -1120,7 +1125,7 @@ The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
-#### Dip switch configuration for SCIF download mode on Ebisu
+#### Dip switch configuration for SCIF download mode on Ebisu/Ebisu-4D
 | SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
 | R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
@@ -1153,7 +1158,7 @@ The following table shows the Dip-Switch Setting for USB download mode.
 \*2: M3 cannot be boot from the USB download mode.<BR>
 \*3: H3 Ver.1.0 and H3 Ver.1.1 cannot be boot from the USB download mode.<BR>
 
-##### Dip switch configuration for USB download mode on Ebisu
+##### Dip switch configuration for USB download mode on Ebisu/Ebisu-4D
 | SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
 | R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | ON  |
@@ -1178,7 +1183,7 @@ To write to Serial NOR Flash, the following additional settings are required in 
 | SW3           | QSPI-C      | OFF  | -    | -    | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    | -    | -    |
 
-##### Additional dip switch configuration for write to the Serial NOR Flash on Ebisu (SCIF/USB download mode)
+##### Additional dip switch configuration for write to the Serial NOR Flash on Ebisu/Ebisu-4D (SCIF/USB download mode)
 | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------|-------------|------|------|------|------|------|------|------|------|
 | SW1           | QSPI-A      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
@@ -1197,7 +1202,7 @@ To write to HyperFlash&trade;, the following additional settings are required in
 | SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
 
-##### Additional dip switch configuration for write to the HyperFlash&trade; on Ebisu (SCIF/USB download mode)
+##### Additional dip switch configuration for write to the HyperFlash&trade; on Ebisu/Ebisu-4D (SCIF/USB download mode)
 | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------|-------------|------|------|------|------|------|------|------|------|
 | SW1           | QSPI-A      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
@@ -1330,7 +1335,7 @@ The following table shows the Dip-Switch Setting.<BR>
 | SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
 
-#### Dip switch configuration for boot from the eMMC on Ebisu (50MHz x8 bus width mode)
+#### Dip switch configuration for boot from the eMMC on Ebisu/Ebisu-4D (50MHz x8 bus width mode)
 | SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
 | R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | ON  | OFF |
@@ -1345,7 +1350,7 @@ The following table shows the Dip-Switch Setting.<BR>
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
-#### Dip switch configuration for boot from the Serial NOR Flash on Ebisu (Single read 40MHz)
+#### Dip switch configuration for boot from the Serial NOR Flash on Ebisu/Ebisu-4D (Single read 40MHz)
 | SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
 | R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | OFF | ON  | ON  |
@@ -1360,7 +1365,7 @@ The following table shows the Dip-Switch Setting.<BR>
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
-##### Additional dip switch configuration for boot from the Serial NOR Flash on Ebisu
+##### Additional dip switch configuration for boot from the Serial NOR Flash on Ebisu/Ebisu-4D
 | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------|-------------|------|------|------|------|------|------|------|------|
 | SW1           | QSPI-A      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
@@ -1369,7 +1374,7 @@ The following table shows the Dip-Switch Setting.<BR>
 | SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    | -    | -    |
 | SW31          | QSPI-D      | OFF  | -    | -    | -    | -    | -    | -    | -    |
 
-#### Dip switch configuration for boot from the HyperFlash&trade; on Ebisu (150MHz DDR)
+#### Dip switch configuration for boot from the HyperFlash&trade; on Ebisu/Ebisu-4D (150MHz DDR)
 | SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
 | R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | ON  | OFF | ON  |
@@ -1384,7 +1389,7 @@ The following table shows the Dip-Switch Setting.<BR>
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
-##### Additional dip switch configuration for boot from the HyperFlash&trade; on Ebisu
+##### Additional dip switch configuration for boot from the HyperFlash&trade; on Ebisu/Ebisu-4D
 | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------|-------------|------|------|------|------|------|------|------|------|
 | SW1           | QSPI-A      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
@@ -1821,39 +1826,40 @@ Please uninstall the ModemManager to solve it.
 $ sudo apt-get purge modemmanager
 ```
 
-## 7.4. If "BOARD = EBISU" is set in the build option, a build error occured
+## 7.4. If "BOARD = EBISU" or "BOARD = EBISU4D" is set in the build option, a build error occured
 The reason for the error is that the binary size of Flash writer exceeds the downloadable size (i.e. 80kBytes) with R-Car E3.<BR>
 To solve the build error, reduce the binary size by disable USB download function, Serial Flash writing function or eMMC writing function with the build option.<BR>
 The following shows the exsample of build procedure to reduce the binary size, please select according to use.<BR>
+In case of Ebisu-4D board, replace the BOARD option with "EBISU4D".<BR>
 
 ##### In case of disable the USB download function
 ```shell
 $ make AArch=32 clean
-$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU USB=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU USB=DISABLE
 ```
 ```shell
 $ make AArch=64 clean
-$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU USB=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU USB=DISABLE
 ```
 
 ##### In case of disable the Serial Flash writing function
 ```shell
 $ make AArch=32 clean
-$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU SERIAL_FLASH=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU SERIAL_FLASH=DISABLE
 ```
 ```shell
 $ make AArch=64 clean
-$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU SERIAL_FLASH=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU SERIAL_FLASH=DISABLE
 ```
 
 ##### In case of disable the eMMC writing function
 ```shell
 $ make AArch=32 clean
-$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU EMMC=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU EMMC=DISABLE
 ```
 ```shell
 $ make AArch=64 clean
-$ CROSS_COMPILE=~/gcc-linaro-5.2-2015.11-2-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU EMMC=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU EMMC=DISABLE
 ```
 
 # 8. Revision history
@@ -1920,3 +1926,13 @@ Describe the revision history of Flash writer.
 ## 8.8. V1.0.7
 - Add R-Car M3 Ver.1.2 support.<BR>
 - Add R-Car M3N Ver.1.1 support.<BR>
+- Update application note.<BR>
+
+## 8.9. V1.0.8
+- Fix "EM_W" command does not work if build by GCC 7.2.<BR>
+- Add Ebisu-4D board support.<BR>
+- Update DDR setting for H3/M3/M3N.<BR>
+- Update DDR setting for E3.<BR>
+- Update Linaro Toolchain from GCC 5.2 to GCC 7.2.<BR>
+- Update USB libraries rebuilt with GCC 7.2.<BR>
+- Update application note.<BR>

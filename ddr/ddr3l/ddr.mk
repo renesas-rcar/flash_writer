@@ -30,9 +30,20 @@
 #
 
 
-SRC_FILE += ddr/ddr3l/boot_init_dram.c
+#The Ebisu board have two 16bit-width 4Gbit DRAMs.
 ifeq ("$(BOARD)", "EBISU")
 SRC_FILE += ddr/ddr3l/ddr_init_e3.c
+SRC_FILE += ddr/dram_sub_func.c
+CFLAGS += -DRCAR_DRAM_DDR3L_MEMCONF=0 -DRCAR_DRAM_DDR3L_MEMDUAL=0
+
+#The Ebisu-4D board have four 8bit-width 4Gbit DRAMs.
+else ifeq ("$(BOARD)", "EBISU4D")
+SRC_FILE += ddr/ddr3l/ddr_init_e3.c
+SRC_FILE += ddr/dram_sub_func.c
+CFLAGS += -DRCAR_DRAM_DDR3L_MEMCONF=1 -DRCAR_DRAM_DDR3L_MEMDUAL=1
+
+#The Draak board have one 16bit-width 4Gbit DRAM.
 else ifeq ("$(BOARD)", "DRAAK")
+SRC_FILE += ddr/ddr3l/boot_init_dram.c
 SRC_FILE += ddr/ddr3l/ddr_init_d3.c
 endif

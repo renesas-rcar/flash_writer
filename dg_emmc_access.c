@@ -235,10 +235,10 @@ void	dg_emmc_write(EMMC_WRITE_COMMAND wc)
 	int8_t motLoad = 1;
 	int8_t oldPartitionConfig;
 
-	const int8_t startMessage[][32] = {"EM_W Start --------------",
+	static const int8_t startMessage[][32] = {"EM_W Start --------------",
 					   "EM_WB Start --------------"};
 
-	const int8_t endMessage[][32] =	{"EM_W Complete!",
+	static const int8_t endMessage[][32] =	{"EM_W Complete!",
 					 "EM_WB Complete!"};
 
 	result = dg_emmc_check_init();

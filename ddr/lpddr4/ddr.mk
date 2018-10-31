@@ -31,4 +31,4 @@
 
 
 SRC_FILE += ddr/lpddr4/boot_init_dram.c
-SRC_FILE += ddr/lpddr4/dram_sub_func.c
+SRC_FILE += ddr/dram_sub_func.c

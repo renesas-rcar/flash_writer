@@ -783,8 +783,8 @@ static EMMC_ERROR_CODE emmc_clock_ctrl(
  */
 static uint32_t emmc_calc_tran_speed( uint32_t* freq )
 {
-    const uint32_t unit[8] = {10000, 100000, 1000000, 10000000, 0, 0, 0, 0};                   /**< frequency unit (1/10) */
-    const uint32_t mult[16] = {0, 10, 12, 13, 15, 20, 26, 30, 35, 40, 45, 52, 55, 60, 70, 80}; /**< multiple factor (x10) */
+    static const uint32_t unit[8] = {10000, 100000, 1000000, 10000000, 0, 0, 0, 0};                   /**< frequency unit (1/10) */
+    static const uint32_t mult[16] = {0, 10, 12, 13, 15, 20, 26, 30, 35, 40, 45, 52, 55, 60, 70, 80}; /**< multiple factor (x10) */
 	uint32_t maxFreq;
 	uint32_t result;
     uint32_t tran_speed = EMMC_CSD_TRAN_SPEED();
