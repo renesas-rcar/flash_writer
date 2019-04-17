@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,6 @@
 void FastRdQspiFlashS25fl512s(uint32_t sourceSpiAdd,uint32_t destinationAdd,uint32_t byteCount);
 void QuadRdQspiFlashS25fl512s (uint32_t sourceSpiAdd,uint32_t destinationAdd,uint32_t byteCount);
 void FastRdManuQspiFlashS25fl512s(uint32_t sourceSpiAdd,uintptr_t destinationAdd,uint32_t byteCount);
-void QuadRdManuQspiFlashS25fl512s(uint32_t sourceSpiAdd,uintptr_t destinationAdd,uint32_t byteCount);
 void EnableQuadModeQspiFlashS25fl512s(void);
 void SectorErase256kbQspiFlashS25fl512s(uint32_t addr);
 int32_t BulkEraseQspiFlashS25fl512s(void);
@@ -44,17 +43,15 @@ void PageProgramQspiFlashS25fl512s(uint32_t addr,uint32_t writeData);
 void PageProgramQspiFlashS25fl512s_CsCont(uint32_t addr, uint32_t *writeData,uint32_t byteCount);
 void PageProgramWithBuffeQspiFlashS25fl512s(uint32_t addr, uint32_t source_addr);
 void QuadPageProgramQspiFlashS25fl512s(uint32_t addr,uint32_t writeData);
-void QuadPageProgramWithBuffeQspiFlashS25fl512s(uint32_t addr, uint32_t source_addr);
-void SaveDataQspiFlashS25fl512s(uintptr_t srcAdd,uint32_t svFlashAdd,uint32_t svSize);
 void SaveDataQspiFlashS25fl512s_CsCont(uintptr_t srcAdd,uint32_t svFlashAdd,uint32_t svSize);
 void SaveDataQspiFlashS25fl512s_CsCont_Byte(uintptr_t srcAdd,uint32_t svFlashAdd,uint32_t svSize);
 void SaveDataWithBuffeQspiFlashS25fl512s(uint32_t srcAdd,uint32_t svFlashAdd,uint32_t svSize);
 void SaveDataQuadQspiFlashS25fl512s(uintptr_t srcAdd,uint32_t svFlashAdd,uint32_t svSize);
-void SaveDataQuadWithBuffeQspiFlashS25fl512s(uint32_t srcAdd,uint32_t svFlashAdd,uint32_t svSize);
 void SectorEraseQspiFlashS25fl512s(uint32_t EraseStatAdd,uint32_t EraseEndAdd);
 void SectorRdQspiFlashS25fl512s(uint32_t spiStatAdd,uint32_t distRamAdd);
 
 void PageProgram02hWithBuffeQspiFlashS25fl512s(uint32_t addr, uint32_t source_addr);
 
-
+void PageProgram4PPWithBuffeQspiFlashS25fl512s(uint32_t addr, uint32_t source_addr);
+void SaveData4PPWithBuffeQspiFlashS25fl512s(uint32_t srcAdd,uint32_t svFlashAdd,uint32_t svSize);
 

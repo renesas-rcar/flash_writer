@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2019, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,19 @@
 
 void InitRPC_HyperFlashExtMode(void)
 {
+	uint32_t product;
+	uint32_t cut;
+
+	product = *((volatile uint32_t*)PRR) & PRR_PRODUCT_MASK;
+	cut = *((volatile uint32_t*)PRR) & PRR_CUT_MASK;
+
+	if ((product ==  PRR_PRODUCT_M3) && (cut < PRR_CUT_30)) {
+		*((volatile uint32_t*)RPC_PHYCNT)     = 0x00070263;
 		*((volatile uint32_t*)RPC_PHYCNT)     = 0x80070263;
+	} else {
+		*((volatile uint32_t*)RPC_PHYCNT)     = 0x00078263;
+		*((volatile uint32_t*)RPC_PHYCNT)     = 0x80078263;
+	}
 		*((volatile uint32_t*)RPC_CMNCR)      = 0x01FFF301;
 		*((volatile uint32_t*)RPC_DRCR)       = 0x001F0100;
 		*((volatile uint32_t*)RPC_DRCMR)      = 0x00A00000;
@@ -66,11 +78,21 @@ void InitRPC_HyperFlash(void)
 
 uint32_t ReadHyperFlashData(uint32_t addr, uint32_t *readData, uint32_t byteCount)
 {
-	char str[64];		//DEBUG
+	uint32_t product;
+	uint32_t cut;
 
-	*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030263;
+	product = *((volatile uint32_t*)PRR) & PRR_PRODUCT_MASK;
+	cut = *((volatile uint32_t*)PRR) & PRR_CUT_MASK;
+
+	if ((product ==  PRR_PRODUCT_M3) && (cut < PRR_CUT_30)) {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x00030263;
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030263;
+	} else {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x00038263;
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x80038263;
 		//bit31  CAL         =  1 : PHY calibration
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
+	}
 
 	*((volatile uint32_t*)RPC_CMNCR)      = 0x81FFF301;
 		//bit31  MD       =  1 : Manual mode
@@ -128,24 +150,25 @@ uint32_t ReadHyperFlashData(uint32_t addr, uint32_t *readData, uint32_t byteCoun
 
 	readData[0] = *((volatile uint32_t*)RPC_SMRDR1);	//read data[31:0]
 
-/*
-	Data2HexAscii(readData[0],str,4);
-	PutStr(" RPC_SMRDR1 = 0x",0);
-	PutStr(str,1);
-	Data2HexAscii(readData[1],str,4);
-	PutStr(" RPC_SMRDR0 = 0x",0);
-	PutStr(str,1);
-*/
-
 	return(readData[0]);
 }
 
 
 void WriteCommandHyperFlash(uint32_t addr, uint32_t command)
 {
-	*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030263;
+	uint32_t product;
+	uint32_t cut;
+
+	product = *((volatile uint32_t*)PRR) & PRR_PRODUCT_MASK;
+	cut = *((volatile uint32_t*)PRR) & PRR_CUT_MASK;
+
+	if ((product ==  PRR_PRODUCT_M3) && (cut < PRR_CUT_30)) {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030263;
+	} else {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x80038263;
 		//bit31  CAL         =  1 : PHY calibration
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
+	}
 
 	*((volatile uint32_t*)RPC_CMNCR)      = 0x81FFF301;
 		//bit31  MD       =  1 : Manual mode
@@ -186,9 +209,19 @@ void WriteCommandHyperFlash(uint32_t addr, uint32_t command)
 
 void WriteDataHyperFlash(uint32_t addr, uint32_t writeData)
 {
-	*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030263;
+	uint32_t product;
+	uint32_t cut;
+
+	product = *((volatile uint32_t*)PRR) & PRR_PRODUCT_MASK;
+	cut = *((volatile uint32_t*)PRR) & PRR_CUT_MASK;
+
+	if ((product ==  PRR_PRODUCT_M3) && (cut < PRR_CUT_30)) {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030263;
+	} else {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x80038263;
 		//bit31  CAL         =  1 : PHY calibration
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
+	}
 
 	*((volatile uint32_t*)RPC_CMNCR)      = 0x81FFF301;
 		//bit31  MD       =  1 : Manual mode
@@ -230,9 +263,9 @@ void WriteDataHyperFlash(uint32_t addr, uint32_t writeData)
 void WriteProtectDisable(void)
 {
 	uint32_t dataL = 0;
-	
+
 	dataL = *((volatile uint32_t*)RPC_PHYINT);
-	
+
 	if(dataL & BIT1)
 	{	//bit1:  WPVAL(0:RPC_WP#=H(Protect Disable), 1:RPC_WP#=L(Protect Enable))
 		dataL &= ~BIT1;
@@ -247,11 +280,21 @@ void WriteProtectDisable(void)
 //////////////////////////////////////////////////////////////////////////////////
 uint32_t ReadHyperFlashData8Byte(uint32_t addr, uint32_t *readData)	//for HyperFlash
 {
-	char str[64];
-	
-	*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030263;
+	uint32_t product;
+	uint32_t cut;
+
+	product = *((volatile uint32_t*)PRR) & PRR_PRODUCT_MASK;
+	cut = *((volatile uint32_t*)PRR) & PRR_CUT_MASK;
+
+	if ((product ==  PRR_PRODUCT_M3) && (cut < PRR_CUT_30)) {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x00030263;
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030263;
+	} else {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x00038263;
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x80038263;
 		//bit31  CAL         =  1 : PHY calibration
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
+	}
 	*((volatile uint32_t*)RPC_CMNCR)      = 0x81FFF301;
 		//bit31  MD       =  1 : Manual mode
 		//bit1-0 BSZ[1:0] = 01 : QSPI Flash x 2 or HyperFlash
@@ -279,22 +322,12 @@ uint32_t ReadHyperFlashData8Byte(uint32_t addr, uint32_t *readData)	//for HyperF
 		//bit2     SPIRE      = 1 : Data read enable
 		//bit1     SPIWE      = 0 : Data write disable
 		//bit0     SPIE       = 1 : SPI transfer start
-	
-//	WaitTxEnd();
+
 	WaitRpcTxEnd();
-	
+
 	readData[1] = *((volatile uint32_t*)RPC_SMRDR0);	//read data[63:32]
 	readData[0] = *((volatile uint32_t*)RPC_SMRDR1);	//read data[31:0]
 
-/*
-	Data2HexAscii(readData[0],str,4);
-	PutStr(" RPC_SMRDR1 = 0x",0);
-	PutStr(str,1);
-	Data2HexAscii(readData[1],str,4);
-	PutStr(" RPC_SMRDR0 = 0x",0);
-	PutStr(str,1);
-*/
-	
 	return(readData[0]);
 }
 
@@ -305,35 +338,43 @@ uint32_t ReadStatusHyperFlash(uint32_t *readData)	//for HyperFlash
 	uint32_t command = 0;
 	uint32_t read_status = 0;
 	uint32_t status = 0;
-	
+
 	//First Command
 	addr = 0x00000555;
 	command = 0x70000000;
 	WriteCommandHyperFlash(addr, command);
-	
+
 	read_status = ReadHyperFlashData8Byte(0x0, readData);	// Status Register read
-	
+
 	status = ((read_status & 0xFF000000) >> 8 ) | ((read_status & 0x00FF0000) << 8 ) | ((read_status & 0x0000FF00) >> 8 ) | ((read_status & 0x000000FF) << 8 );
-	
+
 	status = (status & 0x0000FFFF);
-	
+
 	return(status);
 }
 
 
 void WriteDataWithBufferHyperFlash(uint32_t addr, uint32_t source_addr)	//for HyperFlash
 {
-	//uint32_t i=0;
 	uintptr_t i=0;
-	
+	uint32_t product;
+	uint32_t cut;
+
 	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
-	
-	*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030277;
+
+	product = *((volatile uint32_t*)PRR) & PRR_PRODUCT_MASK;
+	cut = *((volatile uint32_t*)PRR) & PRR_CUT_MASK;
+
+	if ((product ==  PRR_PRODUCT_M3) && (cut < PRR_CUT_30)) {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x80030277;
+	} else {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x80038277;
 		//bit31  CAL         =  1 : PHY calibration
 		//bit2   WBUF        =  1 : Write Buffer Enable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
-	
+	}
+
 	for(i=0;i<256;i=i+0x4)
 	{
 		(*(volatile uint32_t*)(0xEE208000+i)) = (*(volatile uint32_t*)(source_addr+i));
@@ -365,20 +406,24 @@ void WriteDataWithBufferHyperFlash(uint32_t addr, uint32_t source_addr)	//for Hy
 		//bit11-8  ADE[3:0]   = 0100 : ADR[23:0] output (24 Bit Address)
 		//bit7-4   OPDE[3:0]  = 0000 : Option data disable
 		//bit3-0   SPIDE[3:0] = 1111 : 64bit transfer
-	
+
 //	*((volatile uint32_t*)RPC_SMWDR0)     = writeData;
 		//
 	*((volatile uint32_t*)RPC_SMCR)       = 0x00000003;
 		//bit2     SPIRE      = 0 : Data read disable
 		//bit1     SPIWE      = 1 : Data write enable
 		//bit0     SPIE       = 1 : SPI transfer start
-	
+
 	WaitRpcTxEnd();
-	
-	*((volatile uint32_t*)RPC_PHYCNT)    = 0x00030273;
+
+	if ((product ==  PRR_PRODUCT_M3) && (cut < PRR_CUT_30)) {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x00030273;
+	} else {
+		*((volatile uint32_t*)RPC_PHYCNT)    = 0x00038273;
 		//bit31  CAL         =  0 : No PHY calibration
 		//bit2   WBUF        =  0 : Write Buffer Disable
 		//bit1-0 PHYMEM[1:0] = 11 : HyperFlash
+	}
 	*((volatile uint32_t*)RPC_DRCR)       = 0x011F0301;
 		//bit9   RCF         =  1 : Read Cache Clear
 }
@@ -389,22 +434,22 @@ void WriteBufferOperationHyperFlash(uint32_t writeAddr, uint32_t source_addr)
 	//Word Program
 	uint32_t addr = 0;
 	uint32_t command = 0;
-	
+
 	//First Command
 	addr = 0x00000555;
 	command = 0xAA000000;
 	WriteCommandHyperFlash(addr, command);
-	
+
 	//Second Command
 	addr = 0x000002AA;
 	command = 0x55000000;
 	WriteCommandHyperFlash(addr, command);
-	
+
 	//Third Command
 	addr = 0x00000555;
 	command = 0xA0000000;
 	WriteCommandHyperFlash(addr, command);
-	
+
 	//Fourth Command
 	addr = (writeAddr/2);
 	WriteDataWithBufferHyperFlash(addr, source_addr);

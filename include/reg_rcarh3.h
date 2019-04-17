@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018, Renesas Electronics Corporation
+ * Copyright (c) 2015-2019, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1411,6 +1411,7 @@
 #define PRR_PRODUCT_M3N		(0x00005500U)           /* R-Car M3N */
 #define PRR_PRODUCT_E3		(0x00005700U)           /* R-Car E3  */
 #define PRR_PRODUCT_D3		(0x00005800U)           /* R-Car D3  */
-#define PRR_CUT_10		(0x00U)
-#define PRR_CUT_11		(0x01U)
-#define PRR_CUT_20		(0x10U)
+#define PRR_CUT_10		(0x00U)			/* Ver.1.0 */
+#define PRR_CUT_11		(0x01U)			/* Ver.1.1 */			
+#define PRR_CUT_20		(0x10U)			/* Ver.2.0 */
+#define PRR_CUT_30		(0x20U)			/* Ver.3.0 */

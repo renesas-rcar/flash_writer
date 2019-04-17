@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018, Renesas Electronics Corporation
+ * Copyright (c) 2015-2019, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,17 +33,21 @@
 /**********************
 *  TITLE              *
 ***********************/
+#define WRITER_VERSION	"V1.09"		/* Software Version */
+#define WRITER_DATE	"Apr.17,2019"	/* Release date */
+
+#ifdef RCAR_GEN3_SALVATOR
+#define SOC_NAME	"H3/M3/M3N"	/* Salvator-X/XS and Starter Kit */
+#elif  RCAR_GEN3_EBISU
+#define SOC_NAME	"E3"		/* Ebisu / Ebisu-4D */
+#elif  RCAR_GEN3_DRAAK
+#define SOC_NAME	"D3"		/* Draak */
+#endif
+
 
 const char *const StartMessMonitor[START_MESS_MON_LINE] = {
-#ifdef RCAR_GEN3_SALVATOR
-				"Flash writer for R-Car H3/M3/M3N Series V1.08 Oct.31,2018",
-#endif /* RCAR_GEN3_SALVATOR */
-#ifdef RCAR_GEN3_EBISU
-				"Flash writer for R-Car E3 Series V1.08 Oct.31,2018",
-#endif /* RCAR_GEN3_EBISU */
-#ifdef RCAR_GEN3_DRAAK
-				"Flash writer for R-Car D3 Series V1.08 Oct.31,2018",
-#endif /* RCAR_GEN3_DRAAK */
+				"Flash writer for R-Car " SOC_NAME " Series "
+				WRITER_VERSION " " WRITER_DATE,
 				MESSAGE_END,
 };
 

@@ -13,6 +13,7 @@ The Flash writer eMMC writing support is High Speed SDR(i.e. 50MHz) and x8 bus w
 [Chapter 5](#5-how-to-run-flash-writer) explains example of how to perform the Flash writer.<BR>
 [Chapter 6](#6-usb-download-api) explains specifications of USB download API.<BR>
 [Chapter 7](#7-error-case-to-handle) explains how to handle error case.<BR>
+[Chapter 8](#8-revision-history) explains revision history.<BR>
 
 *Note) This sample software does not support the file system. Therefore, can be write the raw image to the Serial NOR Flash and HyperFlash&trade;, eMMC.*
 
@@ -47,24 +48,24 @@ The following table lists the hardware needed to use this function.
 The following table shows Serial Flash and eMMC support for each SoC.
 
 ##### Serial Flash / eMMC support status of each SoC
-| SoC                                                     | Read/Write the Serial Flash | Boot from the Serial Flash | Read/Write the eMMC | Boot from the eMMC | MMC interface |
-|---------------------------------------------------------|-----------------------------|----------------------------|---------------------|--------------------|---------------|
-| R-Car E3 Ver.1.0                                        | Support                     | Support                    | Support             | Support            | MMC1          |
-| R-Car M3N Ver.1.1                                       | Support                     | Support                    | Support             | Support            | MMC0          |
-| R-Car M3 Ver.1.2  / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 | Support                     | Support                    | Support             | Support            | MMC0          |
-| R-Car H3 Ver.3.0  / R-Car H3 Ver.2.0                    | Support                     | Support                    | Support             | Support            | MMC0          |
-| R-Car H3 Ver.1.1  / R-Car H3 Ver.1.0                    | Support                     | Support                    | Support             | Not support        | MMC0          |
+| SoC                                            | Read/Write the Serial Flash | Boot from the Serial Flash | Read/Write the eMMC | Boot from the eMMC | MMC interface |
+|------------------------------------------------|-----------------------------|----------------------------|---------------------|--------------------|---------------|
+| R-Car E3 Ver.1.1 / Ver.1.0                     | Support                     | Support                    | Support             | Support            | MMC1          |
+| R-Car M3N Ver.1.1                              | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car H3 Ver.3.0 / Ver.2.0                     | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car H3 Ver.1.1 / Ver.1.0                     | Support                     | Support                    | Support             | Not support        | MMC0          |
 
 The following table shows USB support for each SoC.
 
 ##### USB download support status of each SoC
-| SoC                                                      | Image download by USB | Boot from the USB download mode |
-|----------------------------------------------------------|-----------------------|---------------------------------|
-| R-Car E3 Ver.1.0                                         | Support               | Support                         |
-| R-Car M3N Ver.1.1                                        | Support               | Support                         |
-| R-Car M3 Ver.1.2  / R-Car M3 Ver.1.1  / R-Car M3 Ver.1.0 | Support               | Not Support                     |
-| R-Car H3 Ver.3.0  / R-Car H3 Ver.2.0                     | Support               | Support                         |
-| R-Car H3 Ver.1.1  / R-Car H3 Ver.1.0                     | Support               | Not support                     |
+| SoC                                            | Image download by USB | Boot from the USB download mode |
+|------------------------------------------------|-----------------------|---------------------------------|
+| R-Car E3 Ver.1.1 / Ver.1.0                     | Support               | Support                         |
+| R-Car M3N Ver.1.1                              | Support               | Support                         |
+| R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 | Support               | Not Support                     |
+| R-Car H3 Ver.3.0 / Ver.2.0                     | Support               | Support                         |
+| R-Car H3 Ver.1.1 / Ver.1.0                     | Support               | Not support                     |
 
 USB 2.0 High-speed is supported. USB device class is CDC ACM compliant.<BR>
 Host PC's USB driver uses OS standard in-box driver.<BR>
@@ -988,8 +989,8 @@ Baud rate is dependent on the SoC and the SCIF clock.<BR>
 ##### Baud rate settings after command execution
 | SoC                                                                                           | SCIF clock settings<BR>(Build option) | Baud rate at startup | Baud rate at After command execution |
 |-----------------------------------------------------------------------------------------------|---------------------------------------|---------------------:|-------------------------------------:|
-| R-Car E3 Ver.1.0                                                                              | Don't care                            | 115200bps            |                            921600bps |
-| R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 /R-Car H3 Ver.2.0 / R-Car H3 Ver.1.1 | External clock                        | 115200bps            |                            921600bps |
+| R-Car E3 Ver.1.1 / Ver.1.0                                                                    | Don't care                            | 115200bps            |                            921600bps |
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | External clock                        | 115200bps            |                            921600bps |
 |                                                                                               | Internal clock                        | 115200bps            |                            230400bps |
 | R-Car H3 Ver.1.0                                                                              | External clock                        | 57600bps             |                            460800bps |
 |                                                                                               | Internal clock                        | 57600bps             |                            115200bps |
@@ -1104,7 +1105,7 @@ The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 ##### Dip switch configuration for SCIF download mode on Salvator-X/XS
 | SoC                                                        | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
 |                                                                      |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
 |                                                                      | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
 |                                                                      |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
@@ -1126,17 +1127,17 @@ The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
 #### Dip switch configuration for SCIF download mode on Ebisu/Ebisu-4D
-| SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
-|------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
-|                              | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
-|                              | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+| SoC              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|----------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car E3 Ver.1.1 / Ver.1.0 | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                            | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
@@ -1145,31 +1146,31 @@ The following table shows the Dip-Switch Setting for USB download mode.
 ##### Dip switch configuration for USB download mode on Salvator-X/XS
 | SoC                    | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3 Ver.1.2  / R-Car M3 Ver.1.1  / R-Car M3 Ver.1.0 *2 | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
-| R-Car M3N Ver.1.1 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0   | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
+| R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 *2 | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
+| R-Car M3N Ver.1.1<BR> R-Car H3 Ver.3.0 / Ver.2.0   | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
 |                                        |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
 |                                        | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
 |                                        |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
 |                                        | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | OFF | OFF | ON  |
 |                                        |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-| R-Car H3 Ver.1.1 / R-Car H3 Ver.1.0 *3 | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
+| R-Car H3 Ver.1.1 / Ver.1.0 *3          | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 \*2: M3 cannot be boot from the USB download mode.<BR>
 \*3: H3 Ver.1.0 and H3 Ver.1.1 cannot be boot from the USB download mode.<BR>
 
 ##### Dip switch configuration for USB download mode on Ebisu/Ebisu-4D
-| SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
-|------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | ON  |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
-|                              | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | ON  |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
-|                              | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | OFF | ON  |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+| SoC              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|----------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car E3 Ver.1.1 / Ver.1.0 | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | ON  |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                            | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | OFF | ON  |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | OFF | ON  |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
@@ -1219,7 +1220,7 @@ The following table shows the setting of terminal software.<BR>
 ##### Terminal software configuration
 | SoC                                                                                           | Baud rate  | Data bit length | Parity check | Stop bits | Flow control |
 |-----------------------------------------------------------------------------------------------|-----------:|-----------------|--------------|-----------|--------------|
-| R-Car E3 Ver.1.0 / R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 / R-Car H3 Ver.1.1 | 115200bps  | 8bits           | none         | 1bit      | none         |
+| R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | 115200bps  | 8bits           | none         | 1bit      | none         |
 | R-Car H3 Ver.1.0                                                                              |  57600bps  | 8bits           | none         | 1bit      | none         |
 
 *Note) In the case of USB connection by CN9, this setting has no effect. Therefore it does not affect USB transfer speed.<BR>*
@@ -1258,7 +1259,7 @@ The following table shows the Dip-Switch Setting.<BR>
 #### Dip switch configuration for boot from the eMMC on Salvator-X/XS (50MHz x8 bus width mode)
 | SoC                                                           | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|----|----|-----|-----|----|-----|
-| R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
 |                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON | ON | ON  | ON  | ON | ON  |
 |                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
 |                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON | ON | ON  | ON  | ON | ON  |
@@ -1273,7 +1274,7 @@ The following table shows the Dip-Switch Setting.<BR>
 #### Dip switch configuration for boot from the Serial NOR Flash on Salvator-X/XS (Single read 40MHz)
 | SoC                                                              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
 |                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
 |                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
 |                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
@@ -1305,7 +1306,7 @@ The following table shows the Dip-Switch Setting.<BR>
 #### Dip switch configuration for boot from the HyperFlash&trade; on Salvator-X/XS (160MHz DDR)
 | SoC                                                              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1 / R-Car M3 Ver.1.2 / R-Car M3 Ver.1.1 / R-Car M3 Ver.1.0 / R-Car H3 Ver.3.0 / R-Car H3 Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
 |                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
 |                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
 |                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
@@ -1336,32 +1337,32 @@ The following table shows the Dip-Switch Setting.<BR>
 | SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
 
 #### Dip switch configuration for boot from the eMMC on Ebisu/Ebisu-4D (50MHz x8 bus width mode)
-| SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
-|------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | ON  | OFF |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
-|                              | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | ON  | OFF |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
-|                              | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | ON  | OFF |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+| SoC              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|----------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car E3 Ver.1.1 / Ver.1.0 | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | ON  | OFF |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                            | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | OFF | OFF | ON  | OFF |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | ON  | OFF |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
 #### Dip switch configuration for boot from the Serial NOR Flash on Ebisu/Ebisu-4D (Single read 40MHz)
-| SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
-|------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | OFF | ON  | ON  |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
-|                              | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | OFF | ON  | ON  |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
-|                              | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | ON  | OFF | ON  | ON  |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+| SoC              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|----------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car E3 Ver.1.1 / Ver.1.0 | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | OFF | ON  | ON  |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                            | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | OFF | ON  | ON  |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | ON  | OFF | ON  | ON  |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
@@ -1375,17 +1376,17 @@ The following table shows the Dip-Switch Setting.<BR>
 | SW31          | QSPI-D      | OFF  | -    | -    | -    | -    | -    | -    | -    |
 
 #### Dip switch configuration for boot from the HyperFlash&trade; on Ebisu/Ebisu-4D (150MHz DDR)
-| SoC                | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
-|------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car E3 Ver.1.0             | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | ON  | OFF | ON  |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
-|                              | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | ON  | OFF | ON  |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
-|                              | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | ON  | ON  | OFF | ON  |
-|                              |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
-|                              |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+| SoC              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|----------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car E3 Ver.1.1 / Ver.1.0 | Cortex-A53 AArch64 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | ON  | OFF | ON  |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | OFF | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                            | Cortex-A53 AArch32 | SW10 | MODESW-A | ON  | OFF | OFF | ON  | ON  | ON  | OFF | ON  |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
+|                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | ON  | ON  | OFF | ON  |
+|                            |                    | SW11 | MODESW-B | OFF | ON  | -*1 | ON  | ON  | ON  | ON  | ON  |
+|                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | OFF | -   | -   |
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
@@ -1935,4 +1936,13 @@ Describe the revision history of Flash writer.
 - Update DDR setting for E3.<BR>
 - Update Linaro Toolchain from GCC 5.2 to GCC 7.2.<BR>
 - Update USB libraries rebuilt with GCC 7.2.<BR>
+- Update application note.<BR>
+
+## 8.10. V1.0.9
+- Add R-Car M3 Ver.1.3 support.<BR>
+- Add R-Car E3 Ver.1.1 support.<BR>
+- Update DDR setting for H3/M3/M3N.<BR>
+- Update DDR setting for E3.<BR>
+- Update RPC PHY calibration setting.<BR>
+- Remove function to use 4QPP command with page buffer for Serial Flash.<BR>
 - Update application note.<BR>

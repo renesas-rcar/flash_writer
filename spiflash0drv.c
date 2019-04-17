@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,19 +84,6 @@ void FastRdManuQspiFlashS25fl512s(uint32_t sourceSpiAdd,uintptr_t destinationAdd
 }
 
 
-void QuadRdManuQspiFlashS25fl512s(uint32_t sourceSpiAdd,uintptr_t destinationAdd,uint32_t byteCount)
-{
-	uint32_t		readAdd;
-	uint32_t		rdData;
-	
-	rdData=destinationAdd;
-
-	for(readAdd=sourceSpiAdd ; readAdd<(sourceSpiAdd+byteCount) ; readAdd+=4){
-		QuadFastReadQspiFlashData4Byte(readAdd, &rdData);
-		*((uint32_t *) destinationAdd) = rdData;
-		destinationAdd +=4;
-	}
-}
 
 
 
@@ -210,6 +197,20 @@ void PageProgramWithBuffeQspiFlashS25fl512s(uint32_t addr, uint32_t source_addr)
 }
 
 
+void PageProgram4PPWithBuffeQspiFlashS25fl512s(uint32_t addr, uint32_t source_addr)
+{
+	uint32_t status;
+
+//	EnableQuadModeQspiFlashS25fl512s();
+
+	WriteCommandQspiFlash(0x00060000);	//WRITE ENABLE
+	WriteData4ppWithBufferQspiFlash(addr,source_addr);
+
+	while(1){
+		ReadStatusQspiFlash(&status);
+		if( !(status & BIT0) )	break;
+	}
+}
 
 
 void PageProgram02hWithBuffeQspiFlashS25fl512s(uint32_t addr, uint32_t source_addr)
@@ -256,22 +257,6 @@ void QuadPageProgramQspiFlashS25fl512s(uint32_t addr,uint32_t writeData)
 	}
 }
 
-void QuadPageProgramWithBuffeQspiFlashS25fl512s(uint32_t addr, uint32_t source_addr)
-{
-	uint32_t status;
-
-	EnableQuadModeQspiFlashS25fl512s();
-
-	WriteCommandQspiFlash(0x00060000);	//WRITE ENABLE
-	WriteData4qppWithBufferQspiFlash(addr,source_addr);
-
-//Add
-	while(1){
-		ReadStatusQspiFlash(&status);
-		if( !(status & BIT0) )	break;
-	}
-
-}
 
 
 
@@ -334,6 +319,20 @@ void SaveDataWithBuffeQspiFlashS25fl512s(uint32_t srcAdd,uint32_t svFlashAdd,uin
 	}
 }
 
+void SaveData4PPWithBuffeQspiFlashS25fl512s(uint32_t srcAdd,uint32_t svFlashAdd,uint32_t svSize)
+{
+	uint32_t flashAdd;
+	uint32_t writeDataAdd;
+
+	WriteCommandQspiFlash(0x00060000);	//WRITE ENABLE
+
+	writeDataAdd = srcAdd;
+	for(flashAdd=svFlashAdd;flashAdd<(svFlashAdd+svSize);flashAdd+=256){	//256byte:RPC Write Buffer size
+		PageProgram4PPWithBuffeQspiFlashS25fl512s(flashAdd, writeDataAdd);
+		writeDataAdd = writeDataAdd + 256;
+	}
+}
+
 //////////////////////////////////////////
 // Qspi:Quad Page Program (4QPP:34h)
 //////////////////////////////////////////
@@ -356,21 +355,6 @@ void SaveDataQuadQspiFlashS25fl512s(uintptr_t srcAdd,uint32_t svFlashAdd,uint32_
 #endif
 }
 
-void SaveDataQuadWithBuffeQspiFlashS25fl512s(uint32_t srcAdd,uint32_t svFlashAdd,uint32_t svSize)
-{
-	uint32_t flashAdd;
-	uint32_t writeDataAdd;
-
-	WriteCommandQspiFlash(0x00060000);	//WRITE ENABLE
-
-	writeDataAdd = srcAdd;
-
-	for(flashAdd=svFlashAdd;flashAdd<(svFlashAdd+svSize);flashAdd+=256){	//256byte:RPC Write Buffer size
-//		WriteData4qppWithBufferQspiFlash(flashAdd, writeDataAdd);
-		QuadPageProgramWithBuffeQspiFlashS25fl512s(flashAdd, writeDataAdd);
-		writeDataAdd = writeDataAdd + 256;
-	}
-}
 
 
 void SectorEraseQspiFlashS25fl512s(uint32_t EraseStatAdd,uint32_t EraseEndAdd)

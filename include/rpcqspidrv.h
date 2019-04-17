@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,16 +44,13 @@ void WriteRegisterQspiFlash(uint32_t statusReg, uint32_t configReg);
 void WriteRegisterQspiFlash_Byte2(uint32_t statusReg, uint32_t configReg);
 void SectorErase4QspiFlash(uint32_t sector_addr);
 void WriteData4ppWithBufferQspiFlash(uint32_t addr, uint32_t source_addr);
-void WriteData4qppWithBufferQspiFlash(uint32_t addr, uint32_t source_addr);
 void WriteData4ppQspiFlash(uint32_t addr, uint32_t writeData);
 void WriteData4ppQspiFlash_CsCont(uint32_t addr, uint32_t *writeData,uint32_t cnt);
 void WriteData4qppQspiFlash(uint32_t addr, uint32_t writeData);
 uint32_t SingleFastReadQspiFlashData4Byte(uint32_t addr, uint32_t *readData);	//for QSPIx1ch
 uint32_t SingleFastReadQspiFlashData1Byte(uint32_t addr, uint32_t *readData);	//for QSPIx1ch
-uint32_t QuadFastReadQspiFlashData4Byte(uint32_t addr, uint32_t *readData);	//for QSPIx1ch
 uint32_t ReadAnyRegisterQspiFlash(uint32_t addr, unsigned char *readData);		// Add24bit,Data8bit
 void WriteAnyRegisterQspiFlash(uint32_t addr, unsigned char writeData);			// Add24bit,Data8bit
-uint32_t QuadIOReadQspiFlashData4Byte(uint32_t addr, uint32_t *readData);
 void SetRPC_ClockMode(uint32_t mode);
 void WaitRpcTxEnd(void);
 

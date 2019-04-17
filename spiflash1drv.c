@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,20 +85,6 @@ void FastRdManuQspiFlashS25s128s(uint32_t sourceSpiAdd,uintptr_t destinationAdd,
 	}
 }
 
-void QuadIORdManuQspiFlashS25s128s(uint32_t sourceSpiAdd,uintptr_t destinationAdd,uint32_t byteCount)
-{
-	uint32_t		readAdd;
-	uint32_t		rdData;
-	
-	rdData=destinationAdd;
-
-	for(readAdd=sourceSpiAdd ; readAdd<(sourceSpiAdd+byteCount) ; readAdd+=4){
-//		QuadFastReadQspiFlashData4Byte(readAdd, &rdData);
-		QuadIOReadQspiFlashData4Byte(readAdd, &rdData);
-		*((uint32_t *) destinationAdd) = rdData;
-		destinationAdd +=4;
-	}
-}
 
 //add 2016.01.19
 //////////////////////////////////

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2018, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,6 @@
 void FastRdQspiFlashS25s128s(uint32_t sourceSpiAdd,uint32_t destinationAdd,uint32_t byteCount);
 void QuadIORdQspiFlashS25s128s(uint32_t sourceSpiAdd,uint32_t destinationAdd,uint32_t byteCount);
 void FastRdManuQspiFlashS25s128s(uint32_t sourceSpiAdd,uintptr_t destinationAdd,uint32_t byteCount);
-void QuadIORdManuQspiFlashS25s128s(uint32_t sourceSpiAdd,uintptr_t destinationAdd,uint32_t byteCount);
 void SetSectorErase256kbQspiFlashS25s128s(void);
 void SectorErase256kbQspiFlashS25s128s(uint32_t addr);
 int32_t BulkEraseQspiFlashS25s128s(void);
