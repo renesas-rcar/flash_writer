@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018, Renesas Electronics Corporation
+ * Copyright (c) 2015-2019, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,18 +37,13 @@
 #define DramArea3_EADD		0x53FFFFFF
 #define FlashArea1_SADD		0x04000000
 
-#define		ADDITION					0x00000000
-#define		SUBTRACTION					0x00000001
+#define	ADDITION		0x00000000
+#define	SUBTRACTION		0x00000001
 
-#define		LS_WORK_DRAM_SADD			0x50000000
+#define	LS_WORK_DRAM_SADD	0x50000000
 
 void	dgHelp(void);
 int32_t	GetStr_ByteCount(char *str,uint32_t getByteCount);
 void	dgScifSpeedUp(void);
-#ifdef RCAR_GEN3_SALVATOR
-void	dgScifSpeedUp_115200(void);
-void	dgScifSpeedUp_230400(void);
-void	dgScifSpeedUp_460800(void);
-#endif /* RCAR_GEN3_SALVATOR */
 void	dgScifSpeedUp_921600(void);
 

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015-2018, Renesas Electronics Corporation. All rights reserved.
+# Copyright (c) 2015-2019, Renesas Electronics Corporation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -36,11 +36,6 @@ endif
 #/* Select BOOT("AREA0"or"WRITER"or"WRITER_WITH_CERT" )*************************
 ifeq ("$(BOOT)", "")
 BOOT = WRITER_WITH_CERT
-endif
-
-#/* Select SCIF_CLK("EXTERNAL"or"INTERNAL" )************************************
-ifeq ("$(SCIF_CLK)", "")
-SCIF_CLK = EXTERNAL
 endif
 
 #/* Select AArch("64"or"32" )***************************************************
@@ -157,14 +152,6 @@ else ifeq ("$(BOARD)", "DRAAK")
 else
 	MEMORY_DEF  = memory_writer_with_cert.def
 endif
-endif
-
-ifeq ("$(SCIF_CLK)", "EXTERNAL")
-	SCIF_DEF    = SCIF_CLK_EXTERNAL
-endif
-
-ifeq ("$(SCIF_CLK)", "INTERNAL")
-	SCIF_DEF    = SCIF_CLK_INTERNAL
 endif
 
 #USB download function can not be used with the starter kit.
@@ -313,11 +300,11 @@ $(OUTPUT_DIR):
 # Compile
 #------------------------------------------
 $(OBJECT_DIR)/%.o:$(BOOTDIR)/%.s
-	$(AS)  -g $(CPU) $(AS_NEON) --MD $(patsubst %.o,%.d,$@) -I $(BOOTDIR) -I $(INCLUDE_DIR) -I $(DDR_DIR) $< -o $@ --defsym $(AArch32_64)=0 --defsym $(BOOT_DEF)=0 --defsym $(TOOL_DEF)=0 --defsym $(SCIF_DEF)=0
+	$(AS)  -g $(CPU) $(AS_NEON) --MD $(patsubst %.o,%.d,$@) -I $(BOOTDIR) -I $(INCLUDE_DIR) -I $(DDR_DIR) $< -o $@ --defsym $(AArch32_64)=0 --defsym $(BOOT_DEF)=0 --defsym $(TOOL_DEF)=0
 
 $(OBJECT_DIR)/%.o:%.c
 	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
-	$(CC) -g -Os $(ALIGN) $(CPU) $(CC_NEON) $(THUMB) -MMD -MP -c -I $(BOOTDIR) -I $(INCLUDE_DIR) -I $(DDR_DIR) $< -o $@ -D$(AArch32_64)=0 -D$(BOOT_DEF)=0 -D$(TOOL_DEF)=0 -D$(SCIF_DEF)=0 $(CFLAGS) -D$(DDR_DEF)=0
+	$(CC) -g -Os $(ALIGN) $(CPU) $(CC_NEON) $(THUMB) -MMD -MP -c -I $(BOOTDIR) -I $(INCLUDE_DIR) -I $(DDR_DIR) $< -o $@ -D$(AArch32_64)=0 -D$(BOOT_DEF)=0 -D$(TOOL_DEF)=0 $(CFLAGS) -D$(DDR_DEF)=0
 
 #------------------------------------------
 # Linker

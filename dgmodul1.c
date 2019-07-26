@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018, Renesas Electronics Corporation
+ * Copyright (c) 2015-2019, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,10 +53,10 @@ uint32_t gFLASH_CS1_ID;
 
 
 /****************************************************************
-	MODULE				: dgHelp								*
-	FUNCTION			: HELP	MESSAGE							*
-	COMMAND				: H										*
-	INPUT PARAMETER		: H										*
+	MODULE		: dgHelp				*
+	FUNCTION	: HELP	MESSAGE				*
+	COMMAND		: H					*
+	INPUT PARAMETER	: H					*
 *****************************************************************/
 void	dgHelp(void)
 {
@@ -94,100 +94,21 @@ int32_t	GetStr_ByteCount(char *str,uint32_t getByteCount)
 
 void	dgScifSpeedUp(void)
 {
-#ifdef RCAR_GEN3_SALVATOR
-	uint32_t product;
-
-	product = *((volatile uint32_t*)PRR) & (PRR_PRODUCT_MASK | PRR_CUT_MASK);
-
-#ifdef SCIF_CLK_EXTERNAL
-	if (product == (PRR_PRODUCT_H3 | PRR_CUT_10)) {	/* R-CarH3_Ver.1.0 */
-		dgScifSpeedUp_460800();
-	} else {
-		dgScifSpeedUp_921600();
-	}
-#endif /* SCIF_CLK_EXTERNAL */
-#ifdef SCIF_CLK_INTERNAL
-	if (product == (PRR_PRODUCT_H3 | PRR_CUT_10)) {	/* R-CarH3_Ver.1.0 */
-		dgScifSpeedUp_115200();
-	} else {
-		dgScifSpeedUp_230400();
-	}
-#endif /* SCIF_CLK_INTERNAL */
-#endif /* RCAR_GEN3_SALVATOR */
-#ifdef RCAR_GEN3_EBISU
 	dgScifSpeedUp_921600();
-#endif /* RCAR_GEN3_EBISU */
-#ifdef RCAR_GEN3_DRAAK
-	dgScifSpeedUp_921600();
-#endif /* RCAR_GEN3_DRAAK */
 }
 
 /****************************************************************
-	MODULE				: dgScifSpeedUp							*
-	FUNCTION			: Scif speed UP		Change 230.4kbps	*
-	COMMAND				: SUP									*
-	INPUT PARAMETER		: SUP									*
-*****************************************************************/
-#ifdef RCAR_GEN3_SALVATOR
-void	dgScifSpeedUp_115200(void)
-{
-	uint8_t setData;
-
-	PutStr("Scif speed UP",1);
-	setData =0x8;			/* 115200bps@33MHz */
-	PutStr("Please change to 115.2Kbps baud rate setting of the terminal.",1);
-	WaitPutCharSendEnd();
-	SetScif2_BRR(setData);
-}
-#endif /* RCAR_GEN3_SALVATOR */
-
-/****************************************************************
-	MODULE				: dgScifSpeedUp							*
-	FUNCTION			: Scif speed UP		Change 230.4kbps	*
-	COMMAND				: SUP									*
-	INPUT PARAMETER		: SUP									*
-*****************************************************************/
-#ifdef RCAR_GEN3_SALVATOR
-void	dgScifSpeedUp_230400(void)
-{
-	uint8_t setData;
-
-	PutStr("Scif speed UP",1);
-	setData =0x8;			/* 230400bps@66MHz */
-	PutStr("Please change to 230.4Kbps baud rate setting of the terminal.",1);
-	WaitPutCharSendEnd();
-	SetScif2_BRR(setData);
-}
-#endif /* RCAR_GEN3_SALVATOR */
-
-/****************************************************************
-	MODULE				: dgScifSpeedUp							*
-	FUNCTION			: Scif speed UP		Change 460.8kbps	*
-	COMMAND				: SUP									*
-	INPUT PARAMETER		: SUP									*
-*****************************************************************/
-#ifdef RCAR_GEN3_SALVATOR
-void	dgScifSpeedUp_460800(void)
-{
-	uint16_t setData;
-
-	PutStr("Scif speed UP",1);
-	setData =0x002;			//14.7456MHz/ (460800*16) =   2
-	PutStr("Please change to 460.8Kbps baud rate setting of the terminal.",1);
-	WaitPutCharSendEnd();
-	SetScif2_DL(setData);
-}
-#endif /* RCAR_GEN3_SALVATOR */
-
-/****************************************************************
-	MODULE				: dgScifSpeedUp							*
-	FUNCTION			: Scif speed UP		Change 921kbps		*
-	COMMAND				: SUP									*
-	INPUT PARAMETER		: SUP									*
+	MODULE		: dgScifSpeedUp				*
+	FUNCTION	: Scif speed UP	Change 921.6kbps	*
+	COMMAND		: SUP					*
+	INPUT PARAMETER	: SUP					*
 *****************************************************************/
 void	dgScifSpeedUp_921600(void)
 {
 	uint16_t setData;
+#ifdef RCAR_GEN3_SALVATOR
+	uint32_t product;
+#endif /* RCAR_GEN3_SALVATOR */
 #ifdef RCAR_GEN3_EBISU
 	uint32_t sscg;
 	uint32_t md;
@@ -208,21 +129,25 @@ void	dgScifSpeedUp_921600(void)
 	WaitPutCharSendEnd();
 
 #ifdef RCAR_GEN3_SALVATOR
-	setData =0x001;			/* 14.7456MHz / (921600*16) = 1 */
+	product = *((volatile uint32_t*)PRR) & (PRR_PRODUCT_MASK | PRR_CUT_MASK);
+	if (product == (PRR_PRODUCT_H3 | PRR_CUT_10)) {
+		setData =0x09;		/* 133.33MHz / (921600*16) =  9.04  @S3D1 */
+	} else {
+		setData =0x12;		/* 266.66MHz / (921600*16) = 18.08  @S3D1 */
+	}
 #endif /* RCAR_GEN3_SALVATOR */
 #ifdef RCAR_GEN3_EBISU
-	if(sscg == 0x0){		//MD12=0 (SSCG off) ： S3D1CΦ=266.6MHz
-		setData =0x12;		//266.66MHz/ (921600*16) =   18.08     @S3D1
-	}else{				//MD12=1 (SSCG on)  ： S3D1CΦ=240MHz
-		setData =0x10;		//240MHz   / (921600*16) =   16.28     @S3D1
+	if (sscg == 0x0) {		/* MD12=0 (SSCG off) ： S3D1C=266.6MHz */
+		setData =0x12;		/* 266.66MHz / (921600*16) = 18.08  @S3D1 */
+	} else {			/* MD12=1 (SSCG on)  ： S3D1C=240MHz */
+		setData =0x10;		/* 240MHz    / (921600*16) = 16.28  @S3D1C */
 	}
 #endif /* RCAR_GEN3_EBISU */
 #ifdef RCAR_GEN3_DRAAK
-	if(sscg == 0x0){		//MD12=0 (SSCG off) ： S3D1CΦ=266.6MHz
-		setData =0x12;		//266.66MHz/ (921600*16) =   18.08     @S3D1
-	}
-	else{				//MD12=1 (SSCG on)  ： S3D1CΦ=250MHz
-		setData =0x11;		//250MHz   / (921600*16) =   16.95     @S3D1
+	if (sscg == 0x0) {		/* MD12=0 (SSCG off) ： S3D1C=266.6MHz */
+		setData =0x12;		/* 266.66MHz / (921600*16) = 18.08  @S3D1 */
+	} else {			/* MD12=1 (SSCG on)  ： S3D1C=250MHz */
+		setData =0x11;		/* 250MHz    / (921600*16) = 16.95  @S3D1C */
 	}
 #endif /* RCAR_GEN3_DRAAK */
 	SetScif2_DL(setData);

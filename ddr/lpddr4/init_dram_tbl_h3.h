@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018, Renesas Electronics Corporation. All rights reserved.
+ * Copyright (c) 2015-2019, Renesas Electronics Corporation. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -103,7 +103,7 @@ static const uint32_t DDR_PHY_SLICE_REGSET_H3[DDR_PHY_SLICE_REGSET_NUM_H3] = {
 /*044d*/	0x00000200,
 /*044e*/	0x01000000,
 /*044f*/	0x00000200,
-/*0450*/	0x4041a141,
+/*0450*/	0x4041a151,
 /*0451*/	0xc00141a0,
 /*0452*/	0x0e0100c0,
 /*0453*/	0x0010000c,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018, Renesas Electronics Corporation
+ * Copyright (c) 2015-2019, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,11 +36,11 @@
 #include "devdrv.h"
 
 
-//////////////////////////////////////////////////////////////////////////////////
-//                                                                              //
-//	Debug Seirial(SCIF2)														//
-//																				//
-//////////////////////////////////////////////////////////////////////////////////
+/************************************************************************/
+/*									*/
+/*	Debug Seirial(SCIF2)						*/
+/*									*/
+/************************************************************************/
 int32_t PutCharSCIF2(char outChar)
 {
 	while(!(0x60 & *((volatile uint16_t*)SCIF2_SCFSR) ));
@@ -70,11 +70,11 @@ void PowerOnScif2(void)
 	uint32_t dataL;
 
 	dataL = *((volatile uint32_t*)CPG_MSTPSR3);
-	if(dataL & BIT10){	// case SCIF2(IrDA) Standby
+	if(dataL & BIT10){	/* case SCIF2(IrDA) Standby */
 		dataL &= ~BIT10;
 		*((volatile uint32_t*)CPG_CPGWPR)    = ~dataL;
 		*((volatile uint32_t*)CPG_SMSTPCR3)  =  dataL;
-		while( BIT10 & *((volatile uint32_t*)CPG_MSTPSR3) );  // wait bit=0
+		while( BIT10 & *((volatile uint32_t*)CPG_MSTPSR3) );  /* wait bit=0 */
 	}
 }
 
@@ -93,7 +93,7 @@ void WaitPutScif2SendEnd(void)
 #ifdef RCAR_GEN3_SALVATOR
 void InitScif2_SCIFCLK(void)
 {
-	uint16_t dataW;
+	volatile uint16_t dataW;
 	uint32_t prr;
 
 	PowerOnScif2();
@@ -106,52 +106,27 @@ void InitScif2_SCIFCLK(void)
 	*((volatile uint16_t*)SCIF2_SCFCR) = 0x0006;	/* reset tx-fifo, reset rx-fifo. */
 	*((volatile uint16_t*)SCIF2_SCFSR) = 0x0000;	/* clear ER, TEND, TDFE, BRK, RDF, DR */
 
-#ifdef SCIF_CLK_EXTERNAL
 	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0002;	/* external clock, SC_CLK pin used for input pin */
 	*((volatile uint16_t*)SCIF2_SCSMR) = 0x0000;	/* 8bit data, no-parity, 1 stop, Po/1 */
 	SoftDelay(100);
 
-#ifdef Writer
+#ifdef Area0Boot
 	prr = *((volatile uint32_t*)PRR);
 	prr &= (PRR_PRODUCT_MASK | PRR_CUT_MASK);
 
 	if (prr == (PRR_PRODUCT_H3 | PRR_CUT_10)) {
-		*((volatile uint16_t*)SCIF2_DL)    = 0x0010;	/* 14.7456MHz/ (57600*16) =  16 */
+		*((volatile uint16_t*)SCIF2_DL) = 0x0048;	/* 133.33MHz / (115200*16) =  72.33 */
 	} else {
-		*((volatile uint16_t*)SCIF2_DL)    = 0x0008;	/* 14.7456MHz/ (115200*16) =  8 */
+		*((volatile uint16_t*)SCIF2_DL) = 0x0091;	/* 266.66MHz / (115200*16) = 144.67 */
 	}
-#else  /* Writer */
-	*((volatile uint16_t*)SCIF2_DL)    = 0x0008;	/* 14.7456MHz/ (115200*16) =  8 */
-#endif /* Writer */
+#else  /* Area0Boot */
+	*((volatile uint16_t*)SCIF2_DL)    = 0x0091;	/* 266.66MHz / (115200*16) = 144.67 */
+#endif /* Area0Boot */
+	*((volatile uint16_t*)SCIF2_CKS)   = 0x4000;	/* select S3D1-Clock */
 
-	*((volatile uint16_t*)SCIF2_CKS)   = 0x0000;	/*  select scif_clk	 */
 	SoftDelay(100);
 	*((volatile uint16_t*)SCIF2_SCFCR) = 0x0000;	/* reset-off tx-fifo, rx-fifo. */
 	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0032;	/* enable TE, RE; SC_CLK=input */
-#endif /* SCIF_CLK_EXTERNAL */
-
-#ifdef SCIF_CLK_INTERNAL
-	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0000;	/* internal clock, SC_CLK pin used for input pin */
-	*((volatile uint16_t*)SCIF2_SCSMR) = 0x0000;	/* 8bit data, no-parity, 1 stop, Po/1 */
-	SoftDelay(100);
-
-#ifdef Writer
-	*((volatile uint8_t*)SCIF2_SCBRR)  = 0x11;	/* 115200bps@66MHz */
-#else  /* Writer */
-	prr = *((volatile uint32_t*)PRR);
-	prr &= (PRR_PRODUCT_MASK | PRR_CUT_MASK);
-
-	if (prr == PRR_PRODUCT_H3 | PRR_CUT_10)) {
-		*((volatile uint8_t*)SCIF2_SCBRR)  = 0x08;	/* 115200bps@33MHz */
-	} else {
-		*((volatile uint8_t*)SCIF2_SCBRR)  = 0x11;	/* 115200bps@66MHz */
-	}
-#endif /* Writer */
-
-	SoftDelay(100);
-	*((volatile uint16_t*)SCIF2_SCFCR) = 0x0000;	/* reset-off tx-fifo, rx-fifo. */
-	*((volatile uint16_t*)SCIF2_SCSCR) = 0x0030;	/* enable TE, RE; SC_CLK=input */
-#endif /* SCIF_CLK_INTERNAL */
 
 	SoftDelay(100);
 }
@@ -160,7 +135,7 @@ void InitScif2_SCIFCLK(void)
 #ifdef RCAR_GEN3_EBISU
 void InitScif2_SCIFCLK_E3(void)
 {
-	uint16_t dataW;
+	volatile uint16_t dataW;
 	uint32_t md;
 	uint32_t sscg;
 
@@ -181,11 +156,10 @@ void InitScif2_SCIFCLK_E3(void)
 	*((volatile uint16_t*)SCIF2_SCSMR) = 0x0000;	/* 8bit data, no-parity, 1 stop, Po/1 */
 	SoftDelay(100);
 
-	if(sscg == 0x0){					//MD12=0 (SSCG off) ： S3D1CΦ=266.6MHz
-		*((volatile uint16_t*)SCIF2_DL) = 0x0091;	/* 266.66MHz/ (115200*16) =  144.67 */
-	}
-	else if(sscg == 0x1){					//MD12=1 (SSCG on)  ： S3D1CΦ=250MHz
-		*((volatile uint16_t*)SCIF2_DL) = 0x0082;	/* 240.00MHz/ (115200*16) =  130.21 */
+	if (sscg == 0x0) {					/* MD12=0 (SSCG off) ： S3D1C=266.6MHz */
+		*((volatile uint16_t*)SCIF2_DL) = 0x0091;	/* 266.66MHz / (115200*16) = 144.67 */
+	} else {						/* MD12=1 (SSCG on)  ： S3D1C=250MHz */
+		*((volatile uint16_t*)SCIF2_DL) = 0x0082;	/* 240.00MHz / (115200*16) = 130.21 */
 	}
 	*((volatile uint16_t*)SCIF2_CKS)   = 0x4000;	/* select S3D1-Clock */
 	SoftDelay(100);
@@ -199,7 +173,7 @@ void InitScif2_SCIFCLK_E3(void)
 #ifdef RCAR_GEN3_DRAAK
 void InitScif2_SCIFCLK_D3(void)
 {
-	uint16_t dataW;
+	volatile uint16_t dataW;
 	uint32_t md;
 	uint32_t sscg;
 
@@ -220,11 +194,10 @@ void InitScif2_SCIFCLK_D3(void)
 	*((volatile uint16_t*)SCIF2_SCSMR) = 0x0000;	/* 8bit data, no-parity, 1 stop, Po/1 */
 	SoftDelay(100);
 
-	if(sscg == 0x0){					//MD12=0 (SSCG off) ： S3D1CΦ=266.6MHz
-		*((volatile uint16_t*)SCIF2_DL) = 0x0091;	/* 266.66MHz/ (115200*16) =  144.67 */
-	}
-	else if(sscg == 0x1){					//MD12=1 (SSCG on)  ： S3D1CΦ=250MHz
-		*((volatile uint16_t*)SCIF2_DL) = 0x0088;	/* 250.00MHz/ (115200*16) =  135.67 */
+	if (sscg == 0x0) {					/* MD12=0 (SSCG off) ： S3D1C=266.6MHz */
+		*((volatile uint16_t*)SCIF2_DL) = 0x0091;	/* 266.66MHz/ (115200*16) = 144.67 */
+	} else {						/* MD12=1 (SSCG on)  ： S3D1C=250MHz */
+		*((volatile uint16_t*)SCIF2_DL) = 0x0088;	/* 250.00MHz/ (115200*16) = 135.67 */
 	}
 	*((volatile uint16_t*)SCIF2_CKS)   = 0x4000;	/* select S3D1-Clock */
 	SoftDelay(100);
@@ -234,26 +207,6 @@ void InitScif2_SCIFCLK_D3(void)
 	SoftDelay(100);
 }
 #endif /* RCAR_GEN3_DRAAK */
-
-void InitScif2PinFunction(void)
-{
-	uint32_t dataL;
-
-	dataL = *((volatile uint32_t*)PFC_MOD_SEL1);
-	dataL &= ~BIT12;
-	*((volatile uint32_t*)PFC_PMMR) = ~dataL;
-	*((volatile uint32_t*)PFC_MOD_SEL1) = dataL;
-	
-	dataL = *((volatile uint32_t*)PFC_IPSR12);
-	dataL &= ~0x000000FF;	//IP12[7:4]=4'b0000, IP12[3:0]=4'b0000
-	*((volatile uint32_t*)PFC_PMMR) = ~dataL;
-	*((volatile uint32_t*)PFC_IPSR12) = dataL;
-	
-	dataL = *((volatile uint32_t*)PFC_GPSR5);
-	dataL |= 0x00000C00;	//GP5[11],GP5[10]
-	*((volatile uint32_t*)PFC_PMMR) = ~dataL;
-	*((volatile uint32_t*)PFC_GPSR5) = dataL;
-}
 
 void SetScif2_DL(uint16_t setData)
 {

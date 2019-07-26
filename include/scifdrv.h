@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018, Renesas Electronics Corporation
+ * Copyright (c) 2015-2019, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,5 +44,4 @@ void InitScif2_SCIFCLK_D3(void);
 #endif /* RCAR_GEN3_DRAAK */
 void SetScif2_DL(uint16_t setData);
 void SetScif2_BRR(uint8_t setData);
-void InitScif2PinFunction(void);
 uint32_t SCIF_TerminalInputCheck(char* str);

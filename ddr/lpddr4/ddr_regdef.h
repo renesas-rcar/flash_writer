@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2015-2019, Renesas Electronics Corporation. All rights reserved.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #define _reg_PHY_DQ_DM_SWIZZLE0                            0x00000000U
 #define _reg_PHY_DQ_DM_SWIZZLE1                            0x00000001U
 #define _reg_PHY_CLK_WR_BYPASS_SLAVE_DELAY                 0x00000002U
@@ -1176,8 +1182,7 @@
 #define DDR_REGDEF_LEN(regdef) (((regdef)>>16)&0xff)
 #define DDR_REGDEF_LSB(regdef) (((regdef)>>24)&0xff)
 
-const static uint32_t DDR_REGDEF_TBL[4][1173] =
-{
+static const uint32_t DDR_REGDEF_TBL[4][1173] = {
 	{
 /*0000*/	0xffffffffU,
 /*0001*/	0xffffffffU,

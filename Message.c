@@ -33,8 +33,8 @@
 /**********************
 *  TITLE              *
 ***********************/
-#define WRITER_VERSION	"V1.09"		/* Software Version */
-#define WRITER_DATE	"Apr.17,2019"	/* Release date */
+#define WRITER_VERSION	"V1.10"		/* Software Version */
+#define WRITER_DATE	"Jul.25,2019"	/* Release date */
 
 #ifdef RCAR_GEN3_SALVATOR
 #define SOC_NAME	"H3/M3/M3N"	/* Salvator-X/XS and Starter Kit */

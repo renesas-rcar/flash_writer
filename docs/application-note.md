@@ -48,24 +48,24 @@ The following table lists the hardware needed to use this function.
 The following table shows Serial Flash and eMMC support for each SoC.
 
 ##### Serial Flash / eMMC support status of each SoC
-| SoC                                            | Read/Write the Serial Flash | Boot from the Serial Flash | Read/Write the eMMC | Boot from the eMMC | MMC interface |
-|------------------------------------------------|-----------------------------|----------------------------|---------------------|--------------------|---------------|
-| R-Car E3 Ver.1.1 / Ver.1.0                     | Support                     | Support                    | Support             | Support            | MMC1          |
-| R-Car M3N Ver.1.1                              | Support                     | Support                    | Support             | Support            | MMC0          |
-| R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 | Support                     | Support                    | Support             | Support            | MMC0          |
-| R-Car H3 Ver.3.0 / Ver.2.0                     | Support                     | Support                    | Support             | Support            | MMC0          |
-| R-Car H3 Ver.1.1 / Ver.1.0                     | Support                     | Support                    | Support             | Not support        | MMC0          |
+| SoC                                                      | Read/Write the Serial Flash | Boot from the Serial Flash | Read/Write the eMMC | Boot from the eMMC | MMC interface |
+|----------------------------------------------------------|-----------------------------|----------------------------|---------------------|--------------------|---------------|
+| R-Car E3 Ver.1.1 / Ver.1.0                               | Support                     | Support                    | Support             | Support            | MMC1          |
+| R-Car M3N Ver.1.1                                        | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car H3 Ver.3.0 / Ver.2.0                               | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car H3 Ver.1.1 / Ver.1.0                               | Support                     | Support                    | Support             | Not support        | MMC0          |
 
 The following table shows USB support for each SoC.
 
 ##### USB download support status of each SoC
-| SoC                                            | Image download by USB | Boot from the USB download mode |
-|------------------------------------------------|-----------------------|---------------------------------|
-| R-Car E3 Ver.1.1 / Ver.1.0                     | Support               | Support                         |
-| R-Car M3N Ver.1.1                              | Support               | Support                         |
-| R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 | Support               | Not Support                     |
-| R-Car H3 Ver.3.0 / Ver.2.0                     | Support               | Support                         |
-| R-Car H3 Ver.1.1 / Ver.1.0                     | Support               | Not support                     |
+| SoC                                                      | Image download by USB | Boot from the USB download mode |
+|----------------------------------------------------------|-----------------------|---------------------------------|
+| R-Car E3 Ver.1.1 / Ver.1.0                               | Support               | Support                         |
+| R-Car M3N Ver.1.1                                        | Support               | Support                         |
+| R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 | Support               | Not Support                     |
+| R-Car H3 Ver.3.0 / Ver.2.0                               | Support               | Support                         |
+| R-Car H3 Ver.1.1 / Ver.1.0                               | Support               | Not support                     |
 
 USB 2.0 High-speed is supported. USB device class is CDC ACM compliant.<BR>
 Host PC's USB driver uses OS standard in-box driver.<BR>
@@ -89,8 +89,8 @@ The following table lists the software needed to use this function.
 ##### Software environment
 | Name             | Note                                                             |
 |------------------|------------------------------------------------------------------|
-| Linaro Toolchain | Linaro Binary Toolchain Release GCC 7.2-2017.11 for aarch64-elf. |
-|                  | Linaro Binary Toolchain Release GCC 7.2-2017.11 for arm-eabi.    |
+| Linaro Toolchain | Linaro Binary Toolchain Release GCC 7.3-2018.05 for aarch64-elf. |
+|                  | Linaro Binary Toolchain Release GCC 7.3-2018.05 for arm-eabi.    |
 
 
 # 3. Software
@@ -176,7 +176,7 @@ This option must match the using compiler.<BR>
 
 | AArch | CPU architecture setting                                                                                                                      |
 |-------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| 32    | Generate binary that works on AArch32.<BR>It works on both the AP-system Core(i.e. Cortex-A57/A53) and the ARM Realtime Core(i.e. Cortex-R7). |
+| 32    | Generate binary that works on AArch32.<BR>It works on both the AP-system Core(i.e. Cortex-A57/A53) and the Arm Realtime Core(i.e. Cortex-R7). |
 | 64    | Generate binary that works on AArch64.<BR>It works on only the AP-System Core(i.e. Cortex-A57/A53).                                           |
 
 ### 3.3.2. BOARD<BR>
@@ -205,20 +205,7 @@ Describe the details of the SCIF/USB download image as follows:
 ##### Detail of binary image
 ![Detail of binary image](images/detail_of_binary_image.png)
 
-### 3.3.4. SCIF_CLK<BR>
-Select from the following table according to the clock to be supplied to SCIF.<BR>
-This setting is valid when "SALVATOR" is selected with the BOARD option.<BR>
-If this option is not selected, the default value is EXTERNAL.<BR>
-
-##### Association table for the SCIF_CLK value and valid SCIF clock source settings
-| SCIF_CLK | SCIF clock source setting                                                                                                                                 |
-|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| INTERNAL | The SCIF clock source is S3D4&phi; (i.e. 66.6666MHz) in the SoC.<BR>H3 Ver.1.0: Maximum baud rate is 115200bps.<BR>Other: Maximum baud rate is 230400bps. |
-| EXTERNAL | The SCIF clock source is SCK2 pin. (default)<BR>Maximum baud rate is 921600bps.<BR>Please supply the 14.7456MHz to the SCK2 pin.                          |
-
-*Note) On the Salvator-X/XS board, 14.7456MHz is supplied to the SCK2 pin.*
-
-### 3.3.5. USB
+### 3.3.4. USB
 Select from the following table according to the USB download function.<BR>
 If this option is not selected, the default value is ENABLE.<BR>
 
@@ -228,7 +215,7 @@ If this option is not selected, the default value is ENABLE.<BR>
 | ENABLE  | USB download function is available. (default) |
 | DISABLE | USB download function is not available.       |
 
-### 3.3.6. SERIAL_FLASH
+### 3.3.5. SERIAL_FLASH
 Select from the following table according to the Serial Flash writing function.<BR>
 If this option is not selected, the default value is ENABLE.<BR>
 
@@ -238,7 +225,7 @@ If this option is not selected, the default value is ENABLE.<BR>
 | ENABLE       | Serial Flash writing function is available. (default) |
 | DISABLE      | Serial Flash writing function is not available.       |
 
-### 3.3.7 eMMC
+### 3.3.6 eMMC
 Select from the following table according to the eMMC writing function.<BR>
 If this option is not selected, the default value is ENABLE.<BR>
 
@@ -987,13 +974,10 @@ This command will change the baud rate of the SCIF.<BR>
 Baud rate is dependent on the SoC and the SCIF clock.<BR>
 
 ##### Baud rate settings after command execution
-| SoC                                                                                           | SCIF clock settings<BR>(Build option) | Baud rate at startup | Baud rate at After command execution |
-|-----------------------------------------------------------------------------------------------|---------------------------------------|---------------------:|-------------------------------------:|
-| R-Car E3 Ver.1.1 / Ver.1.0                                                                    | Don't care                            | 115200bps            |                            921600bps |
-| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | External clock                        | 115200bps            |                            921600bps |
-|                                                                                               | Internal clock                        | 115200bps            |                            230400bps |
-| R-Car H3 Ver.1.0                                                                              | External clock                        | 57600bps             |                            460800bps |
-|                                                                                               | Internal clock                        | 57600bps             |                            115200bps |
+| SoC                                                                                           | Baud rate at startup | Baud rate at After command execution |
+|-----------------------------------------------------------------------------------------------|---------------------:|-------------------------------------:|
+| R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | 115200bps            |                            921600bps |
+| R-Car H3 Ver.1.0                                                                              | 57600bps             |                            921600bps |
 
 *Note) The baud rate that has been changed in this command cannot be undone until the power is turned off.*<BR>
 *Note) In the case of USB connection by CN9, this command has no effect.*
@@ -1036,15 +1020,15 @@ Gets cross compiler. To decompress it. Command is the following.<BR>
 32 bit compiler:
 ```shell
 $ cd ~/
-$ wget https://releases.linaro.org/components/toolchain/binaries/7.2-2017.11/arm-eabi/gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi.tar.xz
-$ tar xvf gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi.tar.xz
+$ wget https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-eabi/gcc-linaro-7.3.1-2018.05-x86_64_arm-eabi.tar.xz
+$ tar xvf gcc-linaro-7.3.1-2018.05-x86_64_arm-eabi.tar.xz
 ```
 
 64 bit compiler:
 ```shell
 $ cd ~/
-$ wget https://releases.linaro.org/components/toolchain/binaries/7.2-2017.11/aarch64-elf/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf.tar.xz
-$ tar xvf gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf.tar.xz
+$ wget https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/aarch64-elf/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-elf.tar.xz
+$ tar xvf gcc-linaro-7.3.1-2018.05-x86_64_aarch64-elf.tar.xz
 ```
 
 ## 4.2. Prepare the source code
@@ -1061,7 +1045,7 @@ S-record file is built by the following command.<BR>
 32 bit compiler:
 ```shell
 $ make AArch=32 clean
-$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi/bin/arm-eabi- make AArch=32
+$ CROSS_COMPILE=~/gcc-linaro-7.3.1-2018.05-x86_64_arm-eabi/bin/arm-eabi- make AArch=32
 ```
 Output the following image.<BR>
 * ./AArch32_output/AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.mot
@@ -1069,7 +1053,7 @@ Output the following image.<BR>
 64 bit compiler:
 ```shell
 $ make AArch=64 clean
-$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64
+$ CROSS_COMPILE=~/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64
 ```
 Output the following image.<BR>
 * ./AArch64_output/AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.mot
@@ -1103,26 +1087,26 @@ Start the target in the SCIF download mode and run Flash writer sample code.<BR>
 The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 
 ##### Dip switch configuration for SCIF download mode on Salvator-X/XS
-| SoC                                                        | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
-|----------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
-|                                                                      |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                      | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
-|                                                                      |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                      | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | OFF | OFF | OFF |
-|                                                                      |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-| R-Car H3 Ver.1.1                                                     | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | OFF | OFF |
-|                                                                      |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                      | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | OFF | OFF |
-|                                                                      |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                      | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
-|                                                                      |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-| R-Car H3 Ver.1.0                                                     | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | OFF | OFF |
-|                                                                      |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
-|                                                                      | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | OFF | OFF |
-|                                                                      |                    | SW12 | MODESW-C | ON  | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
-|                                                                      | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF |
-|                                                                      |                    | SW12 | MODESW-C | -*1 | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+| SoC                                                                                                 | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------------------------------------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | OFF | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+| R-Car H3 Ver.1.1                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+| R-Car H3 Ver.1.0                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
@@ -1144,16 +1128,16 @@ The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 The following table shows the Dip-Switch Setting for USB download mode.
 
 ##### Dip switch configuration for USB download mode on Salvator-X/XS
-| SoC                    | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
-|----------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 *2 | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
-| R-Car M3N Ver.1.1<BR> R-Car H3 Ver.3.0 / Ver.2.0   | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
-|                                        |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                        | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
-|                                        |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                        | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | OFF | OFF | ON  |
-|                                        |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-| R-Car H3 Ver.1.1 / Ver.1.0 *3          | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
+| SoC                                               | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|-------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 *2 | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
+| R-Car M3N Ver.1.1<BR> R-Car H3 Ver.3.0 / Ver.2.0            | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
+|                                                             |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                             | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | OFF | ON  |
+|                                                             |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                             | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | OFF | OFF | ON  |
+|                                                             |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+| R-Car H3 Ver.1.1 / Ver.1.0 *3                               | -                  | -    | -        | -   | -   | -   | -   | -   | -   | -   | -   |
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 \*2: M3 cannot be boot from the USB download mode.<BR>
@@ -1218,10 +1202,10 @@ Connect the Host PC to CN25 or CN9 connector using the USB cable.<BR>
 The following table shows the setting of terminal software.<BR>
 
 ##### Terminal software configuration
-| SoC                                                                                           | Baud rate  | Data bit length | Parity check | Stop bits | Flow control |
-|-----------------------------------------------------------------------------------------------|-----------:|-----------------|--------------|-----------|--------------|
-| R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | 115200bps  | 8bits           | none         | 1bit      | none         |
-| R-Car H3 Ver.1.0                                                                              |  57600bps  | 8bits           | none         | 1bit      | none         |
+| SoC                                                                                                                                                    | Baud rate  | Data bit length | Parity check | Stop bits | Flow control |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------|-----------:|-----------------|--------------|-----------|--------------|
+| R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | 115200bps  | 8bits           | none         | 1bit      | none         |
+| R-Car H3 Ver.1.0                                                                                                                                       |  57600bps  | 8bits           | none         | 1bit      | none         |
 
 *Note) In the case of USB connection by CN9, this setting has no effect. Therefore it does not affect USB transfer speed.<BR>*
 
@@ -1257,41 +1241,41 @@ To boot from the eMMC, need to change the Dip-switch setting.<BR>
 The following table shows the Dip-Switch Setting.<BR>
 
 #### Dip switch configuration for boot from the eMMC on Salvator-X/XS (50MHz x8 bus width mode)
-| SoC                                                           | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
-|----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|----|----|-----|-----|----|-----|
-| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
-|                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON | ON | ON  | ON  | ON | ON  |
-|                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
-|                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON | ON | ON  | ON  | ON | ON  |
-|                                                                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON | ON | OFF | OFF | ON | OFF |
-|                                                                            |                    | SW12 | MODESW-C | -*1 | ON  | ON | ON | ON  | ON  | ON | ON  |
-| R-Car H3 Ver.1.1 *2                                                        | -                  | -    | -        | -   | -   | -  | -  | -   | -   | -  | -   |
-| R-Car H3 Ver.1.0 *2                                                        | -                  | -    | -        | -   | -   | -  | -  | -   | -   | -  | -   |
+| SoC                                                                                              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------------------------------------------------------------------------------------------------------|--------------------|------|----------|-----|-----|----|----|-----|-----|----|-----|
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON | ON | ON  | ON  | ON | ON  |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON | ON | OFF | OFF | ON | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON | ON | ON  | ON  | ON | ON  |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON | ON | OFF | OFF | ON | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | ON | ON | ON  | ON  | ON | ON  |
+| R-Car H3 Ver.1.1 *2                                                                                           | -                  | -    | -        | -   | -   | -  | -  | -   | -   | -  | -   |
+| R-Car H3 Ver.1.0 *2                                                                                           | -                  | -    | -        | -   | -   | -  | -  | -   | -   | -  | -   |
 
 \*1: Don't care this setting for Coretex-R7 boot mode.<BR>
 \*2: H3 Ver.1.0 and H3 Ver.1.1 cannot be boot from the eMMC.<BR>
 
 #### Dip switch configuration for boot from the Serial NOR Flash on Salvator-X/XS (Single read 40MHz)
-| SoC                                                              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
-|----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
-|                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-|                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
-|                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-|                                                                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | ON  | OFF | OFF |
-|                                                                            |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-| R-Car H3 Ver.1.1                                                           | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | ON  | OFF | OFF |
-|                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | ON  | OFF | OFF |
-|                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | ON  | OFF | OFF |
-|                                                                            |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-| R-Car H3 Ver.1.0                                                           | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | ON  | OFF | OFF |
-|                                                                            |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
-|                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | ON  | OFF | OFF |
-|                                                                            |                    | SW12 | MODESW-C | ON  | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
-|                                                                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | OFF | ON  | OFF | OFF |
-|                                                                            |                    | SW12 | MODESW-C | -*1 | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+| SoC                                                                                                 | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------------------------------------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 /  Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | ON  | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+| R-Car H3 Ver.1.1                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | ON  | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | ON  | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | ON  | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+| R-Car H3 Ver.1.0                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | ON  | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | ON  | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | OFF | ON  | OFF | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
 
 \*1: Don't care this setting for Coretex-R7 boot mode.<BR>
 
@@ -1304,26 +1288,26 @@ The following table shows the Dip-Switch Setting.<BR>
 | SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
 
 #### Dip switch configuration for boot from the HyperFlash&trade; on Salvator-X/XS (160MHz DDR)
-| SoC                                                              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
-|----------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
-|                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-|                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
-|                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-|                                                                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | OFF | ON  | OFF |
-|                                                                            |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-| R-Car H3 Ver.1.1                                                           | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | ON  | ON*2 |
-|                                                                            |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | ON  | ON*2 |
-|                                                                            |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | ON  | ON*2 |
-|                                                                            |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-| R-Car H3 Ver.1.0                                                           | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | ON  | ON*2 |
-|                                                                            |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
-|                                                                            | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | ON  | OFF |
-|                                                                            |                    | SW12 | MODESW-C | ON  | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
-|                                                                            | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | OFF | OFF | ON  | OFF |
-|                                                                            |                    | SW12 | MODESW-C | -*1 | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+| SoC                                                                                                 | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------------------------------------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | OFF | ON  | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
+| R-Car H3 Ver.1.1                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | ON  | ON*2 |
+|                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | ON  | ON*2 |
+|                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | ON  | ON*2 |
+|                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
+| R-Car H3 Ver.1.0                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | ON  | ON*2 |
+|                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | ON  | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | OFF | OFF | ON  | OFF |
+|                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
 
 \*1: Don't care this setting for Coretex-R7 boot mode.<BR>
 \*2: Set to 80MHz DDR mode, because LSI specification.<BR>
@@ -1836,31 +1820,31 @@ In case of Ebisu-4D board, replace the BOARD option with "EBISU4D".<BR>
 ##### In case of disable the USB download function
 ```shell
 $ make AArch=32 clean
-$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU USB=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.3.1-2018.05-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU USB=DISABLE
 ```
 ```shell
 $ make AArch=64 clean
-$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU USB=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU USB=DISABLE
 ```
 
 ##### In case of disable the Serial Flash writing function
 ```shell
 $ make AArch=32 clean
-$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU SERIAL_FLASH=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.3.1-2018.05-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU SERIAL_FLASH=DISABLE
 ```
 ```shell
 $ make AArch=64 clean
-$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU SERIAL_FLASH=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU SERIAL_FLASH=DISABLE
 ```
 
 ##### In case of disable the eMMC writing function
 ```shell
 $ make AArch=32 clean
-$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU EMMC=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.3.1-2018.05-x86_64_arm-eabi/bin/arm-eabi- make AArch=32 BOARD=EBISU EMMC=DISABLE
 ```
 ```shell
 $ make AArch=64 clean
-$ CROSS_COMPILE=~/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU EMMC=DISABLE
+$ CROSS_COMPILE=~/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-elf/bin/aarch64-elf- make AArch=64 BOARD=EBISU EMMC=DISABLE
 ```
 
 # 8. Revision history
@@ -1945,4 +1929,14 @@ Describe the revision history of Flash writer.
 - Update DDR setting for E3.<BR>
 - Update RPC PHY calibration setting.<BR>
 - Remove function to use 4QPP command with page buffer for Serial Flash.<BR>
+- Update application note.<BR>
+
+## 8.11. V1.0.10
+- Add R-Car M3 Ver.3.0 support.<BR>
+- Update DDR setting for H3/M3/M3N.<BR>
+- Update DDR setting for E3.<BR>
+- Remove build option to select SCIF clock in Salvator-X/XS board.<BR>
+- Optimize SCIF baud rate in Salvator-X/XS board, up to 921600bps for all SoCs.<BR>
+- Update Linaro Toolchain from GCC 7.2 to GCC 7.3.<BR>
+- Update USB libraries rebuilt with GCC 7.3.<BR>
 - Update application note.<BR>

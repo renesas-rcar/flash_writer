@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#define RCAR_DDR_VERSION        "rev.0.35"
+#define RCAR_DDR_VERSION        "rev.0.37"
 #define DRAM_CH_CNT		0x04
 #define SLICE_CNT		0x04
 #define CS_CNT			0x02
@@ -14,13 +14,16 @@
 #define CHAB_CNT		(DRAM_CH_CNT*2)
 
 /* for pll setting */
-#define CLK_DIV(a,diva, b,divb) (((a)*(divb))/((b)*(diva)))
-#define CLK_MUL(a,diva, b,divb) (((a)*(b))/((diva)*(divb)))
+#define CLK_DIV(a, diva, b, divb) (((a)*(divb))/((b)*(diva)))
+#define CLK_MUL(a, diva, b, divb) (((a)*(b))/((diva)*(divb)))
+
+#define CLK_DIV_RU(a, diva, b, divb) (((a)*(divb)+(b)*(diva)-1)/((b)*(diva)))
+#define CLK_MUL_RU(a, diva, b, divb) (((a)*(b)+(diva)*(divb)-1)/((diva)*(divb)))
 
 /* for ddr deisity setting */
-#define DBMEMCONF_REG(d3,row,bank,col,dw) ((d3)<<30 | ((row)<<24) | ((bank)<<16) | ((col)<<8) | (dw))
-#define DBMEMCONF_REGD(density) (DBMEMCONF_REG((density)%2,((density)+1)/2+(29-3-10-2),3,10,2))
-#define DBMEMCONF_VAL(ch,cs) (DBMEMCONF_REGD(DBMEMCONF_DENS(ch,cs)))
+#define DBMEMCONF_REG(d3, row, bank, col, dw) ((d3)<<30 | ((row)<<24) | ((bank)<<16) | ((col)<<8) | (dw))
+#define DBMEMCONF_REGD(density) (DBMEMCONF_REG((density)%2, ((density)+1)/2+(29-3-10-2), 3, 10, 2))
+#define DBMEMCONF_VAL(ch, cs) (DBMEMCONF_REGD(DBMEMCONF_DENS(ch, cs)))
 
 /* refresh mode */
 #define DBSC_REFINTS		0x0		// 0: Average interval is REFINT. / 1: Average interval is 1/2 REFINT.
@@ -68,7 +71,7 @@
 #define DBSC_DBPHYCONF0		0xE6790010U
 #define DBSC_DBKIND		0xE6790020U
 
-#define DBSC_DBMEMCONF(ch,cs)	(0xE6790030U+0x10U*ch+0x04U*cs)
+#define DBSC_DBMEMCONF(ch, cs)	(0xE6790030U+0x10U*ch+0x04U*cs)
 #define DBSC_DBMEMCONF_0_0	0xE6790030U
 #define DBSC_DBMEMCONF_0_1	0xE6790034U
 #define DBSC_DBMEMCONF_0_2	0xE6790038U
@@ -139,11 +142,11 @@
 #define DBSC_DBDFIPMSTRCNF	0xE6790520U
 #define DBSC_DBDFICUPDCNF	0xE679052CU
 
-#define DBSC_INITCOMP(ch)	(0xE6790600U+0x40U*(ch))
-#define DBSC_INITCOMP_0		0xE6790600U
-#define DBSC_INITCOMP_1		0xE6790640U
-#define DBSC_INITCOMP_2		0xE6790680U
-#define DBSC_INITCOMP_3		0xE67906C0U
+#define DBSC_DBDFISTAT(ch)	(0xE6790600U+0x40U*(ch))
+#define DBSC_DBDFISTAT_0	0xE6790600U
+#define DBSC_DBDFISTAT_1	0xE6790640U
+#define DBSC_DBDFISTAT_2	0xE6790680U
+#define DBSC_DBDFISTAT_3	0xE67906C0U
 
 #define DBSC_DBDFICNT(ch)	(0xE6790604U+0x40U*(ch))
 #define DBSC_DBDFICNT_0		0xE6790604U
