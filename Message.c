@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019, Renesas Electronics Corporation
+ * Copyright (c) 2015-2020, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,8 +33,8 @@
 /**********************
 *  TITLE              *
 ***********************/
-#define WRITER_VERSION	"V1.10"		/* Software Version */
-#define WRITER_DATE	"Jul.25,2019"	/* Release date */
+#define WRITER_VERSION	"V1.11"		/* Software Version */
+#define WRITER_DATE	"Feb.12,2020"	/* Release date */
 
 #ifdef RCAR_GEN3_SALVATOR
 #define SOC_NAME	"H3/M3/M3N"	/* Salvator-X/XS and Starter Kit */

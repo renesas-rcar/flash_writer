@@ -1940,3 +1940,7 @@ Describe the revision history of Flash writer.
 - Update Linaro Toolchain from GCC 7.2 to GCC 7.3.<BR>
 - Update USB libraries rebuilt with GCC 7.3.<BR>
 - Update application note.<BR>
+
+## 8.12. V1.0.11
+- Update DDR setting for H3/M3/M3N.<BR>
+- Update application note.<BR>
