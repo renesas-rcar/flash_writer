@@ -1290,7 +1290,7 @@ The following table shows the Dip-Switch Setting.<BR>
 #### Dip switch configuration for boot from the HyperFlash&trade; on Salvator-X/XS (160MHz DDR)
 | SoC                                                                                                 | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------------------------------------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | ON | ON | OFF  | ON |
 |                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
 |                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
 |                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
