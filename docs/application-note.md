@@ -1258,23 +1258,23 @@ The following table shows the Dip-Switch Setting.<BR>
 #### Dip switch configuration for boot from the Serial NOR Flash on Salvator-X/XS (Single read 40MHz)
 | SoC                                                                                                 | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------------------------------------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 /  Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | ON  | OFF | ON  | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | ON  | OFF | OFF |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | ON  | OFF | ON  | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | ON  | OFF | OFF |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | ON  | OFF | ON  | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-| R-Car H3 Ver.1.1                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | ON  | OFF | OFF |
+| R-Car H3 Ver.1.1                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | ON  | OFF | ON  | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | ON  | OFF | OFF |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | ON  | OFF | ON  | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | ON  | OFF | OFF |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | ON  | OFF | ON  | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-| R-Car H3 Ver.1.0                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | ON  | OFF | OFF |
+| R-Car H3 Ver.1.0                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | ON  | OFF | ON  | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
-|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | ON  | OFF | OFF |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | ON  | OFF | ON  | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
-|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | OFF | ON  | OFF | OFF |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | ON  | OFF | ON  | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
 
 \*1: Don't care this setting for Coretex-R7 boot mode.<BR>
@@ -1290,23 +1290,23 @@ The following table shows the Dip-Switch Setting.<BR>
 #### Dip switch configuration for boot from the HyperFlash&trade; on Salvator-X/XS (160MHz DDR)
 | SoC                                                                                                 | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------------------------------------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | ON | ON | OFF  | ON |
+| R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | ON  | ON  | OFF | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | OFF | OFF | ON  | OFF |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | ON  | ON  | ON  | ON  | OFF | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | OFF | OFF | ON  | OFF |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | ON  | ON  | ON  | ON  | OFF | ON  |
 |                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  |  ON | ON  |
-| R-Car H3 Ver.1.1                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | ON  | ON*2 |
+| R-Car H3 Ver.1.1                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | ON  | ON  | OFF | OFF*2 |
 |                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | OFF | OFF | ON  | ON*2 |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | ON  | ON  | ON  | OFF | OFF*2 |
 |                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | OFF | OFF | ON  | ON*2 |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | ON  | ON  | ON  | OFF | OFF*2 |
 |                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | ON  | ON  | ON  | ON  | ON  | ON  |
-| R-Car H3 Ver.1.0                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | ON  | ON*2 |
+| R-Car H3 Ver.1.0                                                                                              | Cortex-A57 AArch64 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | ON  | ON  | OFF | OFF*2 |
 |                                                                                                               |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
-|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | OFF | OFF | ON  | OFF |
+|                                                                                                               | Cortex-A57 AArch32 | SW10 | MODESW-A | ON  | ON  | OFF | OFF | ON  | ON  | OFF | OFF*2 |
 |                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
-|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | OFF | OFF | ON  | OFF |
+|                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | ON  | ON  | OFF | OFF*2 |
 |                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
 
 \*1: Don't care this setting for Coretex-R7 boot mode.<BR>
