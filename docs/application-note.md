@@ -1,7 +1,7 @@
 # 1. Overview
 -------------
 ## 1.1. Overview
-This document explains about R-Car H3/M3/M3N/E3 Flash writer sample software.<BR>
+This document explains about R-Car H3/M3/M3N/E3/D3 Flash writer sample software.<BR>
 The Flash writer is downloaded from the Host PC via SCIF or USB by boot ROM.<BR>
 And the Flash writer downloads the some of the raw images from Host PC via SCIF or USB, and writes the raw images to the Serial NOR Flash and HyperFlash&trade;(hereafter referred to as &ldquo;Serial Flash&rdquo;), eMMC.<BR>
 The Flash wrriter Serial Flash writing support is HyperFlash&trade; in SiP packge, and on-board Serial NOR Flash(i.e. S25FS128S).<BR>
@@ -35,21 +35,23 @@ There is no restriction in this revision.
 ## 2.1. Hardware Environment
 The following table lists the hardware needed to use this function.
 
-##### Hardware environment (R-Car H3/M3/M3N/E3)
+##### Hardware environment (R-Car H3/M3/M3N/E3/D3)
 | Name                          | Note                                      |
 |-------------------------------|-------------------------------------------|
-| R-Car H3-SiP System Evaluation Board Salvator-X<BR>R-Car M3-SiP System Evaluation Board Salvator-X<BR>R-Car H3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3N-SiP System Evaluation Board Salvator-XS<BR>R-Car E3 System Evaluation Board Ebisu<BR>R-Car E3 System Evaluation Board Ebisu-4D | RTP0RC7795SIPB0010S / RTP0RC7795SIPB0011S<BR>RTP0RC7796SIPB0010S / RTP0RC7796SIPB0011S<BR>RTP0RC7795SIPB0012S<BR>RTP0RC7796SIPB0012S<BR>RTP0RC77965SIPB012S<BR>RTP0RC77990SEB0010S<BR>RTP0RC77990SEB0020SA00 |
+| R-Car H3-SiP System Evaluation Board Salvator-X<BR>R-Car M3-SiP System Evaluation Board Salvator-X<BR>R-Car H3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3N-SiP System Evaluation Board Salvator-XS<BR>R-Car E3 System Evaluation Board Ebisu<BR>R-Car E3 System Evaluation Board Ebisu-4D<BR>R-Car D3 System Evaluation Board Draak | RTP0RC7795SIPB0010S / RTP0RC7795SIPB0011S<BR>RTP0RC7796SIPB0010S / RTP0RC7796SIPB0011S<BR>RTP0RC7795SIPB0012S<BR>RTP0RC7796SIPB0012S<BR>RTP0RC77965SIPB012S<BR>RTP0RC77990SEB0010S<BR>RTP0RC77990SEB0020SA00<BR>RTP0RC77995SEB0010S |
 | Host PC                       | Ubuntu Desktop 14.04(64bit) or later          |
 | USB cable (type A to micro B) | Connect to CN25 when using UART connection. (SCIF2)<BR>Connect to CN9 when using USB connection. (HS-USB) |
 
 *Note) RTP0RC7795SIPB0010S needs to update to the latest PMIC-EEPROM settings.*<BR>
-*Note) After starting the Flash writer, CN9 and CN25 can not be used in parallel. Please use only either one.*
+*Note) After starting the Flash writer, CN9 and CN25 can not be used in parallel. Please use only either one.*<BR>
+*Note) USB type A to type A cable is required when using USB download mode on Draak Board.*<BR>
 
 The following table shows Serial Flash and eMMC support for each SoC.
 
 ##### Serial Flash / eMMC support status of each SoC
 | SoC                                                      | Read/Write the Serial Flash | Boot from the Serial Flash | Read/Write the eMMC | Boot from the eMMC | MMC interface |
 |----------------------------------------------------------|-----------------------------|----------------------------|---------------------|--------------------|---------------|
+| R-Car D3 Ver.1.1 / Ver.1.0                               | Support                     | Support                    | Support             | Support            | MMC0          |
 | R-Car E3 Ver.1.1 / Ver.1.0                               | Support                     | Support                    | Support             | Support            | MMC1          |
 | R-Car M3N Ver.1.1                                        | Support                     | Support                    | Support             | Support            | MMC0          |
 | R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 | Support                     | Support                    | Support             | Support            | MMC0          |
@@ -61,6 +63,7 @@ The following table shows USB support for each SoC.
 ##### USB download support status of each SoC
 | SoC                                                      | Image download by USB | Boot from the USB download mode |
 |----------------------------------------------------------|-----------------------|---------------------------------|
+| R-Car D3 Ver.1.1 / Ver.1.0                               | Support               | Support                         |
 | R-Car E3 Ver.1.1 / Ver.1.0                               | Support               | Support                         |
 | R-Car M3N Ver.1.1                                        | Support               | Support                         |
 | R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 | Support               | Not Support                     |
@@ -75,6 +78,7 @@ The following table shows USB Vendor ID and Product ID.
 ##### List of USB Vendor ID and Product ID
 | SoC       | Vendor ID (Renesas) | Product ID |
 |-----------|---------------------|------------|
+| R-Car D3  | 0x045B              | 0x0247     |
 | R-Car E3  | 0x045B              | 0x024D     |
 | R-Car M3N | 0x045B              | 0x0248     |
 | R-Car M3  | 0x045B              | 0x023D     |
@@ -188,6 +192,7 @@ If this option is not selected, the default value is SALVATOR.<BR>
 | SALVATOR | Generate binary that works on Salvator-X/XS board. (default) |
 | EBISU    | Generate binary that works on Ebisu board.                   |
 | EBISU4D  | Generate binary that works on Ebisu-4D board.                |
+| DRAAK    | Generate binary that works on Draak board.                   |
 
 ### 3.3.3. BOOT<BR>
 Select from the following table according to the image header settings.<BR>
@@ -976,7 +981,7 @@ Baud rate is dependent on the SoC and the SCIF clock.<BR>
 ##### Baud rate settings after command execution
 | SoC                                                                                           | Baud rate at startup | Baud rate at After command execution |
 |-----------------------------------------------------------------------------------------------|---------------------:|-------------------------------------:|
-| R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | 115200bps            |                            921600bps |
+| R-Car D3 Ver.1.1 / Ver.1.0<BR> R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | 115200bps            |                            921600bps |
 | R-Car H3 Ver.1.0                                                                              | 57600bps             |                            921600bps |
 
 *Note) The baud rate that has been changed in this command cannot be undone until the power is turned off.*<BR>
@@ -1077,8 +1082,11 @@ The following table lists the relationship between build option and target files
 |       |          | WRITER_WITH_CERT |                  | AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu4d.mot<BR>AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu4d.bin       |
 | 64    |          | WRITER           | AArch64_output   | AArch64_Flash_writer_SCIF_E6304000_ebisu4d.mot<BR>AArch64_Flash_writer_SCIF_E6304000_ebisu4d.bin                             |
 |       |          | WRITER_WITH_CERT |                  | AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu4d.mot<BR>AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu4d.bin       |
+| 64    | DRAAK    | WRITER           | AArch64_output   | AArch64_Flash_writer_SCIF_E6304000_draak.mot<BR>AArch64_Flash_writer_SCIF_E6304000_draak.bin                                 |
+|       |          | WRITER_WITH_CERT |                  | AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_draak.mot<BR>AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_draak.bin           |
 
-*Note) If "BOARD=EBISU" or "BOARD=EBISU4D" specified and build error occerd, add the "USB=DISABLE", "SERIAL_FLASH=DISABLE" or "EMMC=DISABLE" option to reduce binary size.*
+*Note) If "BOARD=EBISU", "BOARD=EBISU4D" or "BOARD=DRAAK" is specified and build error occerd, add the "USB=DISABLE", "SERIAL_FLASH=DISABLE" or "EMMC=DISABLE" option to reduce binary size.*<BR>
+*Note) Draak Board is not supported AArch32.*
 
 # 5. How to run Flash writer
 ---------------------------------
@@ -1125,6 +1133,13 @@ The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
+#### Dip switch configuration for SCIF download mode on Draak
+| SoC              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 |
+|----------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|
+| R-Car D3 Ver.1.1 / Ver.1.0 | Cortex-A53 AArch64 | SW10 | MODESW-A | OFF | ON  | OFF | OFF | OFF | OFF |
+|                            |                    | SW11 | MODESW-B | ON  | ON  | ON  | OFF | ON  | OFF |
+|                            |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | -   | -   |
+
 The following table shows the Dip-Switch Setting for USB download mode.
 
 ##### Dip switch configuration for USB download mode on Salvator-X/XS
@@ -1158,6 +1173,13 @@ The following table shows the Dip-Switch Setting for USB download mode.
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
+#### Dip switch configuration for USB download mode on Draak
+| SoC              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 |
+|----------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|
+| R-Car D3 Ver.1.1 / Ver.1.0 | Cortex-A53 AArch64 | SW10 | MODESW-A | OFF | ON  | OFF | OFF | OFF | ON  |
+|                            |                    | SW11 | MODESW-B | ON  | ON  | ON  | OFF | ON  | OFF |
+|                            |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | -   | -   |
+
 To write to Serial NOR Flash, the following additional settings are required in addition to the setting for SCIF/USB download mode.
 
 ##### Additional dip switch configuration for write to the Serial NOR Flash on Salvator-X/XS (SCIF/USB download mode)
@@ -1175,7 +1197,16 @@ To write to Serial NOR Flash, the following additional settings are required in 
 | SW2           | QSPI-B      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
 | SW3           | QSPI-C      | OFF  | -    | -    | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    | -    | -    |
-| SW31          | QSPI-D      | OFF  | -    | -    | -    | -    | -    | -    | -    |
+| SW31          | QSPI-E      | OFF  | -    | -    | -    | -    | -    | -    | -    |
+
+##### Additional dip switch configuration for write to the Serial NOR Flash on Draak (SCIF/USB download mode)
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 |
+|---------------|-------------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW2           | QSPI-B      | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW3           | QSPI-C      | OFF  | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    |
+| SW31          | QSPI-E      | OFF  | -    | -    | -    | -    | -    |
 
 To write to HyperFlash&trade;, the following additional settings are required in addition to the setting for SCIF/USB download mode.
 
@@ -1194,7 +1225,16 @@ To write to HyperFlash&trade;, the following additional settings are required in
 | SW2           | QSPI-B      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
 | SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
-| SW31          | QSPI-D      | ON   | -    | -    | -    | -    | -    | -    | -    |
+| SW31          | QSPI-E      | ON   | -    | -    | -    | -    | -    | -    | -    |
+
+##### Additional dip switch configuration for write to the HyperFlash&trade; on Draak (SCIF/USB download mode)
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 |
+|---------------|-------------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW2           | QSPI-B      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    |
+| SW31          | QSPI-E      | ON   | -    | -    | -    | -    | -    |
 
 To write to eMMC, additional Dip-switch setting is not necessary.
 
@@ -1204,7 +1244,7 @@ The following table shows the setting of terminal software.<BR>
 ##### Terminal software configuration
 | SoC                                                                                                                                                    | Baud rate  | Data bit length | Parity check | Stop bits | Flow control |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------|-----------:|-----------------|--------------|-----------|--------------|
-| R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | 115200bps  | 8bits           | none         | 1bit      | none         |
+| R-Car D3 Ver.1.1 / Ver.1.0<BR> R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | 115200bps  | 8bits           | none         | 1bit      | none         |
 | R-Car H3 Ver.1.0                                                                                                                                       |  57600bps  | 8bits           | none         | 1bit      | none         |
 
 *Note) In the case of USB connection by CN9, this setting has no effect. Therefore it does not affect USB transfer speed.<BR>*
@@ -1357,7 +1397,7 @@ The following table shows the Dip-Switch Setting.<BR>
 | SW2           | QSPI-B      | ON   | ON   | ON   | ON   | ON   | ON   | ON   | ON   |
 | SW3           | QSPI-C      | OFF  | -    | -    | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    | -    | -    |
-| SW31          | QSPI-D      | OFF  | -    | -    | -    | -    | -    | -    | -    |
+| SW31          | QSPI-E      | OFF  | -    | -    | -    | -    | -    | -    | -    |
 
 #### Dip switch configuration for boot from the HyperFlash&trade; on Ebisu/Ebisu-4D (150MHz DDR)
 | SoC              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
@@ -1381,7 +1421,46 @@ The following table shows the Dip-Switch Setting.<BR>
 | SW2           | QSPI-B      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
 | SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
-| SW31          | QSPI-D      | ON   | -    | -    | -    | -    | -    | -    | -    |
+| SW31          | QSPI-E      | ON   | -    | -    | -    | -    | -    | -    | -    |
+
+#### Dip switch configuration for boot from the eMMC on Draak
+| SoC              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 |
+|----------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|
+| R-Car D3 Ver.1.1 / Ver.1.0 | Cortex-A53 AArch64 | SW10 | MODESW-A | OFF | ON  | OFF | OFF | ON  | OFF |
+|                            |                    | SW11 | MODESW-B | ON  | ON  | ON  | OFF | ON  | OFF |
+|                            |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | -   | -   |
+
+#### Dip switch configuration for boot from the Serial NOR Flash on Draak
+| SoC              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 |
+|----------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|
+| R-Car D3 Ver.1.1 / Ver.1.0 | Cortex-A53 AArch64 | SW10 | MODESW-A | OFF | ON  | ON  | OFF | ON  | ON  |
+|                            |                    | SW11 | MODESW-B | ON  | ON  | ON  | OFF | ON  | OFF |
+|                            |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | -   | -   |
+
+##### Additional dip switch configuration for write to the Serial NOR Flash on Draak (SCIF/USB download mode)
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 |
+|---------------|-------------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW2           | QSPI-B      | ON   | ON   | ON   | ON   | ON   | ON   |
+| SW3           | QSPI-C      | OFF  | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    |
+| SW31          | QSPI-E      | OFF  | -    | -    | -    | -    | -    |
+
+#### Dip switch configuration for boot from the HyperFlash&trade; on Draak
+| SoC              | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 |
+|----------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|
+| R-Car D3 Ver.1.1 / Ver.1.0 | Cortex-A53 AArch64 | SW10 | MODESW-A | OFF | ON  | ON  | ON  | OFF | ON  |
+|                            |                    | SW11 | MODESW-B | ON  | ON  | ON  | OFF | ON  | OFF |
+|                            |                    | SW12 | MODESW-C | OFF | ON  | OFF | OFF | -   | -   |
+
+##### Additional dip switch configuration for write to the HyperFlash&trade; on Draak (SCIF/USB download mode)
+| Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 |
+|---------------|-------------|------|------|------|------|------|------|
+| SW1           | QSPI-A      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW2           | QSPI-B      | OFF  | OFF  | OFF  | OFF  | OFF  | OFF  |
+| SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    |
+| SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    |
+| SW31          | QSPI-E      | ON   | -    | -    | -    | -    | -    |
 
 # 6. USB download API
 
@@ -1811,11 +1890,11 @@ Please uninstall the ModemManager to solve it.
 $ sudo apt-get purge modemmanager
 ```
 
-## 7.4. If "BOARD = EBISU" or "BOARD = EBISU4D" is set in the build option, a build error occured
-The reason for the error is that the binary size of Flash writer exceeds the downloadable size (i.e. 80kBytes) with R-Car E3.<BR>
+## 7.4. If "BOARD = EBISU", "BOARD = EBISU4D" or "BOARD = DRAAK" is set in the build option, a build error occured
+The reason for the error is that the binary size of Flash writer exceeds the downloadable size (i.e. 80kBytes) with R-Car E3 / D3.<BR>
 To solve the build error, reduce the binary size by disable USB download function, Serial Flash writing function or eMMC writing function with the build option.<BR>
 The following shows the exsample of build procedure to reduce the binary size, please select according to use.<BR>
-In case of Ebisu-4D board, replace the BOARD option with "EBISU4D".<BR>
+In case of Ebisu-4D or Draak board, replace the BOARD option with "EBISU4D" or "DRAAK".<BR>
 
 ##### In case of disable the USB download function
 ```shell
@@ -1850,16 +1929,16 @@ $ CROSS_COMPILE=~/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-elf/bin/aarch64-elf- m
 # 8. Revision history
 Describe the revision history of Flash writer.
 
-## 8.1. V1.0.0
+## 8.1. V1.00
 - First release.<BR>
 
-## 8.2. V1.0.1
+## 8.2. V1.01
 - Add R-Car H3 Ver.2.0 support.<BR>
 - Add application note.(Markdown format)<BR>
 - Change boot address from 0xE6302000 to 0xE6304000.<BR>
 - Update DDR setting for H3 Ver.2.0.<BR>
 
-## 8.3. V1.0.2
+## 8.3. V1.02
 - Fix initial key input does not work.<BR>
 - Add R-Car M3 Ver.1.1 support.<BR>
 - Add raw binary transfer mode.<BR>
@@ -1869,7 +1948,7 @@ Describe the revision history of Flash writer.
 - Update DDR setting for M3 Ver.1.1.<BR>
 - Update application note.<BR>
 
-## 8.4. V1.0.3
+## 8.4. V1.03
 - Renamed to Flash writer.<BR>
 - Fix incorrect key input at startup from SCIF download mode.<BR>
 - Add support writing to QSPI Flash and HyperFlash.<BR>
@@ -1877,7 +1956,7 @@ Describe the revision history of Flash writer.
 - Change align binary size to 64-byte boundary.<BR>
 - Update application note.<BR>
 
-## 8.5. V1.0.4
+## 8.5. V1.04
 - Fix binary write error if binary size is odd.<BR>
 - Fix typo of EXT_CSD register byte [177] by EM_DECSD command.<BR>
 - Fix build error if object folder does not exist.<BR>
@@ -1891,7 +1970,7 @@ Describe the revision history of Flash writer.
 - Update DDR setting for M3N Ver.1.0.<BR>
 - Update application note.<BR>
 
-## 8.6. V1.0.5
+## 8.6. V1.05
 - Add R-Car M3N Ver.1.1 support.<BR>
 - Add R-Car E3 Ver.1.0 support.<BR>
 - Add Cortex-A53 CPU support.<BR>
@@ -1902,18 +1981,18 @@ Describe the revision history of Flash writer.
 - Update USB libraries for E3.<BR>
 - Update application note.<BR>
 
-## 8.7. V1.0.6
+## 8.7. V1.06
 - Add R-Car H3 Ver.3.0 support.<BR>
 - Add build option to use eMMC.<BR>
 - Update DDR setting for H3 Ver.3.0.<BR>
 - Update application note.<BR>
 
-## 8.8. V1.0.7
+## 8.8. V1.07
 - Add R-Car M3 Ver.1.2 support.<BR>
 - Add R-Car M3N Ver.1.1 support.<BR>
 - Update application note.<BR>
 
-## 8.9. V1.0.8
+## 8.9. V1.08
 - Fix "EM_W" command does not work if build by GCC 7.2.<BR>
 - Add Ebisu-4D board support.<BR>
 - Update DDR setting for H3/M3/M3N.<BR>
@@ -1922,7 +2001,7 @@ Describe the revision history of Flash writer.
 - Update USB libraries rebuilt with GCC 7.2.<BR>
 - Update application note.<BR>
 
-## 8.10. V1.0.9
+## 8.10. V1.09
 - Add R-Car M3 Ver.1.3 support.<BR>
 - Add R-Car E3 Ver.1.1 support.<BR>
 - Update DDR setting for H3/M3/M3N.<BR>
@@ -1931,7 +2010,7 @@ Describe the revision history of Flash writer.
 - Remove function to use 4QPP command with page buffer for Serial Flash.<BR>
 - Update application note.<BR>
 
-## 8.11. V1.0.10
+## 8.11. V1.10
 - Add R-Car M3 Ver.3.0 support.<BR>
 - Update DDR setting for H3/M3/M3N.<BR>
 - Update DDR setting for E3.<BR>
@@ -1941,6 +2020,11 @@ Describe the revision history of Flash writer.
 - Update USB libraries rebuilt with GCC 7.3.<BR>
 - Update application note.<BR>
 
-## 8.12. V1.0.11
+## 8.12. V1.11
 - Update DDR setting for H3/M3/M3N.<BR>
+- Update application note.<BR>
+
+## 8.13. V1.12
+- Add R-Car D3 Ver.1.1 / Ver.1.0 support.<BR>
+- Add Draak board support.<BR>
 - Update application note.<BR>

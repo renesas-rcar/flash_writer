@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018, Renesas Electronics Corporation
+ * Copyright (c) 2015-2021, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1079,17 +1079,18 @@ int32_t CheckDataChange(uintptr_t checkAdd)
 
 	Data2HexAscii(data,str,4);	PutStr(str,1);
 	while(1){
-		PutStr(" Change ?(Y/N)",0);	GetStr(keyBuf,&chCnt);
-		if(chCnt==1){
-			if((keyBuf[0]=='Y')||(keyBuf[0]=='y')){
-				PutStr(" Please Input New Data ",1);
-				SetData(&data);
-				*((uint32_t*)checkAdd) = data;
-				change = CHANGE_ON;
-				break;
-			}
-			if((keyBuf[0]=='N')||(keyBuf[0]=='n'))
-				break;
+		PutStr(" Change ?(Y/N)",0);
+		if( WaitKeyIn_YorN() ){	// Return1=N
+			DelStr(34);
+			PutStr(" Exit ",1);
+			break;
+		}
+		else {
+			PutStr(" Please Input New Data ",1);
+			SetData(&data);
+			*((uint32_t*)checkAdd) = data;
+			change = CHANGE_ON;
+			break;
 		}
 	}
 	return(change);

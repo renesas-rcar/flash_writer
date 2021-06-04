@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Renesas Electronics Corporation
+ * Copyright (c) 2015-2021, Renesas Electronics Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,6 +38,7 @@
 void InitDma01_Data(uint32_t prgStartAd, uint32_t sector_Ad, uint32_t accessCount)
 {
 	//DMA Setting
+	*((volatile uint32_t*)SYSDMAC_DMASEC_0)    =  0x00000001;		//	Secure Contorol
 	*((volatile uint32_t*)SYSDMAC_DMASAR_0)    =  sector_Ad;		//	RPC area
 	*((volatile uint32_t*)SYSDMAC_DMADAR_0)    =  prgStartAd;		//	
 	*((volatile uint32_t*)SYSDMAC_DMATCR_0)    =  accessCount;		//
