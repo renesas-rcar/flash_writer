@@ -3,17 +3,19 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
+#include "common.h"
 /*******************************************************************************
  *	NUMBER OF BOARD CONFIGRATION
  *	PLEASE DEFINE
  ******************************************************************************/
-#define BOARDNUM 22
+#define BOARDNUM 23
 /*******************************************************************************
  *	PLEASE SET board number or board judge function
  ******************************************************************************/
 #define BOARD_JUDGE_AUTO
 #ifdef BOARD_JUDGE_AUTO
+char str[16];
+int32_t  chCnt ;
 static uint32_t _board_judge(void);
 static uint32_t boardcnf_get_brd_type(void)
 {
@@ -1614,6 +1616,39 @@ static const struct _boardcnf boardcnfs[BOARDNUM] = {
 			  0, 0, 0, 0, 0, 0, 0, 0 }
 		}
 	}
+},
+/*
+ * boardcnf[22] RENESAS R-CarM3Le Reference board Rev.0.14
+ */
+{
+	0x01U,      /* phyvalid */
+	0x01U,		/* dbi_en */
+	0x0300U,    /* cacs_dly */
+	0U,     /* cacs_dly_adj */
+	0x0300U,	/* dqdm_dly_w */
+	0x00A0,		/* dqdm_dly_r */
+	{
+/*ch[0]*/	{
+/*ddr_density[]*/	{ 0x04U, 0x04U },
+/*ca_swap*/		0x520314FFFF345021U,
+/*dqs_swap*/		0x3201U,
+/*dq_swap[]*/		{ 0x01726453U, 0x23510476U, 0x45732061U, 0x17406238U },
+/*dm_swap[]*/		{ 0x08U, 0x08U, 0x08U, 0x05U },
+/*wdqlvl_patt[]*/	WDQLVL_PAT,
+/*cacs_adj*/		{ 0, 0, 0, 0, 0, 0, 0, 0,
+			  0, 0, 0, 0, 0, 0, 0, 0 },
+/*dm_adj_w*/		{ 0, 0, 0, 0 },
+/*dqdm_adj_w*/		{ 0, 0, 0, 0, 0, 0, 0, 0,
+			  0, 0, 0, 0, 0, 0, 0, 0,
+			  0, 0, 0, 0, 0, 0, 0, 0,
+			  0, 0, 0, 0, 0, 0, 0, 0 },
+/*dm_adj_r*/		{ 0, 0, 0, 0 },
+/*dqdm_adj_r*/		{ 0, 0, 0, 0, 0, 0, 0, 0,
+			  0, 0, 0, 0, 0, 0, 0, 0,
+			  0, 0, 0, 0, 0, 0, 0, 0,
+			  0, 0, 0, 0, 0, 0, 0, 0 }
+		}
+	}
 }
 };
 
@@ -1673,6 +1708,7 @@ void boardcnf_get_brd_clk(uint32_t brd, uint32_t *clk, uint32_t *div)
  * DDR2400 (md19,17==1,0) : 2400
  * DDR1600 (md19,17==1,1) : 1600
  */
+
 void boardcnf_get_ddr_mbps(uint32_t brd, uint32_t *mbps, uint32_t *div)
 {
 	uint32_t md;
@@ -1849,7 +1885,6 @@ static uint32_t opencheck_SSI_WS6(void)
 static uint32_t _board_judge(void)
 {
 	uint32_t brd;
-
 #if (RCAR_GEN3_ULCB == 1)
 	/* Starter Kit */
 	if (Prr_Product == PRR_PRODUCT_H3) {
@@ -1888,8 +1923,11 @@ static uint32_t _board_judge(void)
 		brd = 12;
 	} else if (usb2_ovc_open) {
 		if (Prr_Product == PRR_PRODUCT_M3N) {
+			if(is_rcar_product(PRODUCT_ID_M3N)) {
 			/* RENESAS Kriek board with M3-N */
 			brd = 10;
+		} else if (is_rcar_product(PRODUCT_ID_M3L)) {
+			brd = 22;
 		} else if (Prr_Product == PRR_PRODUCT_M3) {
 			/* RENESAS Kriek board with M3-W */
 			brd = 1;
@@ -1899,6 +1937,7 @@ static uint32_t _board_judge(void)
 		} else if ((Prr_Product == PRR_PRODUCT_H3) && (Prr_Cut > PRR_PRODUCT_20)) {
 			/* RENESAS Kriek board with H3N */
 			brd = 15;
+		}
 		}
 	} else {
 		if (Prr_Product == PRR_PRODUCT_H3) {
@@ -1918,8 +1957,18 @@ static uint32_t _board_judge(void)
 #endif
 			}
 		} else if (Prr_Product == PRR_PRODUCT_M3N) {
-			/* RENESAS SALVATOR-X (M3-N/SIP) */
-			brd = 11;
+			// identify Soc Type (M3N or M3Le)
+			if (is_rcar_product(PRODUCT_ID_M3N)) {
+				/* RENESAS SALVATOR-X (M3-N/SIP) */
+				PutStr("RENESAS SALVATOR-X (M3-N/SIP)", 1);
+				brd = 11;
+			} else if (is_rcar_product(PRODUCT_ID_M3L)){
+				/* RENESAS SALVATOR-X (M3LE/SIP) */
+				PutStr("RENESAS GEIST(M3LE/SIP)", 1);
+				brd = 22 ;
+			} else {
+			    PutStr("Unknown product", 1);
+			}
 		} else if ((Prr_Product == PRR_PRODUCT_M3) && (Prr_Cut <= PRR_PRODUCT_20)) {
 			/* RENESAS SALVATOR-X (M3-W/SIP) */
 			brd = 0;

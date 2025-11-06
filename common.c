@@ -33,6 +33,10 @@
 #include	"types.h"
 #include	"common.h"
 #include	"devdrv.h"
+#include	"mmio.h"
+#include	<stdbool.h>
+#include 	"ddr/lpddr4/boot_init_dram_regdef.h"
+#include 	"reg_rcarh3.h"
 #if USB_ENABLE == 1
 #include	"usb_lib.h"
 #endif /* USB_ENABLE == 1 */
@@ -399,4 +403,51 @@ void *memcpy(void *dst, const void *src, size_t len)
 		*d++ = *s++;
 
 	return dst;
+}
+uint32_t rcar_product_id(void)
+{
+	uint32_t product;
+	uint32_t rcar_prod_indent;
+	static uint32_t rcar_prod_id_num;
+
+	if (rcar_prod_id_num > 0)
+		return rcar_prod_id_num;
+
+	product = mmio_read_32(PRR) & PRR_PRODUCT_MASK;
+
+	switch (product)
+	{
+	case PRR_PRODUCT_H3:
+		rcar_prod_id_num = PRODUCT_ID_H3;
+		break;
+	case PRR_PRODUCT_M3:
+		rcar_prod_id_num = PRODUCT_ID_M3;
+		break;
+	case PRR_PRODUCT_D3:
+		rcar_prod_id_num = PRODUCT_ID_D3;
+		break;
+	case PRR_PRODUCT_E3:
+		rcar_prod_id_num = PRODUCT_ID_E3;
+		break;
+	case PRR_PRODUCT_M3N:
+		rcar_prod_indent = mmio_read_32(RCAR_M3NM3L_IDENT);
+		if(rcar_prod_indent == RCARM3N_M3NE_IDENT_VAL){
+			rcar_prod_id_num = PRODUCT_ID_M3N;
+		} else {
+			rcar_prod_id_num = PRODUCT_ID_M3L;
+		}
+		break;
+	default:
+		break;
+	}
+
+	return rcar_prod_id_num;
+}
+
+_Bool is_rcar_product(uint32_t product_id)
+{
+	if (rcar_product_id() == product_id)
+		return true;
+
+	return false;
 }

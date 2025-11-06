@@ -35,10 +35,10 @@ There is no restriction in this revision.
 ## 2.1. Hardware Environment
 The following table lists the hardware needed to use this function.
 
-##### Hardware environment (R-Car H3/M3/M3N/E3/D3)
+##### Hardware environment (R-Car H3/M3/M3N/E3/D3/M3LE)
 | Name                          | Note                                      |
 |-------------------------------|-------------------------------------------|
-| R-Car H3-SiP System Evaluation Board Salvator-X<BR>R-Car M3-SiP System Evaluation Board Salvator-X<BR>R-Car H3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3N-SiP System Evaluation Board Salvator-XS<BR>R-Car E3 System Evaluation Board Ebisu<BR>R-Car E3 System Evaluation Board Ebisu-4D<BR>R-Car D3 System Evaluation Board Draak | RTP0RC7795SIPB0010S / RTP0RC7795SIPB0011S<BR>RTP0RC7796SIPB0010S / RTP0RC7796SIPB0011S<BR>RTP0RC7795SIPB0012S<BR>RTP0RC7796SIPB0012S<BR>RTP0RC77965SIPB012S<BR>RTP0RC77990SEB0010S<BR>RTP0RC77990SEB0020SA00<BR>RTP0RC77995SEB0010S |
+| R-Car H3-SiP System Evaluation Board Salvator-X<BR>R-Car M3-SiP System Evaluation Board Salvator-X<BR>R-Car H3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3-SiP System Evaluation Board Salvator-XS<BR>R-Car M3N-SiP System Evaluation Board Salvator-XS<BR>R-Car E3 System Evaluation Board Ebisu<BR>R-Car E3 System Evaluation Board Ebisu-4D<BR>R-Car D3 System Evaluation Board Draak<BR>R-Car M3Le System Evaluation Board Geist | RTP0RC7795SIPB0010S / RTP0RC7795SIPB0011S<BR>RTP0RC7796SIPB0010S / RTP0RC7796SIPB0011S<BR>RTP0RC7795SIPB0012S<BR>RTP0RC7796SIPB0012S<BR>RTP0RC77965SIPB012S<BR>RTP0RC77990SEB0010S<BR>RTP0RC77990SEB0020SA00<BR>RTP0RC77995SEB0010S<BR>RTP8A779MDASKB0F10S|
 | Host PC                       | Ubuntu Desktop 14.04(64bit) or later          |
 | USB cable (type A to micro B) | Connect to CN25 when using UART connection. (SCIF2)<BR>Connect to CN9 when using USB connection. (HS-USB) |
 
@@ -54,9 +54,11 @@ The following table shows Serial Flash and eMMC support for each SoC.
 | R-Car D3 Ver.1.1 / Ver.1.0                               | Support                     | Support                    | Support             | Support            | MMC0          |
 | R-Car E3 Ver.1.1 / Ver.1.0                               | Support                     | Support                    | Support             | Support            | MMC1          |
 | R-Car M3N Ver.1.1                                        | Support                     | Support                    | Support             | Support            | MMC0          |
+| R-Car M3Le Ver.1.0                                       | Support                     | Support                    | Support             | Support            | MMC0          |
 | R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 | Support                     | Support                    | Support             | Support            | MMC0          |
 | R-Car H3 Ver.3.0 / Ver.2.0                               | Support                     | Support                    | Support             | Support            | MMC0          |
 | R-Car H3 Ver.1.1 / Ver.1.0                               | Support                     | Support                    | Support             | Not support        | MMC0          |
+
 
 The following table shows USB support for each SoC.
 
@@ -66,6 +68,7 @@ The following table shows USB support for each SoC.
 | R-Car D3 Ver.1.1 / Ver.1.0                               | Support               | Support                         |
 | R-Car E3 Ver.1.1 / Ver.1.0                               | Support               | Support                         |
 | R-Car M3N Ver.1.1                                        | Support               | Support                         |
+| R-Car M3Le Ver.1.0                                       | Support               |  Support                   	 |
 | R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0 | Support               | Not Support                     |
 | R-Car H3 Ver.3.0 / Ver.2.0                               | Support               | Support                         |
 | R-Car H3 Ver.1.1 / Ver.1.0                               | Support               | Not support                     |
@@ -83,6 +86,7 @@ The following table shows USB Vendor ID and Product ID.
 | R-Car M3N | 0x045B              | 0x0248     |
 | R-Car M3  | 0x045B              | 0x023D     |
 | R-Car H3  | 0x045B              | 0x023C     |
+| R-Car M3Le| 0x0403              | 0x6010     |
 
 #### Recommended Environment
 ![Recommended Environment](images/recommended_environment.png)
@@ -193,6 +197,7 @@ If this option is not selected, the default value is SALVATOR.<BR>
 | EBISU    | Generate binary that works on Ebisu board.                   |
 | EBISU4D  | Generate binary that works on Ebisu-4D board.                |
 | DRAAK    | Generate binary that works on Draak board.                   |
+| GEIST    | Generate binary that works on Geist board.                   |
 
 ### 3.3.3. BOOT<BR>
 Select from the following table according to the image header settings.<BR>
@@ -981,7 +986,7 @@ Baud rate is dependent on the SoC and the SCIF clock.<BR>
 ##### Baud rate settings after command execution
 | SoC                                                                                           | Baud rate at startup | Baud rate at After command execution |
 |-----------------------------------------------------------------------------------------------|---------------------:|-------------------------------------:|
-| R-Car D3 Ver.1.1 / Ver.1.0<BR> R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | 115200bps            |                            921600bps |
+| R-Car D3 Ver.1.1 / Ver.1.0<BR> R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3Le Ver.1.0<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | 115200bps            |                            921600bps |
 | R-Car H3 Ver.1.0                                                                              | 57600bps             |                            921600bps |
 
 *Note) The baud rate that has been changed in this command cannot be undone until the power is turned off.*<BR>
@@ -1073,7 +1078,11 @@ The following table lists the relationship between build option and target files
 | 32    | SALVATOR | WRITER           | AArch32_output   | AArch32_Flash_writer_SCIF_E6304000_salvator-x.mot<BR>AArch32_Flash_writer_SCIF_E6304000_salvator-x.bin                       |
 |       |          | WRITER_WITH_CERT |                  | AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.mot<BR>AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.bin |
 | 64    |          | WRITER           | AArch64_output   | AArch64_Flash_writer_SCIF_E6304000_salvator-x.mot<BR>AArch64_Flash_writer_SCIF_E6304000_salvator-x.bin                       |
-|       |          | WRITER_WITH_CERT |                  | AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.mot<BR>AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.bin |
+|       |          | WRITER_WITH_CERT |                  | AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.mot<BR>AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_salvator-x.bin |           |                  |                                                                                                                              |
+| 32    | GEIST    | WRITER           | AArch32_output   | AArch32_Flash_writer_SCIF_E6304000_geist.mot<BR>AArch32_Flash_writer_SCIF_E6304000_geist.bin                       |
+|       |          | WRITER_WITH_CERT |                  | AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_geist.mot<BR>AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_geist-x.bin |
+| 64    |          | WRITER           | AArch64_output   | AArch64_Flash_writer_SCIF_E6304000_geist.mot<BR>AArch64_Flash_writer_SCIF_E6304000_geist.bin                       |
+|       |          | WRITER_WITH_CERT |                  | AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_geist.mot<BR>AArch64_Flash_writer_SCIF_DUMMY_CERT_E6300400_geist-x.bin |
 | 32    | EBISU    | WRITER           | AArch32_output   | AArch32_Flash_writer_SCIF_E6304000_ebisu.mot<BR>AArch32_Flash_writer_SCIF_E6304000_ebisu.bin                                 |
 |       |          | WRITER_WITH_CERT |                  | AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu.mot<BR>AArch32_Flash_writer_SCIF_DUMMY_CERT_E6300400_ebisu.bin           |
 | 64    |          | WRITER           | AArch64_output   | AArch64_Flash_writer_SCIF_E6304000_ebisu.mot<BR>AArch64_Flash_writer_SCIF_E6304000_ebisu.bin                                 |
@@ -1115,6 +1124,14 @@ The following table shows the Dip-Switch Setting for SCIF download mode.<BR>
 |                                                                                                               |                    | SW12 | MODESW-C | ON  | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
 |                                                                                                               | Cortex-R7          | SW10 | MODESW-A | OFF | OFF | OFF | OFF | OFF | OFF | OFF | OFF |
 |                                                                                                               |                    | SW12 | MODESW-C | -*1 | ON  | OFF | OFF | ON  | ON  | ON  | ON  |
+
+
+
+##### Dip switch configuration for SCIF download mode on Geist
+| SoC                                                                                                 | Boot CPU | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
+|---------------------------------------------------------------------------------------------------------------|--------------------|------|----------|-----|-----|-----|-----|-----|-----|-----|-----|
+| R-Car M3Le  | Cortex-A57 AArch64 | SW10 | MODESW-A | OFF  | OFF  | OFF  | OFF  | ON | ON | ON | ON |
+| 			  | 				   | SW12 | MODESW-A | OFF | OFF | OFF | OFF | OFF | OFF | ON  | OFF |
 
 \*1: Don't care this setting for Cortex-R7 boot mode.<BR>
 
@@ -1218,6 +1235,13 @@ To write to HyperFlash&trade;, the following additional settings are required in
 | SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  |      | -    | -    | -    | -    | -    |
 
+##### Additional dip switch configuration for write to the HyperFlash&trade; on Geist (SCIF download mode)
+
+| Switch Number | Switch Mode | Pin1 | Pin2 |
+|---------------|-------------|------|------|
+| SW2054        | EX-SPI board| OFF  | OFF  |
+|               |On Board SPI Flash| ON   | OFF |
+
 ##### Additional dip switch configuration for write to the HyperFlash&trade; on Ebisu/Ebisu-4D (SCIF/USB download mode)
 | Switch Number | Switch Name | Pin1 | Pin2 | Pin3 | Pin4 | Pin5 | Pin6 | Pin7 | Pin8 |
 |---------------|-------------|------|------|------|------|------|------|------|------|
@@ -1244,7 +1268,7 @@ The following table shows the setting of terminal software.<BR>
 ##### Terminal software configuration
 | SoC                                                                                                                                                    | Baud rate  | Data bit length | Parity check | Stop bits | Flow control |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------|-----------:|-----------------|--------------|-----------|--------------|
-| R-Car D3 Ver.1.1 / Ver.1.0<BR> R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1 | 115200bps  | 8bits           | none         | 1bit      | none         |
+| R-Car D3 Ver.1.1 / Ver.1.0<BR> R-Car E3 Ver.1.1 / Ver.1.0<BR> R-Car M3N Ver.1.1<BR> R-Car M3 Ver.3.0 / Ver.1.3 / Ver.1.2 / Ver.1.1 / Ver.1.0<BR> R-Car H3 Ver.3.0 / Ver.2.0 / Ver.1.1/R-Car M3Le v1.0 | 115200bps  | 8bits           | none         | 1bit      | none         |
 | R-Car H3 Ver.1.0                                                                                                                                       |  57600bps  | 8bits           | none         | 1bit      | none         |
 
 *Note) In the case of USB connection by CN9, this setting has no effect. Therefore it does not affect USB transfer speed.<BR>*
@@ -1266,7 +1290,7 @@ S-record file for Cortex-A57/A53 AArch32 or Cortex-R7:
 
 When the transfer is successful, the following log is output.
 ```text
-Flash writer for R-Car H3/M3/M3N Series V1.06 Apr.25,2018
+Flash writer for R-Car H3/M3/M3N/M3Le Series V1.13 Sep.19,2025
 >
 ```
 Please enter the any key from the console after starting Flash writer.<BR>
@@ -1461,6 +1485,12 @@ The following table shows the Dip-Switch Setting.<BR>
 | SW3           | QSPI-C      | ON   | -    | -    | -    | -    | -    |
 | SW13          | QSPI-D      | 1-side | -  | -    | -    | -    | -    |
 | SW31          | QSPI-E      | ON   | -    | -    | -    | -    | -    |
+
+#### Dip switch configuration for boot from the HyperFlash&trade; on Geist(at 160 MHz using DMA)
+| SoC              | Boot CPU | Switch Number | Switch Name | Pin5 | Pin6 | Pin7 | Pin8 |
+|--------------------|--------------------|------|----------|-----|-----|-----|-----|
+| R-Car M3Le Ver.1.0 | Cortex-A57 AArch64 | SW10 | MODESW-A | OFF | OFF  | ON | OFF |
+
 
 # 6. USB download API
 
@@ -2027,4 +2057,8 @@ Describe the revision history of Flash writer.
 ## 8.13. V1.12
 - Add R-Car D3 Ver.1.1 / Ver.1.0 support.<BR>
 - Add Draak board support.<BR>
+- Update application note.<BR>
+## 8.14. V1.13
+- Add R-Car M3Le Ver.1.0 support.<BR>
+- Add M3Le board support.<BR>
 - Update application note.<BR>

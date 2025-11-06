@@ -34,7 +34,9 @@
 
 #include <stdint.h>
 
-
+#define RCAR_M3NM3L_IDENT (0xE6060800)
+#define RCARM3N_M3NE_IDENT_VAL (0x00000000)
+#define RCARM3LE_IDENT_VAL     (0x00000001)
 #ifdef AArch64
 //typedef uint64_t    uintptr_t;
 #define CPU_BYTE_SIZE			SIZE_64BIT
@@ -99,3 +101,11 @@ void WaitKeyIn_Y(void);
 char WaitKeyIn_YorN(void);
 
 #endif
+uint32_t rcar_product_id(void);
+_Bool is_rcar_product(uint32_t product_id);
+#define PRODUCT_ID_H3	0x1
+#define PRODUCT_ID_M3	0x10
+#define PRODUCT_ID_M3N	0x20
+#define PRODUCT_ID_M3L	0x30
+#define PRODUCT_ID_E3	0x40
+#define PRODUCT_ID_D3	0x50

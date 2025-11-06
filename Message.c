@@ -33,11 +33,11 @@
 /**********************
 *  TITLE              *
 ***********************/
-#define WRITER_VERSION	"V1.12"		/* Software Version */
-#define WRITER_DATE	"Jun.4,2021"	/* Release date */
+#define WRITER_VERSION	"V1.13"		/* Software Version */
+#define WRITER_DATE	"Nov.19,2025"	/* Release date */
 
 #ifdef RCAR_GEN3_SALVATOR
-#define SOC_NAME	"H3/M3/M3N"	/* Salvator-X/XS and Starter Kit */
+#define SOC_NAME	"H3/M3/M3N/M3Le"	/* Salvator-X/XS, Geist and Starter Kit */
 #elif  RCAR_GEN3_EBISU
 #define SOC_NAME	"E3"		/* Ebisu / Ebisu-4D */
 #elif  RCAR_GEN3_DRAAK
